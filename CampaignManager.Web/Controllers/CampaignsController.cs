@@ -570,6 +570,8 @@ namespace CampaignManager.Web.Controllers
 
         }
 
+
+        /*
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int? id, Campaign campaign, IFormFile? image)
@@ -656,7 +658,61 @@ namespace CampaignManager.Web.Controllers
 
 
             return View(campaign);
+        } */
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int? id, Campaign campaign, IFormFile? image)
+        {
+            if (id == null || campaign == null)
+            {
+                _logger.LogWarning("Edit method called with null id or campaign.");
+                return NotFound();
+            }
+
+            var existingCampaign = await _service.GetCampaignById(id.Value);
+            if (existingCampaign == null)
+            {
+                _logger.LogWarning($"Campaign with id {id} not found.");
+                return NotFound();
+            }
+
+            // Update campaign properties
+            existingCampaign.Name = campaign.Name;
+            existingCampaign.Description = campaign.Description;
+            var oldGameTime = existingCampaign.GameTime;
+            existingCampaign.GameTime = campaign.GameTime;
+
+            // Handle image upload if provided
+            if (image != null && image.Length > 0)
+            {
+                // Process image upload
+                // ...
+            }
+
+            try
+            {
+                // Save changes to the campaign
+                await _service.UpdateCampaign(existingCampaign);
+                _logger.LogInformation($"Campaign {existingCampaign.Id} updated successfully.");
+
+                // Run scripts if the GameTime has changed
+                if (oldGameTime != campaign.GameTime)
+                {
+                    _logger.LogInformation($"GameTime changed for campaign {existingCampaign.Id}. Running scripts.");
+                    await RunScript(existingCampaign, oldGameTime, campaign.GameTime);
+                }
+
+                return RedirectToAction(nameof(Details), new { id = existingCampaign.Id });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error updating campaign {existingCampaign.Id}.");
+                ModelState.AddModelError(string.Empty, "An error occurred while updating the campaign.");
+                return View(campaign);
+            }
         }
+
 
         public async Task<IActionResult> EditRole(int? id)
         {
@@ -1059,9 +1115,13 @@ namespace CampaignManager.Web.Controllers
            
         } */
 
+
+        /*
         private async Task RunScript(Campaign campaign, DateTime oldGameTime, DateTime newGameTime)
         {
             var notifications = Notifications?.ToList() ?? new List<string>();
+
+            _logger.LogInformation($"Running scripts for campaign {campaign.Id} from {oldGameTime} to {newGameTime}.");
 
             foreach (var session in campaign.Sessions)
             {
@@ -1071,6 +1131,7 @@ namespace CampaignManager.Web.Controllers
                     {
                         if (!noteGenerator.NextRunInGameDate.HasValue)
                         {
+                            _logger.LogInformation($"Skipping NoteGenerator {noteGenerator.Id} as NextRunInGameDate is not set.");
                             continue;
                         }
 
@@ -1080,6 +1141,7 @@ namespace CampaignManager.Web.Controllers
                             // Run the script
                             if (string.IsNullOrWhiteSpace(noteGenerator.Generator?.Script))
                             {
+                                _logger.LogInformation($"Skipping NoteGenerator {noteGenerator.Id} as script is empty.");
                                 continue;
                             }
 
@@ -1134,7 +1196,107 @@ namespace CampaignManager.Web.Controllers
 
             Notifications = notifications.ToArray();
             await Task.CompletedTask;
+        } */
+
+        private async Task RunScript(Campaign campaign, DateTime oldGameTime, DateTime newGameTime)
+        {
+            var notifications = Notifications?.ToList() ?? new List<string>();
+
+            _logger.LogInformation($"Running scripts for campaign {campaign.Id} from {oldGameTime} to {newGameTime}.");
+
+            foreach (var session in campaign.Sessions)
+            {
+                foreach (var note in session.Notes)
+                {
+                    foreach (var noteGenerator in note.NoteGenerators)
+                    {
+                        if (!noteGenerator.NextRunInGameDate.HasValue)
+                        {
+                            _logger.LogInformation($"Skipping NoteGenerator {noteGenerator.Id} as NextRunInGameDate is not set.");
+                            continue;
+                        }
+
+                        var nextRunDate = noteGenerator.NextRunInGameDate.Value;
+                        if (nextRunDate > oldGameTime && nextRunDate <= newGameTime)
+                        {
+                            // Run the script
+                            if (string.IsNullOrWhiteSpace(noteGenerator.Generator?.Script))
+                            {
+                                _logger.LogInformation($"Skipping NoteGenerator {noteGenerator.Id} as script is empty.");
+                                continue;
+                            }
+
+                            // Execute the script
+                            var scriptOptions = ScriptOptions.Default
+                                .AddReferences(
+                                    typeof(object).Assembly,
+                                    typeof(Enumerable).Assembly,
+                                    typeof(JsonSerializer).Assembly,
+                                    typeof(Random).Assembly,
+                                    typeof(List<>).Assembly,
+                                    typeof(Array).Assembly,
+                                    typeof(String).Assembly,
+                                    typeof(ILogger).Assembly,
+                                    typeof(Note).Assembly // Add Note type reference
+                                )
+                                .AddImports(
+                                    "System",
+                                    "System.Linq",
+                                    "System.Collections.Generic",
+                                    "System.Text.Json",
+                                    "System.Text.Json.Nodes",
+                                    "Microsoft.Extensions.Logging",
+                                    "CampaignManager.Persistence.Models"
+                                );
+
+                            var globals = new ScriptGlobals { Note = note, Logger = _logger };
+
+                            try
+                            {
+                                _logger.LogInformation($"Running script for NoteGenerator {noteGenerator.Id} in Note {note.Id}.");
+                                _logger.LogInformation($"Script content: {noteGenerator.Generator.Script}");
+                                var result = await CSharpScript.EvaluateAsync<string>(noteGenerator.Generator.Script, scriptOptions, globals);
+                                _logger.LogInformation($"Script result for NoteGenerator {noteGenerator.Id}: {result}");
+
+                                if(result!= null)
+                                {
+                                    note.Content = result;
+                                    var updateResult = await _service.UpdateNote(note);
+                                    if (updateResult)
+                                    {
+                                        // Check if Generator is null and use GeneratorId if necessary
+                                        var generatorName = noteGenerator.Generator?.Name ?? noteGenerator.GeneratorId.ToString();
+                                        notifications.Add($"{campaign.Name}/{session.Name}/{note.Title}/{generatorName} successfully run!");
+                                    } else
+                                    {
+                                        var generatorName = noteGenerator.Generator?.Name ?? noteGenerator.GeneratorId.ToString();
+                                        //Should use an error message here
+                                        notifications.Add($"{campaign.Name}/{session.Name}/{note.Title}/{generatorName} didn't run successfully!");
+                                    }
+                                }
+                              
+                            }
+                            catch (CompilationErrorException ex)
+                            {
+                                // Log compilation errors
+                                _logger.LogError(ex, $"Script compilation errors for NoteGenerator {noteGenerator.Id}: {string.Join(Environment.NewLine, ex.Diagnostics)}!");
+                                notifications.Add($"Error compiling script for {campaign.Name}/{session.Name}/{note.Title}/{noteGenerator.Generator?.Name ?? noteGenerator.GeneratorId.ToString()}: {ex.Message}!");
+                            }
+                            catch (Exception ex)
+                            {
+                                // Log runtime errors
+                                _logger.LogError(ex, $"Error executing script for NoteGenerator {noteGenerator.Id}");
+                                notifications.Add($"Error executing script for {campaign.Name}/{session.Name}/{note.Title}/{noteGenerator.Generator?.Name ?? noteGenerator.GeneratorId.ToString()}: {ex.Message}");
+                            }
+                        }
+                    }
+                }
+            }
+
+            Notifications = notifications.ToArray();
         }
+
+
 
         private async Task<bool> IsUserGameMaster(int campaignId, string userId)
         {
@@ -1142,9 +1304,10 @@ namespace CampaignManager.Web.Controllers
             return gameMasters.Any(gm => gm.ApplicationUserId == userId);
         }
 
-        private class ScriptGlobals
+        public class ScriptGlobals
         {
             public Note Note { get; set; } = null!;
+            public ILogger<CampaignsController> Logger { get; set;} = null!;
         }
 
 
