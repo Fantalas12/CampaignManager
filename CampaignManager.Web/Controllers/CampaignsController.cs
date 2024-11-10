@@ -28,7 +28,10 @@ namespace CampaignManager.Web.Controllers
         private readonly ILogger<CampaignsController> _logger;
 
         [TempData]
-        public string[] Notifications { get; set; } = Array.Empty<string>();
+        public string[] SuccessNotifications { get; set; } = Array.Empty<string>();
+
+        [TempData]
+        public string[] ErrorNotifications { get; set; } = Array.Empty<string>();
 
 
         public CampaignsController(ICampaignManagerService service, UserManager<ApplicationUser> userManager, ILogger<CampaignsController> logger)
@@ -1200,7 +1203,8 @@ namespace CampaignManager.Web.Controllers
 
         private async Task RunScript(Campaign campaign, DateTime oldGameTime, DateTime newGameTime)
         {
-            var notifications = Notifications?.ToList() ?? new List<string>();
+            var successNotifications = SuccessNotifications?.ToList() ?? new List<string>();
+            var errorNotifications = ErrorNotifications?.ToList() ?? new List<string>();
 
             _logger.LogInformation($"Running scripts for campaign {campaign.Id} from {oldGameTime} to {newGameTime}.");
 
@@ -1266,12 +1270,12 @@ namespace CampaignManager.Web.Controllers
                                     {
                                         // Check if Generator is null and use GeneratorId if necessary
                                         var generatorName = noteGenerator.Generator?.Name ?? noteGenerator.GeneratorId.ToString();
-                                        notifications.Add($"{campaign.Name}/{session.Name}/{note.Title}/{generatorName} successfully run!");
+                                        successNotifications.Add($"{campaign.Name}/{session.Name}/{note.Title}/{generatorName} successfully run!");
                                     } else
                                     {
                                         var generatorName = noteGenerator.Generator?.Name ?? noteGenerator.GeneratorId.ToString();
                                         //Should use an error message here
-                                        notifications.Add($"{campaign.Name}/{session.Name}/{note.Title}/{generatorName} didn't run successfully!");
+                                        errorNotifications.Add($"{campaign.Name}/{session.Name}/{note.Title}/{generatorName} didn't run successfully!");
                                     }
                                 }
                               
@@ -1280,20 +1284,21 @@ namespace CampaignManager.Web.Controllers
                             {
                                 // Log compilation errors
                                 _logger.LogError(ex, $"Script compilation errors for NoteGenerator {noteGenerator.Id}: {string.Join(Environment.NewLine, ex.Diagnostics)}!");
-                                notifications.Add($"Error compiling script for {campaign.Name}/{session.Name}/{note.Title}/{noteGenerator.Generator?.Name ?? noteGenerator.GeneratorId.ToString()}: {ex.Message}!");
+                                errorNotifications.Add($"Error compiling script for {campaign.Name}/{session.Name}/{note.Title}/{noteGenerator.Generator?.Name ?? noteGenerator.GeneratorId.ToString()}: {ex.Message}!");
                             }
                             catch (Exception ex)
                             {
                                 // Log runtime errors
                                 _logger.LogError(ex, $"Error executing script for NoteGenerator {noteGenerator.Id}");
-                                notifications.Add($"Error executing script for {campaign.Name}/{session.Name}/{note.Title}/{noteGenerator.Generator?.Name ?? noteGenerator.GeneratorId.ToString()}: {ex.Message}");
+                                errorNotifications.Add($"Error executing script for {campaign.Name}/{session.Name}/{note.Title}/{noteGenerator.Generator?.Name ?? noteGenerator.GeneratorId.ToString()}: {ex.Message}");
                             }
                         }
                     }
                 }
             }
 
-            Notifications = notifications.ToArray();
+            SuccessNotifications = successNotifications.ToArray();
+            ErrorNotifications = errorNotifications.ToArray();
         }
 
 

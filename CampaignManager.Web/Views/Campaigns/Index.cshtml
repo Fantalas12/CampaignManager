@@ -3,22 +3,7 @@
 
 @{
     ViewData["Title"] = "Campaigns";
-
-    var notificationsArray = TempData["Notifications"] as string[];
-    var notifications = notificationsArray?.ToList();
     var gameMasterCampaignIds = ViewBag.GameMasterCampaignIds as List<int>;
-}
-
-@if (notifications != null && notifications.Any())
-
-{
-    foreach (var notification in notifications)
-    {
-        <div class="alert alert-success">
-            @notification
-        </div>
-    }
-
 }
 
 <h1>Your Campaigns</h1>

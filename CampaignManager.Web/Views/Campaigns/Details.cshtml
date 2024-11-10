@@ -8,6 +8,10 @@
        (p.Role == CampaignManager.Persistence.Models.Role.GameMaster || p.Role == CampaignManager.Persistence.Models.Role.PlayerAndGameMaster));
     var errorMessage = TempData["ErrorMessage"] as string;
     var successMessage = TempData["SuccessMessage"] as string;
+    var successArray = TempData["SuccessNotifications"] as string[];
+    var successNotifications = successArray?.ToList();
+    var errorArray = TempData["ErrorNotifications"] as string[];
+    var errorNotifications = errorArray?.ToList();
     
     string CapitalizeFirstLetter(string input)
     {
@@ -29,6 +33,30 @@
     <div class="alert alert-success">
         @successMessage
     </div>
+}
+
+
+@if (successNotifications != null && successNotifications.Any())
+
+{
+    foreach (var notification in successNotifications)
+    {
+        <div class="alert alert-success">
+            @notification
+        </div>
+    }
+}
+
+
+@if (errorNotifications != null && errorNotifications.Any())
+
+{
+    foreach (var notification in errorNotifications)
+    {
+        <div class="alert alert-danger">
+            @notification
+        </div>
+    }
 }
 
 <h1>Campaign Details</h1>
@@ -97,7 +125,7 @@
         {
             @foreach (var gm in Model.Campaign.Participants.Where(p => p.Role == CampaignManager.Persistence.Models.Role.GameMaster || p.Role == CampaignManager.Persistence.Models.Role.PlayerAndGameMaster))
             {
-                <li>@CapitalizeFirstLetter(gm.ApplicationUser.UserName ?? "No Owner")).ToLower()</li>
+                <li>@CapitalizeFirstLetter(gm.ApplicationUser.UserName ?? "No Owner")</li>
             }
         }
         else
@@ -114,7 +142,7 @@
         {
             @foreach (var player in Model.Campaign.Participants.Where(p => p.Role == CampaignManager.Persistence.Models.Role.Player || p.Role == CampaignManager.Persistence.Models.Role.PlayerAndGameMaster))
             {
-                <li>@CapitalizeFirstLetter(player.ApplicationUser.UserName ?? "No Player")).ToLower()</li>
+                <li>@CapitalizeFirstLetter(player.ApplicationUser.UserName ?? "No Player")</li>
             }
         }
         else
