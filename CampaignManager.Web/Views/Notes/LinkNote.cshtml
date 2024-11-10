@@ -1,0 +1,35 @@
+﻿@model CampaignManager.Persistence.Models.NoteLink
+
+@{
+    ViewData["Title"] = "Link Notes";
+}
+
+<h2>Link Notes</h2>
+
+<form asp-action="LinkNote" method="post">
+    <div class="form-group">
+        <label class="control-label">NoteId</label>
+        <input asp-for="ToNoteId" class="form-control" />
+        <span asp-validation-for="ToNoteId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="LinkType" class="control-label"></label>
+        <input asp-for="LinkType" class="form-control" />
+        <span asp-validation-for="LinkType" class="text-danger"></span>
+    </div>
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" asp-for="FromNoteId"/>    
+    <div class="form-group">
+        <input type="submit" value="Link Notes" class="btn btn-primary" />
+    </div>
+</form>
+
+<div>
+    <a asp-action="Details" asp-route-id="@Model.FromNoteId">Back to Details</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

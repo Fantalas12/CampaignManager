@@ -1,0 +1,30 @@
+﻿@{
+    ViewData["Title"] = "Load Campaign";
+    var errorMessage = TempData["ErrorMessage"];
+    var successMessage = TempData["SuccessMessage"];
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<h1>Load Campaign</h1>
+
+<form asp-action="LoadCampaign" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="jsonFile">Select file (JSON)</label>
+        <input type="file" name="jsonFile" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Load Campaign</button>
+</form>
+

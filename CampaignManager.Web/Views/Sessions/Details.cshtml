@@ -1,0 +1,169 @@
+﻿@using System.Security.Claims
+@model SessionDetailsViewModel
+
+@{
+    ViewData["Title"] = "Session Details";
+
+    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+    var isGameMaster = Model.Session.Campaign.Participants.Any(p => p.ApplicationUserId == userId &&
+
+       (p.Role == CampaignManager.Persistence.Models.Role.GameMaster || p.Role == CampaignManager.Persistence.Models.Role.PlayerAndGameMaster));
+    var errorMessage = TempData["ErrorMessage"] as string;
+    var successMessage = TempData["SuccessMessage"] as string;
+
+    string CapitalizeFirstLetter(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+            return input;
+        return char.ToUpper(input[0]) + input.Substring(1).ToLower();
+    }
+
+}
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger">
+        @errorMessage
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(successMessage))
+{
+    <div class="alert alert-success">
+        @successMessage
+    </div>
+}
+
+
+<h1>Session Details</h1>
+
+<div>
+    <h4>@Model.Session.Name</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            Game Master
+        </dt>
+        <dd class="col-sm-10">
+            @(Model.Session.GameMaster != null ? CapitalizeFirstLetter(Model.Session.GameMaster.UserName ?? "No game master") : "No game master")
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Session.Date)
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Session.Date.ToString("yyyy/MM/dd")
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Session.GameTime)
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Session.GameTime.ToString("yyyy/MM/dd HH:mm")
+        </dd>
+        <dt class="col-sm-2">
+            Players
+        </dt>
+        <dd class="col-sm-10">
+            @if (Model.Session.SessionPlayers.Any())
+            {
+                <ul>
+                    @foreach (var player in Model.Session.SessionPlayers)
+                    {
+                        <li>@player.ApplicationUser.UserName</li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p>No players yet.</p>
+            }
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Session.Description)
+        </dt>
+        <dd class="col-sm-10">
+            <pre>@Html.DisplayFor(model => model.Session.Description)</pre>
+        </dd>
+    </dl>
+</div>
+
+<div>
+    <h4>Notes:</h4>
+    @if (Model.Notes == null || !Model.Notes.Any())
+
+    {
+        <p>No notes yet</p>
+    }
+
+    else
+
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Title</th>
+                    <th>Owner</th>
+                    <th>Note Type</th>
+                    <th>Note DateTime</th>
+                    <th>Created</th>
+                    <th>Edited</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var note in Model.Notes)
+                {
+                    <tr>
+                        <td>@note.Id</td>
+                        <td>@note.Title</td>
+                        <td>@(note.Owner?.UserName ?? "No User")</td>
+                        <td>@(note.NoteType?.Name ?? "No type")</td>
+                        <td>@note.InGameDate.ToString("yyyy/MM/dd HH:mm")</td>
+                        <td>@note.CreatedDate.ToString("yyyy/MM/dd HH:mm")</td>
+                        <td>@note.ModifiedDate.ToString("yyyy/MM/dd HH:mm")</td>
+                        <td> <a asp-controller="Notes" asp-action="Details" asp-route-id="@note.Id" class="btn btn-info">Details</a>
+                        @if (note.OwnerId == userId)
+                        {
+                                <a asp-controller="Notes" asp-action="Edit" asp-route-id="@note.Id" class="btn btn-warning">Edit</a>
+                                <a asp-controller="Notes" asp-action="Delete" asp-route-id="@note.Id" class="btn btn-danger">Delete</a>
+                        }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+<div>
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                    <a class="page-link" asp-action="Details" asp-route-id="@Model.Session.Id" asp-route-page="@i">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+</div>
+
+
+<p>
+    <a asp-action="Create" asp-controller="Notes" asp-route-sessionId="@Model.Session.Id" class="btn btn-primary">Create Note</a>
+</p>
+
+@if (isGameMaster) 
+{
+<p>
+        <a asp-action="Edit" asp-route-id="@Model.Session.Id" class="btn btn-warning">Edit Session</a> |
+        <a asp-action="Delete" asp-route-id="@Model.Session.Id" class="btn btn-danger">Delete Session</a> |
+    <a asp-action="AddPlayer" asp-route-sessionId="@Model.Session.Id" class="btn btn-primary">Add Player</a> |
+        <a asp-action="RemovePlayer" asp-route-sessionId="@Model.Session.Id" class="btn btn-danger">Remove Player</a>
+</p>
+}
+
+<p>
+    <a asp-controller="Campaigns" asp-action="Details" asp-route-id="@Model.Session.CampaignId" class="btn btn-primary">Back to Campaign</a>
+</p>

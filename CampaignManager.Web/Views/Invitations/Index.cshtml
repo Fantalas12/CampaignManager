@@ -1,0 +1,76 @@
+﻿@model IEnumerable<CampaignManager.Persistence.Models.Invitation>
+
+@{
+    ViewData["Title"] = "Invitations";
+    var errorMessage = TempData["ErrorMessage"] as string;
+}
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger">
+        @errorMessage
+    </div>
+}
+
+@{
+    Func<Role, String> RoleConverter = role =>
+    {
+
+        switch (role)
+        {
+            case Role.GameMaster: return "Gamemaster";
+            case Role.Player: return "Player";
+            case Role.PlayerAndGameMaster: return "Player And Gamemaster";
+            default: return "?";
+        }
+    };
+}
+
+<h1>Invitations</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Campaign Image
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Campaign.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Role)
+            </th>
+            <th>Accept</th>
+            <th>Reject</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if (item.Campaign.Image != null)
+                    {
+                        <img src="@Url.Action("DisplayImage", "Campaigns", new { id = item.CampaignId })" class="item" />
+                    }
+                    else
+                    {
+                        <text>No image</text>
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Campaign.Name)
+                </td>
+                <td>
+                    @RoleConverter(item.Role)
+                </td>
+                <td>
+                    <a asp-action="Accept" asp-route-id="@item.Id" class="btn btn-success">Accept</a>
+                </td>
+                <td>
+                    <a asp-action="Reject" asp-route-id="@item.Id" class="btn btn-danger">Reject</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

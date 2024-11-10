@@ -1,0 +1,23 @@
+﻿@model CampaignManager.Persistence.Models.ManageNoteTypeGeneratorViewModel
+
+@{
+    ViewData["Title"] = "Remove Generator";
+}
+
+<h1>Remove Generator</h1>
+
+<form asp-action="RemoveGenerator">
+    <div class="form-group">
+        <label asp-for="GeneratorId" class="control-label">Generator ID</label>
+        <input asp-for="GeneratorId" class="form-control" />
+        <span asp-validation-for="GeneratorId" class="text-danger"></span>
+    </div>
+    <input type="hidden" asp-for="NoteTypeId" />
+    <div class="form-group">
+        <input type="submit" value="Remove" class="btn btn-danger" />
+    </div>
+</form>
+
+<div>
+    <a asp-action="Details" asp-route-id="@Model.NoteTypeId">Back to Details</a>
+</div>

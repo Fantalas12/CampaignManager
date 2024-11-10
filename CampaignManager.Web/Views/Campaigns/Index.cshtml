@@ -1,0 +1,108 @@
+﻿@model IEnumerable<CampaignManager.Persistence.Models.Campaign>
+@using System.Security.Claims
+
+@{
+    ViewData["Title"] = "Campaigns";
+
+    var notificationsArray = TempData["Notifications"] as string[];
+    var notifications = notificationsArray?.ToList();
+    var gameMasterCampaignIds = ViewBag.GameMasterCampaignIds as List<int>;
+}
+
+@if (notifications != null && notifications.Any())
+
+{
+    foreach (var notification in notifications)
+    {
+        <div class="alert alert-success">
+            @notification
+        </div>
+    }
+
+}
+
+<h1>Your Campaigns</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Campaign Image
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParam"]">Name</a>
+            </th>
+            <th>
+                Campaign Owner
+            </th>
+            <th>
+                GameTime
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["CreatedSortParam"]">Created</a>
+            </th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["EditedSortParam"]">Edited</a>
+            </th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if (item.Image != null)
+                    {
+                        <img src="@Url.Action("DisplayImage", "Campaigns", new { id = item.Id })" class="item" />
+                    }
+                    else
+                    {
+                        <text>No image</text>
+                    }
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
+                </td>
+                <td>
+                    @if (item.Owner != null)
+                    {
+                        @item.Owner.UserName
+                    }
+                    else
+                    {
+                        <text>No owner</text>
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GameTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Created)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Edited)
+                </td>
+                <td>
+                    <a class="btn btn-info" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                        @if (item.OwnerId == User.FindFirstValue(ClaimTypes.NameIdentifier) || (gameMasterCampaignIds != null && gameMasterCampaignIds.Contains(item.Id)))
+                    {
+                        <a class="btn btn-warning" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    }
+                    @if (item.OwnerId == User.FindFirstValue(ClaimTypes.NameIdentifier))
+                    {
+                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">New Campaign</a>
+    <text> | </text>
+    <a asp-action="LoadCampaign" class="btn btn-primary">Load Campaign from File</a>
+    <text> | </text>
+    <a asp-action="IndexOwned" class="btn btn-primary">Manage Owned Campaigns</a>
+</p>

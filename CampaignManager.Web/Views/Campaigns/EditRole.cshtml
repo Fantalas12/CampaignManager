@@ -1,0 +1,58 @@
+﻿@model CampaignManager.Persistence.Models.EditRoleViewModel
+
+@{
+    ViewData["Title"] = "Edit Role";
+
+    Func<Role, String> RoleConverter = role =>
+    {
+        switch (role)
+        {
+            case Role.GameMaster: return "Gamemaster";
+            case Role.Player: return "Player";
+            case Role.PlayerAndGameMaster: return "Player and Gamemaster";
+            default: return "?";
+        }
+    };
+}
+
+<h1>Edit Role</h1>
+
+<h4>Campaign: @Model.CampaignId</h4>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="EditRole">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="CampaignId" />
+            <div class="form-group">
+                <label asp-for="ParticipantId" class="control-label">Participant</label>
+                <select asp-for="ParticipantId" class="form-control" asp-items="Model.Participants"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Role" class="control-label">Role</label>
+                <select asp-for="Role" class="form-control">
+                    @foreach (var role in Model.Roles)
+                    {
+                        <option value="@role.Value">@RoleConverter((Role)Enum.Parse(typeof(Role), role.Value))</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Details" asp-route-id="@Model.CampaignId">Back to Campaign</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+

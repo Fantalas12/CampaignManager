@@ -1,0 +1,96 @@
+﻿@using System;
+@using System.Text;
+@using Microsoft.AspNetCore.Identity;
+@using System.Security.Claims
+@model IEnumerable<CampaignManager.Persistence.Models.Campaign>
+
+@{
+    ViewData["Title"] = "Campaign Editor";
+    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    var errorMessage = TempData["ErrorMessage"];
+    var successMessage = TempData["SuccessMessage"];
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<h1>Owned Campaigns</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Campaign Image
+            </th>
+            <th>
+                <a asp-controller="Campaigns" asp-action="IndexOwned" asp-route-sortOrder="@ViewData["NameSortParam"]">Name</a>
+            </th>
+            <th>
+                GameTime
+            </th>
+            <th>
+                <a asp-controller="Campaigns" asp-action="IndexOwned" asp-route-sortOrder="@ViewData["CreatedSortParam"]">Created</a>
+            </th>
+            <th>
+                <a asp-controller="Campaigns" asp-action="IndexOwned" asp-route-sortOrder="@ViewData["EditedSortParam"]">Edited</a>
+            </th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @if (item.Image != null)
+                {
+                    <img src="@Url.Action("DisplayImage", "Campaigns", new { id = item.Id })" class="item" />
+                } else {
+                    <text>No image</text>
+                }
+            </td>
+            <td>
+                <a asp-controller="Campaigns" asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GameTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Created)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Edited)
+            </td>
+            <td>
+                <a asp-controller="Campaigns" asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a>
+                @if(userId == item.OwnerId)
+                {  
+                    <a asp-controller="Campaigns" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Edit</a>
+                    <a asp-controller="Campaigns" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>                
+                }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+<p>
+    <a asp-controller="Campaigns" asp-action="Index" class="btn btn-primary">Back To Your Campaigns</a>
+</p>
+
+<p>
+    <a asp-controller="Campaigns" asp-action="Create" class="btn btn-primary">New Campaign</a>
+    <text> | </text>
+    <a asp-action="LoadCampaign" class="btn btn-primary">Load Campaign from File</a>
+</p>

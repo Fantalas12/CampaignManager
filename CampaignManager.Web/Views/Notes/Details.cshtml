@@ -1,0 +1,237 @@
+﻿@model CampaignManager.Persistence.Models.NoteDetailsViewModel
+
+@{
+    ViewData["Title"] = "Note Details";
+    var successMessage = TempData["SuccessMessage"] as string;
+    if (!string.IsNullOrWhiteSpace(successMessage))
+    {
+        <div class="alert alert-success" role="alert">
+            @successMessage
+        </div>
+    }
+    var errorMessage = TempData["ErrorMessage"] as string;
+    if (!string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <div class="alert alert-danger" role="alert">
+            @errorMessage
+        </div>
+    }
+}
+
+<h1>Note Details:</h1>
+
+<div>
+    <h4>Note</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Note.Id)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Note.Id)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Note.Title)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Note.Title)
+        </dd>
+        <dt class="col-sm-2">
+            Owner
+        </dt>
+        <dd class="col-sm-10">
+            @(Model.Note.Owner?.UserName ?? "No User")
+        </dd>
+        <dt class="col-sm-2">
+            Note Type
+        </dt>
+        <dd class="col-sm-10">
+            @(Model.Note.NoteType?.Name ?? "No type")
+        </dd>
+        <dt class="col-sm-2">
+            In-Game Date
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Note.InGameDate.ToString("yyyy/MM/dd HH:mm")
+        </dd>
+        <dt class="col-sm-2">
+            Created Date
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Note.CreatedDate.ToString("yyyy/MM/dd HH:mm")
+        </dd>
+        <dt class="col-sm-2">
+            Edited Date
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Note.ModifiedDate.ToString("yyyy/MM/dd HH:mm")
+        </dd>
+    </dl>
+</div>
+<p></p>
+
+<h4>Note Content:</h4>
+<p></p>
+<div>
+    @Html.Raw(ViewData["RenderedContent"] ?? Model.Note.Content)
+</div>
+<p></p>
+
+    
+<div>
+    <h4>Generators:</h4>
+    @if (Model.Note.NoteGenerators == null || !Model.Note.NoteGenerators.Any())
+    {
+        <p>No generators available for this note.</p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Generator Id</th>
+                    <th>Generator Name</th>
+                    <th>Run Time </th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var generator in Model.Note.NoteGenerators)
+                {
+                    <tr>
+                        <td>@(generator.Generator?.Id.ToString() ?? "No Generator")</td>
+                        <td>@(generator.Generator?.Name ?? "No Name")</td>
+                        @if (Model.Note.Owner?.UserName == User.Identity?.Name)
+                        {
+                            <td>@generator.NextRunInGameDate</td>
+                            <td>
+                                <a asp-controller="Notes" asp-action="SetGeneratorNextRunDate" asp-route-noteGeneratorId="@generator.Id" class="btn btn-primary">Set Run Time</a>
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+<p></p>
+
+@if (Model.Note.Owner?.UserName == User.Identity?.Name)
+{
+    <p>
+        <a asp-controller="Notes" asp-action="AddGenerator" asp-route-noteId="@Model.Note.Id" class="btn btn-primary">Add Generator</a>
+        <a asp-controller="Notes" asp-action="RemoveGenerator" asp-route-noteId="@Model.Note.Id" class="btn btn-danger">Remove Generator</a>
+    </p>
+}
+
+<p></p>
+
+<h4>Linked Notes:</h4>
+@if (!Model.ToNotes.Any())
+{
+    <p>No linked notes available.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Note Id</th>
+                <th>Title</th>
+                <th>Link Type</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var noteLink in Model.ToNotes)
+            {
+                <tr>
+                    <td>@(noteLink.ToNote?.Id.ToString() ?? "No Note")</td>
+                    <td>@(noteLink.ToNote?.Title ?? "No Title")</td>
+                    <td>@noteLink.LinkType</td>
+                    <td>
+                        @if (noteLink.ToNote != null)
+                        {
+                            <a asp-controller="Notes" asp-action="Details" asp-route-id="@noteLink.ToNote.Id" class="btn btn-primary">Details</a>
+                        }
+                        @if (Model.Note.Owner?.UserName == User.Identity?.Name)
+                        {
+                            <form asp-controller="Notes" asp-action="UnlinkNote" method="post" style="display:inline;">
+                                <input type="hidden" name="fromNoteId" value="@Model.Note.Id" />
+                                <input type="hidden" name="id" value="@noteLink.Id" />
+                                <button type="submit" class="btn btn-danger">Unlink</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div>
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                @for (int i = 1; i <= Model.ToTotalCount / Model.PageSize + (Model.ToTotalCount % Model.PageSize > 0 ? 1 : 0); i++)
+                {
+                    <li class="page-item @(i == Model.ToPage ? "active" : "")">
+                        <a class="page-link" asp-action="Details" asp-route-id="@Model.Note.Id" asp-route-toPage="@i">@i</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
+}
+
+<p></p>
+
+@if (Model.Note.Owner?.UserName == User.Identity?.Name)
+{
+    <p>
+        <a asp-controller="Notes" asp-action="LinkNote" asp-route-fromNoteId="@Model.Note.Id" class="btn btn-primary">Link Note</a>
+    </p>
+}
+
+<p></p>
+
+@*
+<h4>From Linked Notes:</h4>
+@if (!Model.FromNotes.Any())
+{
+    <p>No linked notes available.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>From Note Id</th>
+                <th>From Note Title</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var note in Model.FromNotes)
+            {
+                <tr>
+                    <td>@note.Id</td>
+                    <td>@note.Title</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div>
+        @if (Model.FromPage > 1)
+        {
+            <a asp-action="Details" asp-route-id="@Model.Note.Id" asp-route-fromPage="@(Model.FromPage - 1)" asp-route-toPage="@Model.ToPage" class="btn btn-primary">Previous</a>
+        }
+        @if (Model.FromPage < (Model.FromTotalCount + Model.PageSize - 1) / Model.PageSize)
+        {
+            <a asp-action="Details" asp-route-id="@Model.Note.Id" asp-route-fromPage="@(Model.FromPage + 1)" asp-route-toPage="@Model.ToPage" class="btn btn-primary">Next</a>
+        }
+    </div>
+}
+*@
+
+
+<p>
+    <a asp-controller="Sessions" asp-action="Details" asp-route-id="@Model.Note.SessionId" class="btn btn-primary">Back to Session</a>
+</p>

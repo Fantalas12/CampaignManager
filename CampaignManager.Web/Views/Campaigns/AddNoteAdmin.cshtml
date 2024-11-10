@@ -1,0 +1,32 @@
+﻿@* @model CampaignManager.Persistence.Models.ManageNoteAdminViewModel
+
+@{
+    ViewData["Title"] = "Add Note Admin to Campaign";
+}
+
+<h1>Add Note Admin</h1>
+
+<div>
+    <h4>Select a participant to add as Note Admin:</h4>
+    <hr />
+    <form asp-action="AddNoteAdmin" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="CampaignId" />
+        <div class="form-group">
+            <label asp-for="SelectedParticipantId" class="control-label"></label>
+            <select asp-for="SelectedParticipantId" class="form-control" asp-items="Model.Participants">
+                <option value="">-- Select Participant --</option>
+            </select>
+            @Html.ValidationMessageFor(model => model.SelectedParticipantId, "", new { @class = "text-danger" })
+        </div>
+        <button type="submit" class="btn btn-primary">Add Note Admin</button>
+        <a asp-action="Details" asp-route-id="@Model.CampaignId" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+*@

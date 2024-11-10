@@ -1,0 +1,33 @@
+﻿@model CampaignManager.Persistence.Models.ManagePlayerViewModel
+
+@{
+    ViewData["Title"] = "Add Player to Session";
+}
+
+<h1>Add Player</h1>
+
+<div>
+    <h4>Select a player to add to the session:</h4>
+    <hr />
+    <form asp-action="AddPlayer" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="SessionId" />
+        <div class="form-group">
+            <label asp-for="SelectedPlayerId" class="control-label"></label>
+            <select asp-for="SelectedPlayerId" class="form-control" asp-items="Model.Players">
+                <option value="">-- Select Player --</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Player</button>
+        <a asp-action="Details" asp-route-id="@Model.SessionId" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
+<a asp-action="Details" asp-route-id="@Model.SessionId" class="btn btn-primary">Back to Details</a>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,25 @@
+﻿@model NoteGenerator
+
+@{
+    ViewData["Title"] = "Set Generator Next Run Date";
+}
+
+<h1>Set Generator Next Run Date</h1>
+
+<form asp-action="SetGeneratorNextRunDate" method="post">
+    <div class="form-group">
+        <label asp-for="NextRunInGameDate" class="control-label">Next Run In-Game Date and Time</label>
+        <input asp-for="NextRunInGameDate" class="form-control" type="datetime-local" />
+        <span asp-validation-for="NextRunInGameDate" class="text-danger"></span>
+    </div>
+    <input type="hidden" asp-for="NoteId" />
+    <input type="hidden" asp-for="GeneratorId" />
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <input type="submit" value="Set Runtime" class="btn btn-primary" />
+    </div>
+</form>
+
+<div>
+    <a asp-action="Details" asp-route-id="@Model.NoteId">Back to Note</a>
+</div>

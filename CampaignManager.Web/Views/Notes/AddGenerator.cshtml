@@ -1,0 +1,29 @@
+﻿@model ManageNoteGeneratorViewModel
+
+@{
+    ViewData["Title"] = "Add Generator";
+}
+
+<h1>Add Generator</h1>
+
+<form asp-action="AddGenerator">
+    <div class="form-group">
+        <label asp-for="GeneratorId" class="control-label">Generator ID</label>
+        <input asp-for="GeneratorId" class="form-control" />
+        <span asp-validation-for="GeneratorId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="NextRunInGameDate" class="control-label"></label>
+        <input asp-for="NextRunInGameDate" class="form-control" type="datetime-local" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
+        <span asp-validation-for="NextRunInGameDate" class="text-danger"></span>
+    </div>
+    <input type="hidden" asp-for="NoteId" />
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <input type="submit" value="Add" class="btn btn-primary" />
+    </div>
+</form>
+
+<div>
+    <a class="btn btn-primary" asp-action="Details" asp-route-id="@Model.NoteId">Back to Note</a>
+</div>

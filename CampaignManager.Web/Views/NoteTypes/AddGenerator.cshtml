@@ -1,0 +1,23 @@
+﻿@model ManageNoteTypeGeneratorViewModel
+
+@{
+    ViewData["Title"] = "Add Generator";
+}
+
+<h1>Add Generator</h1>
+
+<form asp-action="AddGenerator">
+    <div class="form-group">
+        <label asp-for="GeneratorId" class="control-label">Generator ID</label>
+        <input asp-for="GeneratorId" class="form-control" />
+        <span asp-validation-for="GeneratorId" class="text-danger"></span>
+    </div>
+    <input type="hidden" asp-for="NoteTypeId" />
+    <div class="form-group">
+        <input type="submit" value="Add" class="btn btn-primary" />
+    </div>
+</form>
+
+<div>
+    <a asp-action="Details" asp-route-id="@Model.NoteTypeId">Back to NoteType</a>
+</div>
