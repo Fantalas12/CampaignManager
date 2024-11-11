@@ -184,8 +184,6 @@ namespace CampaignManager.Web.Controllers
 
             if (!ModelState.IsValid)
             {
-
-
                 var campaignParticipants = await _service.GetParticipantsForCampaign(session.CampaignId);
                 model.Players = campaignParticipants
                     .Where(p => p.Role == Role.Player || p.Role == Role.PlayerAndGameMaster)
@@ -405,6 +403,113 @@ namespace CampaignManager.Web.Controllers
             return View(viewModel);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> ChangeGameMaster(int? sessionId)
+        {
+            if(sessionId == null) 
+            { 
+                return NotFound(); 
+            }
+
+            var userId = _userManager.GetUserId(User);
+            if (userId == null)
+            {
+                TempData["ErrorMessage"] = "You need to be logged in to change the gamemaster";
+                return RedirectToAction("Login", "Account");
+            }
+
+            var session = await _service.GetSessionById((int)sessionId);
+            if (session == null)
+            {
+                return NotFound();
+            }
+
+            var campaign = await _service.GetCampaignById(session.CampaignId);
+            if (campaign == null)
+            {
+                return NotFound();
+            }
+
+            if(userId != campaign.OwnerId)
+            {
+                TempData["ErrorMessage"] = "You do not have permission to change the gamemaster for this session.";
+                return RedirectToAction("Details", new { id = session.Id });
+            }
+
+            var gameMasters = await _service.GetGMsForCampaign(campaign.Id);
+            //var gameMasters = campaign.Participants.Where(p => p.Role == Role.GameMaster);
+            //var gameMasterSelectList = new SelectList(gameMasters, "UserId", "UserName");
+            var gameMasterSelectList = new SelectList(gameMasters.Select(gm => new SelectListItem
+            {
+                Value = gm.ApplicationUserId,
+                Text = gm.ApplicationUser.UserName
+            }).ToList(), "Value", "Text");
+
+            if (!gameMasterSelectList.Any())
+            {
+                TempData["ErrorMessage"] = "There are no gamemasters in the campaign";
+                return RedirectToAction("Details", new { id = session.Id });
+            }
+
+            var viewModel = new ChangeGameMasterViewModel
+            {
+                SessionId = session.Id,
+                CurrentGameMasterId = session.GameMasterId,
+                GameMasters = gameMasterSelectList
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangeGameMaster(ChangeGameMasterViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                var gameMasters = await _service.GetGMsForCampaign(viewModel.SessionId);
+                viewModel.GameMasters = new SelectList(gameMasters.Select(gm => new SelectListItem
+                {
+                    Value = gm.ApplicationUserId,
+                    Text = gm.ApplicationUser.UserName
+                }).ToList(), "Value", "Text");
+                return View(viewModel);
+            }
+
+            var userId = _userManager.GetUserId(User);
+            if (userId == null)
+            {
+                TempData["ErrorMessage"] = "You need to be logged in to change the gamemaster";
+                return RedirectToAction("Login", "Account");
+            }
+
+            var session = await _service.GetSessionById(viewModel.SessionId);
+            if (session == null)
+            {
+                return NotFound();
+            }
+
+            if (userId != session.Campaign.OwnerId)
+            {
+                TempData["ErrorMessage"] = "You do not have permission to change the Gamemaster for this session.";
+                return RedirectToAction("Details", new { id = session.Id });
+            }
+
+            session.GameMasterId = viewModel.SelectedGameMasterId;
+            var updateResult = await _service.UpdateSession(session);
+
+            if (!updateResult)
+            {
+                //_logger.LogError("Failed to update GameMaster for Session {SessionId}", session.Id);
+                ModelState.AddModelError("", "Failed to update Gamemaster.");
+                TempData["ErrorMessage"] = "Failed to update Gamemaster.";
+                return View(viewModel);
+            }
+
+            TempData["SuccessMessage"] = "Gamemaster added successfully.";
+            return RedirectToAction(nameof(Details), new { id = session.Id });
+        }
+
 
         #endregion
 
@@ -573,39 +678,7 @@ namespace CampaignManager.Web.Controllers
 
         #endregion
 
-
         #region Other methods
-
-        public async Task<IActionResult> Settings(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var session = await _service.GetSessionById((int)id);
-
-            if (session == null)
-            {
-                return NotFound();
-            }
-
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                TempData["ErrorMessage"] = "You need to be logged in to set this session.";
-                return RedirectToAction("Login", "Account");
-            }
-
-            //Check if the user is the game master of the session
-            if (session.GameMasterId != user.Id)
-            {
-                TempData["ErrorMessage"] = "You do not have permission to set this session.";
-                return RedirectToAction("Details", new { id = session.Id });
-            }
-
-            return View(session);
-        }
 
         #endregion
 

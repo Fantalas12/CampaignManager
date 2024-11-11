@@ -574,95 +574,6 @@ namespace CampaignManager.Web.Controllers
         }
 
 
-        /*
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? id, Campaign campaign, IFormFile? image)
-        {
-            if (image != null && image.Length > 0)
-            {
-                using (var stream = new MemoryStream())
-                {
-                    image.CopyTo(stream);
-                    campaign.Image = stream.ToArray();
-                }
-            }
-
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            if (id != campaign.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                var userId = _userManager.GetUserId(User);
-                if (userId == null)
-                {
-                    TempData["ErrorMessage"] = "You need to be logged in to edit campaigns";
-                    return RedirectToAction("Login", "Account");
-                }
-
-                // We need existingCampaign variable to access the owner id so we can check if the user is the owner of the campaign
-                var existingCampaign = await _service.GetCampaignById((int)id);
-                if (existingCampaign == null)
-                {
-                    return NotFound();
-                }
-
-                var isGameMaster = await IsUserGameMaster((int)id, userId);
-                if (existingCampaign.OwnerId != userId && !isGameMaster)
-                {
-                    TempData["ErrorMessage"] = "You do not have access to edit this campaign.";
-                    return RedirectToAction("Index", "Home");
-                }
-
-                //Only if the name is changed, we need to check if the new name is already taken
-                if (existingCampaign.Name != campaign.Name)
-                {
-                    bool existWithName = await _service.IsReservedCampaignNameForUser(campaign.Name, userId);
-                    if (existWithName)
-                    {
-                        ModelState.AddModelError("Name", "Campaign with this name already exists.");
-                        return View(campaign);
-                    }
-                }
-
-                var oldGameTime = existingCampaign.GameTime;
-
-                // Update the properties of the existing campaign with the new values from the form
-                existingCampaign.Name = campaign.Name;
-                existingCampaign.Description = campaign.Description;
-                existingCampaign.Edited = DateTime.Now;
-                existingCampaign.GameTime = campaign.GameTime;
-                existingCampaign.Image = campaign.Image;
-
-                var newGameTime = existingCampaign.GameTime;
-
-                bool result = await _service.UpdateCampaign(existingCampaign);
-                if (result)
-                {
-                    //Checks the conditions for the script to run and runs it if the conditions are met
-                    await RunScript(existingCampaign, oldGameTime, newGameTime);
-                    return RedirectToAction(nameof(Index));
-                }
-                else
-                {
-                    ModelState.AddModelError("", "There was an error during saving");
-                }
-            }
-
-
-            
-
-
-            return View(campaign);
-        } */
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int? id, Campaign campaign, IFormFile? image)
@@ -1230,7 +1141,6 @@ namespace CampaignManager.Web.Controllers
                                 continue;
                             }
 
-                            // Execute the script
                             var scriptOptions = ScriptOptions.Default
                                 .AddReferences(
                                     typeof(object).Assembly,
@@ -1241,7 +1151,9 @@ namespace CampaignManager.Web.Controllers
                                     typeof(Array).Assembly,
                                     typeof(String).Assembly,
                                     typeof(ILogger).Assembly,
-                                    typeof(Note).Assembly // Add Note type reference
+                                    typeof(Note).Assembly,
+                                    typeof(DateTime).Assembly,
+                                    AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == "System.Runtime")
                                 )
                                 .AddImports(
                                     "System",

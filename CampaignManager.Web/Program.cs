@@ -105,21 +105,25 @@ app.Run();
 /*
  RÖGTÖN:
 
-
-
-ÉLES CLOUD VAGY BÁRMILYEN KIHELYEZÉS
+Session mesélõmódosítás KÉSÕBB!!!
 MAUI WEBUI
 HTTPKLIENS-es Service-t beépíteni az alkalmazásba
+ÉLES CLOUD VAGY BÁRMILYEN KIHELYEZÉS
 Dokumentáció
+
 
 BEMUTATÁS ÉS LADÁS KÖZÖTT:
 
 
 Unit tesztek KÉSÕBB!!!
-Session mesélõmódosítás KÉSÕBB!!!
 Note "Tag"-ek hozzáadása és törlése KÉSÕBB!!!!
+Privát Template-k...
+Összs mûvelet jogosultságellenõrzésének és átírányításai helyességeinek ellenõrzése nem jogosult felhasználó esetén és átírása... és átírása...
+NextRunInGameDate Updates from the Script
 HOME PAGE-t feltölteni !!! KÉSÕBB!!!
 Alapadatok az INIT-ben !!!! KÉSÕBB
+
+Ha egy kampánymesélõ kilép a játékból vagy játékossá válik a jogosultsága, akkor az összes Session aminek mesélõje õ volt, nullázódjon...
 
 
 

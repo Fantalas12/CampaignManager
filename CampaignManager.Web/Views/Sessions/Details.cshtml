@@ -9,6 +9,7 @@
     var isGameMaster = Model.Session.Campaign.Participants.Any(p => p.ApplicationUserId == userId &&
 
        (p.Role == CampaignManager.Persistence.Models.Role.GameMaster || p.Role == CampaignManager.Persistence.Models.Role.PlayerAndGameMaster));
+    var isCampaignOwner = Model.Session.Campaign.OwnerId == userId;
     var errorMessage = TempData["ErrorMessage"] as string;
     var successMessage = TempData["SuccessMessage"] as string;
 
@@ -159,9 +160,16 @@
 <p>
         <a asp-action="Edit" asp-route-id="@Model.Session.Id" class="btn btn-warning">Edit Session</a> |
         <a asp-action="Delete" asp-route-id="@Model.Session.Id" class="btn btn-danger">Delete Session</a> |
-    <a asp-action="AddPlayer" asp-route-sessionId="@Model.Session.Id" class="btn btn-primary">Add Player</a> |
+        <a asp-action="AddPlayer" asp-route-sessionId="@Model.Session.Id" class="btn btn-primary">Add Player</a> |
         <a asp-action="RemovePlayer" asp-route-sessionId="@Model.Session.Id" class="btn btn-danger">Remove Player</a>
 </p>
+}
+
+@if(isCampaignOwner)
+{
+    <p>
+        <a asp-action="ChangeGameMaster" asp-route-sessionId="@Model.Session.Id" class="btn btn-warning">Change Game Master</a>
+    </p>
 }
 
 <p>

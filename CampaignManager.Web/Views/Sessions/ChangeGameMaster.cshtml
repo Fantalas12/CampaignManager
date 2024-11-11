@@ -1,0 +1,36 @@
+﻿@model ChangeGameMasterViewModel
+
+@{
+    ViewData["Title"] = "Change Gamemaster";
+}
+
+<h1>Change Gamemaster</h1>
+
+<h4>Session</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="ChangeGameMaster">
+            <div class="form-group">
+                <label asp-for="SelectedGameMasterId" class="control-label">Select New Game Master</label>
+                <select asp-for="SelectedGameMasterId" class="form-control" asp-items="Model.GameMasters"></select>
+            </div>
+            <input type="hidden" asp-for="SessionId" />
+            <div class="form-group">
+                <input type="submit" value="Change Game Master" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<p></p>
+
+<div>
+    <a asp-controller="Sessions" asp-action="Details" asp-route-id="@Model.SessionId" class="btn btn-primary">Back to Session</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
