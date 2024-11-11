@@ -39,7 +39,7 @@
 
 <h1>Session Details</h1>
 
-<div>
+<div class="details-view">
     <h4>@Model.Session.Name</h4>
     <hr />
     <dl class="row">
@@ -54,12 +54,6 @@
         </dt>
         <dd class="col-sm-10">
             @Model.Session.Date.ToString("yyyy/MM/dd")
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Session.GameTime)
-        </dt>
-        <dd class="col-sm-10">
-            @Model.Session.GameTime.ToString("yyyy/MM/dd HH:mm")
         </dd>
         <dt class="col-sm-2">
             Players

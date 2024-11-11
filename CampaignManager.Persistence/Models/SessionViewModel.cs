@@ -15,9 +15,9 @@ namespace CampaignManager.Persistence.Models
         [Required]
         [DataType(DataType.Date)]
         public DateTime Date { get; set; }
-        [Required]
-        [DataType(DataType.DateTime)]
-        public DateTime GameTime { get; set; }
+        //[Required]
+        //[DataType(DataType.DateTime)]
+        //public DateTime GameTime { get; set; }
 
         public int CampaignId { get; set; }
         public string? GameMasterId { get; set; } 
@@ -30,7 +30,7 @@ namespace CampaignManager.Persistence.Models
                 Name = session.Name,
                 Description = session.Description,
                 Date = session.Date,
-                GameTime = session.GameTime,
+                //GameTime = session.GameTime,
                 CampaignId = session.CampaignId,
                 GameMasterId = session.GameMasterId
             };
@@ -44,7 +44,7 @@ namespace CampaignManager.Persistence.Models
                 Name = Name,
                 Description = Description,
                 Date = Date,
-                GameTime = GameTime,
+                //GameTime = GameTime,
                 CampaignId = CampaignId,
                 GameMasterId = GameMasterId
             };

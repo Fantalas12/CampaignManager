@@ -47,7 +47,7 @@ namespace CampaignManager.Web.Controllers
             {
                 CampaignId = campaignId,
                 Date = DateTime.Now.Date, // Set the default date to the current date
-                GameTime = DateTime.Now // Set the default time to the current time
+                //GameTime = DateTime.Now // Set the default time to the current time
             };
             return View(sessionViewModel);
         }
@@ -387,7 +387,7 @@ namespace CampaignManager.Web.Controllers
                 existingSession.Name = session.Name;
                 existingSession.Description = session.Description;
                 existingSession.Date = session.Date;
-                existingSession.GameTime = session.GameTime;
+                //existingSession.GameTime = session.GameTime;
 
                 bool result = await _service.UpdateSession(existingSession);
                 if (result)

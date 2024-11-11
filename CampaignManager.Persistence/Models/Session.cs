@@ -20,13 +20,14 @@ namespace CampaignManager.Persistence.Models
 
         [Required]
         [DataType(DataType.Date)]
-        //The in real time date of the session
+        //The in real life datetime of the session
         //We can create sessions with either past or future dates
         public DateTime Date { get; set; }
 
+        /*
         [Required]
         [DataType(DataType.Time)]
-        public DateTime GameTime { get; set; }
+        public DateTime GameTime { get; set; } */
 
         //CampaignId is the ID of the campaign that the session is part of
         public int CampaignId { get; set; }
