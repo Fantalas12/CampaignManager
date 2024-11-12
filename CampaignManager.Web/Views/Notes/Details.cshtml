@@ -70,15 +70,15 @@
 </div>
 <p></p>
 
+<div class="details-view">
 <h4>Note Content:</h4>
 <p></p>
-<div>
     @Html.Raw(ViewData["RenderedContent"] ?? Model.Note.Content)
 </div>
 <p></p>
 
     
-<div>
+<div class="details-view">
     <h4>Generators:</h4>
     @if (Model.Note.NoteGenerators == null || !Model.Note.NoteGenerators.Any())
     {
@@ -113,7 +113,6 @@
             </tbody>
         </table>
     }
-</div>
 
 <p></p>
 
@@ -124,9 +123,11 @@
         <a asp-controller="Notes" asp-action="RemoveGenerator" asp-route-noteId="@Model.Note.Id" class="btn btn-danger">Remove Generator</a>
     </p>
 }
+</div>
 
 <p></p>
 
+<div class="details-view">
 <h4>Linked Notes:</h4>
 @if (!Model.ToNotes.Any())
 {
@@ -192,6 +193,7 @@ else
 }
 
 <p></p>
+</div>
 
 @*
 <h4>From Linked Notes:</h4>

@@ -82,7 +82,7 @@
     </dl>
 </div>
 
-<div>
+<div class="details-view">
     <h4>Notes:</h4>
     @if (Model.Notes == null || !Model.Notes.Any())
 
@@ -129,22 +129,23 @@
             </tbody>
         </table>
     }
+
+    <div>
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                        <a class="page-link" asp-action="Details" asp-route-id="@Model.Session.Id" asp-route-page="@i">@i</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
 </div>
 
-<div>
-    <nav aria-label="Page navigation">
-        <ul class="pagination">
-            @for (int i = 1; i <= Model.TotalPages; i++)
-            {
-                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
-                    <a class="page-link" asp-action="Details" asp-route-id="@Model.Session.Id" asp-route-page="@i">@i</a>
-                </li>
-            }
-        </ul>
-    </nav>
-</div>
 
-
+<div class="details-view">
 <p>
     <a asp-action="Create" asp-controller="Notes" asp-route-sessionId="@Model.Session.Id" class="btn btn-primary">Create Note</a>
 </p>
@@ -165,6 +166,8 @@
         <a asp-action="ChangeGameMaster" asp-route-sessionId="@Model.Session.Id" class="btn btn-warning">Change Game Master</a>
     </p>
 }
+
+</div>
 
 <p>
     <a asp-controller="Campaigns" asp-action="Details" asp-route-id="@Model.Session.CampaignId" class="btn btn-primary">Back to Campaign</a>

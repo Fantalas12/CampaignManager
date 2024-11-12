@@ -64,8 +64,8 @@ CampaignManager.DTO/bin/
 CampaignManager.DTO/obj/
 CampaignManager.Service/bin/
 CampaignManager.Service/obj/
-CampaignManager.Desktop/bin/
-CampaignManager.Desktop/obj/
+CampaignManager.MAUI/bin/
+CampaignManager.MAUI/obj/
 /packages/
 /.vs/
 /Properties/launchSettings.json

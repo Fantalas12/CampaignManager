@@ -105,7 +105,14 @@ app.Run();
 /*
  RÖGTÖN:
 
-Session mesélõmódosítás KÉSÕBB!!!
+UI - CREATE, EDIT, DELETE - Details View class UI...
+Run Time current date-tel inicializálódik
+Generator - Decription érték....
+Manual Script Execution
+Script Execution Optization
+Links Refactor/Reorganise
+
+
 MAUI WEBUI
 HTTPKLIENS-es Service-t beépíteni az alkalmazásba
 ÉLES CLOUD VAGY BÁRMILYEN KIHELYEZÉS

@@ -118,7 +118,7 @@
     </dl>
 </div>
 
-<div>
+<div class="details-view">
     <h4>Game Masters:</h4>
     <ul>
         @if (Model.Campaign.Participants.Any(p => p.Role == CampaignManager.Persistence.Models.Role.GameMaster || p.Role == CampaignManager.Persistence.Models.Role.PlayerAndGameMaster))
@@ -135,7 +135,7 @@
     </ul>
 </div>
 
-<div>
+<div class="details-view">
     <h4>Players:</h4>
     <ul>
         @if (Model.Campaign.Participants.Any(p => p.Role == CampaignManager.Persistence.Models.Role.Player || p.Role == CampaignManager.Persistence.Models.Role.PlayerAndGameMaster))
@@ -174,7 +174,7 @@
     </ul>
 </div> *@
 
-<div>
+<div class="details-view">
     <h4>Sessions:</h4>
     @if (Model.Campaign.Sessions == null || !Model.Campaign.Sessions.Any())
     {
@@ -249,10 +249,8 @@
             </table>
         </div>
     }
-</div>
 
 
-<div>
     <nav aria-label="Page navigation">
         <ul class="pagination">
             @for (int i = 1; i <= Model.TotalPages; i++)
@@ -265,7 +263,7 @@
     </nav>
 </div>
 
-<div>
+<div class="details-view">
     @if (isGameMaster)
     {
     <p>
