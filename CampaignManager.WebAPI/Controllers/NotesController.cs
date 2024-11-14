@@ -84,6 +84,18 @@ namespace CampaignManager.WebAPI.Controllers
             }
         }
 
+        [HttpGet("session/{sessionId}/notes")]
+        public async Task<ActionResult<IEnumerable<NoteDTO>>> GetPaginatedNotesForSession(int sessionId, [FromQuery] int page, [FromQuery] int pageSize)
+        {
+            var (notes, totalCount) = await _service.GetPaginatedNotesForSession(sessionId, page, pageSize);
+            var noteDTOs = notes.Select(note => (NoteDTO)note).ToList();
+
+            // Add total count to response headers
+            // This is used by the client to determine how many pages there are
+            Response.Headers.Append("X-Total-Count", totalCount.ToString());
+            return Ok(noteDTOs);
+        }
+
         /* Paginated Notes for Session 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<NoteDTO>>> GetNotes([FromQuery] int sessionId)

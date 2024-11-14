@@ -13,18 +13,24 @@ using System.Security.Claims;
 using static System.Net.Mime.MediaTypeNames;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
+using CampaignManager.Web.Services;
+using CampaignManager.DTO;
+using Microsoft.CodeAnalysis.CSharp.Scripting;
+using Microsoft.CodeAnalysis.Scripting;
 
 namespace CampaignManager.Web.Controllers
 {
     public class NotesController : Controller
     {
         private readonly ICampaignManagerService _service;
+        private readonly NotesHttpClientService _notesHttpClientService;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<CampaignsController> _logger;
 
-        public NotesController(ICampaignManagerService service, UserManager<ApplicationUser> userManager, ILogger<CampaignsController> logger)
+        public NotesController(ICampaignManagerService service, NotesHttpClientService notesHttpClientService, UserManager<ApplicationUser> userManager, ILogger<CampaignsController> logger)
         {
             _service = service;
+            _notesHttpClientService = notesHttpClientService;
             _userManager = userManager;
             _logger = logger;
         }
@@ -109,6 +115,7 @@ namespace CampaignManager.Web.Controllers
                 }
 
                 var result = await _service.AddNote(note);
+                //var result = await _notesHttpClientService.CreateNoteAsync((NoteDTO)note);
                 if (result)
                 {
                     return RedirectToAction("Details", "Sessions", new { id = sessionId });
@@ -124,11 +131,8 @@ namespace CampaignManager.Web.Controllers
         {
             if (id == null)
             {
-                _logger.LogWarning("Details method called with null id.");
                 return NotFound();
             }
-
-            _logger.LogInformation("Fetching note with id: {Id}", id);
 
             var userId = _userManager.GetUserId(User);
             if (userId == null)
@@ -139,11 +143,15 @@ namespace CampaignManager.Web.Controllers
 
             var note = await _service.GetNoteById((Guid)id);
             if (note == null)
+            //var noteDTO = await _notesHttpClientService.GetNoteByIdAsync((Guid)id);
+            //if (noteDTO == null)
             {
                 _logger.LogWarning("No note found with id: {Id}", id);
                 TempData["ErrorMessage"] = "Note does not belong to a session";
                 return RedirectToAction("Index", "Home");
             }
+
+            //var note = (Note)noteDTO;
 
             var sessionId = note.SessionId;
             if (sessionId == null)
@@ -212,9 +220,13 @@ namespace CampaignManager.Web.Controllers
 
             var note = await _service.GetNoteById((Guid)id);
             if (note == null)
+            //var noteDTO = await _notesHttpClientService.GetNoteByIdAsync((Guid)id);
+            //if (noteDTO == null)
             {
                 return NotFound();
             }
+
+            //var note = (Note)noteDTO;
 
             if (note.OwnerId != userId)
             {
@@ -267,6 +279,7 @@ namespace CampaignManager.Web.Controllers
 
 
                 var result = await _service.UpdateNote(existingNote);
+                //var result = await _notesHttpClientService.UpdateNoteAsync((Guid)id, (NoteDTO)existingNote);
                 if (result)
                 {
                     TempData["SuccessMessage"] = "Note updated successfully.";
@@ -297,10 +310,14 @@ namespace CampaignManager.Web.Controllers
             }
 
             var note = await _service.GetNoteById((Guid)id);
-            if (note == null)
+            if(note == null)
+            //var noteDTO = await _notesHttpClientService.GetNoteByIdAsync((Guid)id);
+            //if (noteDTO == null)
             {
                 return NotFound();
             }
+
+            //var note = (Note)noteDTO;
 
             if (note.OwnerId != userId)
             {
@@ -341,6 +358,7 @@ namespace CampaignManager.Web.Controllers
             }
 
             var result = await _service.DeleteNoteById((Guid)id);
+            //var result = await _notesHttpClientService.DeleteNoteByIdAsync((Guid)id);
             if (!result)
             {
                 TempData["ErrorMessage"] = "Unable to delete note. Please try again.";
@@ -673,11 +691,6 @@ namespace CampaignManager.Web.Controllers
                 TempData["ErrorMessage"] = "Note id cannot be empty and must be in a correct note id format";
                 return RedirectToAction("Details", "Notes", new { id = noteLink.FromNoteId });
 
-                //Add model errors
-                //ModelState.AddModelError("", "The Note id cannot be empty.");
-
-                //TempData["ErrorMessage"] = "NoteLink cannot be null.";
-                //return RedirectToAction("Index", "Home");
             }
 
             if (!ModelState.IsValid)
@@ -895,5 +908,124 @@ namespace CampaignManager.Web.Controllers
 
             }
         }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RunScript(Guid? noteId, Guid? noteGeneratorId)
+        {
+
+            if (noteId == null || noteGeneratorId == null)
+            {
+                TempData["ErrorMessage"] = "Invalid note or note generator ID";
+                return RedirectToAction("Index", "Home");
+            }
+
+            var userId = _userManager.GetUserId(User);
+            if (userId == null)
+            {
+                TempData["ErrorMessage"] = "You need to be logged in to run a generator.";
+                return RedirectToAction("Login", "Account");
+            }
+
+            var note = await _service.GetNoteById((Guid)noteId);
+            if (note == null)
+            {
+                TempData["ErrorMessage"] = "Note not found";
+                return RedirectToAction("Index", "Home");
+            }
+            var noteGenerator = await _service.GetNoteGeneratorById((Guid)noteGeneratorId);
+            if (noteGenerator == null)
+            {
+                TempData["ErrorMessage"] = "Note generator not found";
+                return RedirectToAction("Details", new { id = noteId });
+            }
+
+
+            if(userId != note.OwnerId)
+            {
+                TempData["ErrorMessage"] = "You do not have permission to run the note's generators";
+                return RedirectToAction("Details", "Notes", new { id = noteId });
+            }
+            
+
+            if (string.IsNullOrWhiteSpace(noteGenerator.Generator?.Script))
+            {
+                TempData["ErrorMessage"] = "Note generator script is empty!";
+                return RedirectToAction("Details", new { id = noteId });
+            }
+
+            var scriptOptions = ScriptOptions.Default
+                .AddReferences(
+                    typeof(object).Assembly,
+                    typeof(Enumerable).Assembly,
+                    typeof(JsonSerializer).Assembly,
+                    typeof(Random).Assembly,
+                    typeof(List<>).Assembly,
+                    typeof(Array).Assembly,
+                    typeof(String).Assembly,
+                    typeof(ILogger).Assembly,
+                    typeof(Note).Assembly,
+                    typeof(DateTime).Assembly,
+                    AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == "System.Runtime")
+                )
+                .AddImports(
+                    "System",
+                    "System.Linq",
+                    "System.Collections.Generic",
+                    "System.Text.Json",
+                    "System.Text.Json.Nodes",
+                    "Microsoft.Extensions.Logging",
+                    "CampaignManager.Persistence.Models"
+                );
+
+            var globals = new ScriptGlobals { Note = note, Logger = _logger };
+
+            try
+            {
+                _logger.LogInformation($"Script content: {noteGenerator.Generator.Script}");
+                var result = await CSharpScript.EvaluateAsync<string>(noteGenerator.Generator.Script, scriptOptions, globals);
+                _logger.LogInformation($"Script result for NoteGenerator {noteGenerator.Id}: {result}");
+
+                if (result != null)
+                {
+                    note.Content = result;
+                    var updateResult = await _service.UpdateNote(note);
+                    if (updateResult)
+                    {
+                        TempData["SuccessMessage"] = "Generator ran successfully!";
+                        return RedirectToAction("Details", new { id = noteId });
+                    }
+                    else
+                    {
+                        TempData["ErrorMessage"] = "Generator failed to run!";
+                        return RedirectToAction("Details", new { id = noteId });
+                    }
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Script returned null result!";
+                    return RedirectToAction("Details", new { id = noteId });
+                }
+            }
+            catch (CompilationErrorException ex)
+            {
+                _logger.LogError(ex, $"Script compilation errors for NoteGenerator {noteGenerator.Id}: {string.Join(Environment.NewLine, ex.Diagnostics)}!");
+                TempData["ErrorMessage"] = "Script compilation errors!";
+                return RedirectToAction("Index", "Home");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Error executing script for NoteGenerator {noteGenerator.Id}");
+                TempData["ErrorMessage"] = "Script execution errors!";
+                return RedirectToAction("Index", "Home");
+            }
+        }
     }
+
+        public class ScriptGlobals
+        {
+        public Note Note { get; set; } = null!;
+        public ILogger Logger { get; set; } = null!;
+        }
 }

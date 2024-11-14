@@ -2,6 +2,7 @@ using CampaignManager.Persistence.Services;
 using CampaignManager.Persistence.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using CampaignManager.Web.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -70,6 +71,11 @@ builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
 
+builder.Services.AddHttpClient<NotesHttpClientService>(client =>
+{
+    client.BaseAddress = new Uri("https://localhost:7218/");
+});
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
@@ -105,38 +111,44 @@ app.Run();
 /*
  RÖGTÖN:
 
-UI - CREATE, EDIT, DELETE - Details View class UI...
+
 Run Time current date-tel inicializálódik
 Generator - Decription érték....
-Manual Script Execution
-Script Execution Optization
-Links Refactor/Reorganise
+Kézi Script végrehajtás...  
+Linkek átrendezése
 
 
-MAUI WEBUI
-HTTPKLIENS-es Service-t beépíteni az alkalmazásba
+
 ÉLES CLOUD VAGY BÁRMILYEN KIHELYEZÉS
 Dokumentáció
 
 
 BEMUTATÁS ÉS LADÁS KÖZÖTT:
 
-
-Unit tesztek KÉSÕBB!!!
-Note "Tag"-ek hozzáadása és törlése KÉSÕBB!!!!
-Privát Template-k...
+Campaign és Session Int ID-ról GUID-ra átírása
 Összs mûvelet jogosultságellenõrzésének és átírányításai helyességeinek ellenõrzése nem jogosult felhasználó esetén és átírása... és átírása...
-NextRunInGameDate Updates from the Script
-HOME PAGE-t feltölteni !!! KÉSÕBB!!!
-Alapadatok az INIT-ben !!!! KÉSÕBB
+HTTPKLIENS-es Service-t beépíteni az alkalmazásba 
+Unit tesztek
+HOME PAGE-t feltölteni !!!
+Alapadatok az INIT-ben !!!!
 
-Ha egy kampánymesélõ kilép a játékból vagy játékossá válik a jogosultsága, akkor az összes Session aminek mesélõje õ volt, nullázódjon...
 
+
+
+Dokumentációban leírt továbbfejlesztési lehetõségek - Nem valósul meg...:
+
+Note "Tag"-ek hozzáadása és törlése KÉSÕBB!!!!
+A Sessionhöz és a Jegyzetekhez tartozó kapcsolt jegyzetek mindkét irányba listázva legyenek
+Privát Template-k...hogy a mesélõ által létrehozott jegyzetet publikusan ne lehessen megnézni
+Script Execution Optimization...SignalR és asztali alkalmazással oldjuk meg az értesítéseket valós idejû értesítésekkel párhuzamosítva
+NextRunInGameDate Updates from the Script, hogy ne manuálisan kelljen állítani a dátumot...
+JWT Authentikáció-val a  Web API végpontok védése
+Sessionök és Jegyzetek mentése Fil-be és feltöltése File-ból - Jegyzet tulajdonosának átállítása
 
 
 ...
 
-
+Ha egy kampánymesélõ kilép a játékból vagy játékossá válik a jogosultsága, akkor az összes Session aminek mesélõje õ volt, nullázódjon... - Nem kell mert a kampánytulajdonosnak van a jogosultsága a kampányhoz és a kampányhoz tartozó sessionökhöz is
 JWT Authentikáció/Web API végpontok védése ???
 JOBB UI... ("Back To" linkek... különbözõ Create, Edit és Delete formokban)
 AccountsController névjavítás

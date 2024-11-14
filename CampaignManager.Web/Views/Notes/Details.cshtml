@@ -101,11 +101,16 @@
                     <tr>
                         <td>@(generator.Generator?.Id.ToString() ?? "No Generator")</td>
                         <td>@(generator.Generator?.Name ?? "No Name")</td>
+                        <td>@generator.NextRunInGameDate</td>
                         @if (Model.Note.Owner?.UserName == User.Identity?.Name)
                         {
-                            <td>@generator.NextRunInGameDate</td>
                             <td>
-                                <a asp-controller="Notes" asp-action="SetGeneratorNextRunDate" asp-route-noteGeneratorId="@generator.Id" class="btn btn-primary">Set Run Time</a>
+                                <a asp-controller="Notes" asp-action="SetGeneratorNextRunDate" asp-route-noteGeneratorId="@generator.Id" class="btn btn-primary">Set Run Time</a> |
+                                <form asp-controller="Notes" asp-action="RunScript" method="post" style="display:inline;">
+                                    <input type="hidden" name="noteId" value="@Model.Note.Id" />
+                                    <input type="hidden" name="noteGeneratorId" value="@generator.Id" />
+                                    <button type="submit" class="btn btn-primary">Run Script</button>
+                                </form>
                             </td>
                         }
                     </tr>
