@@ -421,7 +421,7 @@ namespace CampaignManager.Persistence.Services // TODO Change to CampaignManager
             return true;
         }
 
-        public async Task<bool> DeleteSessionById(int id)
+        public async Task<bool> DeleteSessionById(Guid id)
         {
             var session = await _context.Sessions.FindAsync(id);
             if (session == null)
@@ -445,7 +445,7 @@ namespace CampaignManager.Persistence.Services // TODO Change to CampaignManager
             return true;
         }
 
-        public async Task<Session?> GetSessionById(int sessionId)
+        public async Task<Session?> GetSessionById(Guid sessionId)
         {
             return await _context.Sessions
                 .Include(s => s.Campaign)
@@ -600,7 +600,7 @@ namespace CampaignManager.Persistence.Services // TODO Change to CampaignManager
                 .FirstOrDefaultAsync(n => n.Id == noteId);
         }
 
-        public async Task<(List<Note> Notes, int TotalCount)> GetPaginatedNotesForSession(int sessionId, int page, int pageSize)
+        public async Task<(List<Note> Notes, int TotalCount)> GetPaginatedNotesForSession(Guid sessionId, int page, int pageSize)
         {
             var query = _context.Notes
                 .Where(n => n.SessionId == sessionId)
@@ -615,26 +615,6 @@ namespace CampaignManager.Persistence.Services // TODO Change to CampaignManager
 
             return (notes, totalCount);
         }
-
-        /*
-        public async Task<bool> UpdateNote(Note note)
-        {
-            try
-            {
-                _context.Update(note);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                return false;
-            }
-            catch (DbUpdateException)
-            {
-                return false;
-            }
-
-            return true;
-        } */
 
         public async Task<bool> UpdateNote(Note note)
         {
@@ -700,7 +680,8 @@ namespace CampaignManager.Persistence.Services // TODO Change to CampaignManager
                 .ToListAsync();
         } */
 
-        public async Task<List<Note>> GetPaginatedNotesForSesson(int sessionId, int page, int pageSize)
+        /*
+        public async Task<List<Note>> GetPaginatedNotesForSesson(Guid sessionId, int page, int pageSize)
         {
             return await _context.Notes
                 .Where(n => n.SessionId == sessionId)
@@ -708,7 +689,7 @@ namespace CampaignManager.Persistence.Services // TODO Change to CampaignManager
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
-        }
+        } */
 
         #endregion
 

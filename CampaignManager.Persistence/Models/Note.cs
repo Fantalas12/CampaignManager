@@ -21,7 +21,7 @@ namespace CampaignManager.Persistence.Models
         public string? Content { get; set; } // JSON-formatted text field
         public string? OwnerId { get; set; }
         public virtual ApplicationUser? Owner { get; set; }
-        public int? SessionId { get; set; }
+        public Guid? SessionId { get; set; }
         public virtual Session? Session { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime ModifiedDate { get; set; }

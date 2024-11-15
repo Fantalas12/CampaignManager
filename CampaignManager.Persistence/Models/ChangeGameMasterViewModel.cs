@@ -9,7 +9,7 @@ namespace CampaignManager.Persistence.Models
 {
     public class ChangeGameMasterViewModel
     {
-        public int SessionId { get; set; }
+        public Guid SessionId { get; set; } = Guid.Empty;
         public string? CurrentGameMasterId { get; set; }
         public string SelectedGameMasterId { get; set; } = string.Empty;
         public SelectList GameMasters { get; set; } = new SelectList(Enumerable.Empty<SelectListItem>()); // Initialize with an empty list

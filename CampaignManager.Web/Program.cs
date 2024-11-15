@@ -112,12 +112,6 @@ app.Run();
  RÖGTÖN:
 
 
-Run Time current date-tel inicializálódik
-Generator - Decription érték....
-Kézi Script végrehajtás...  
-Linkek átrendezése
-
-
 
 ÉLES CLOUD VAGY BÁRMILYEN KIHELYEZÉS
 Dokumentáció
@@ -125,14 +119,18 @@ Dokumentáció
 
 BEMUTATÁS ÉS LADÁS KÖZÖTT:
 
-Campaign és Session Int ID-ról GUID-ra átírása
+Campaign Int ID-ról GUID-ra átírása
 Összs mûvelet jogosultságellenõrzésének és átírányításai helyességeinek ellenõrzése nem jogosult felhasználó esetén és átírása... és átírása...
 HTTPKLIENS-es Service-t beépíteni az alkalmazásba 
 Unit tesztek
+
 HOME PAGE-t feltölteni !!!
 Alapadatok az INIT-ben !!!!
+Generator - Decription érték....
 
-
+Extrák:
+Run Time current date-tel inicializálódik
+Linkek átrendezése
 
 
 Dokumentációban leírt továbbfejlesztési lehetõségek - Nem valósul meg...:

@@ -10,7 +10,7 @@ namespace CampaignManager.DTO
     public class SessionPlayerDTO
     {
         public int Id { get; set; }
-        public int SessionId { get; set; }
+        public Guid SessionId { get; set; }
         public string ApplicationUserId { get; set; } = string.Empty;
         public string SessonPlayerRole { get; set; } = string.Empty;
 

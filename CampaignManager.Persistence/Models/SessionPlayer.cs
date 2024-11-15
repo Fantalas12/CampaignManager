@@ -8,7 +8,7 @@ namespace CampaignManager.Persistence.Models
     public class SessionPlayer
     {
         public int Id { get; set; }
-        public int SessionId { get; set; }
+        public Guid SessionId { get; set; } = Guid.Empty;
         public virtual Session Session { get; set; } = null!;
         public string ApplicationUserId { get; set; } = null!;
         public virtual ApplicationUser ApplicationUser { get; set; } = null!;

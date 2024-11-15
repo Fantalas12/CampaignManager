@@ -37,7 +37,7 @@ namespace CampaignManager.Web.Controllers
 
         // GET: Notes/Create
         [HttpGet]
-        public IActionResult Create(int sessionId)
+        public IActionResult Create(Guid sessionId)
         {
             var userId = _userManager.GetUserId(User);
             if (userId == null)
@@ -160,7 +160,7 @@ namespace CampaignManager.Web.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            var session = await _service.GetSessionById((int)sessionId);
+            var session = await _service.GetSessionById((Guid)sessionId);
             if (session == null)
             {
                 TempData["ErrorMessage"] = "Session not found";

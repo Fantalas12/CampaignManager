@@ -85,7 +85,7 @@ namespace CampaignManager.WebAPI.Controllers
         }
 
         [HttpGet("session/{sessionId}/notes")]
-        public async Task<ActionResult<IEnumerable<NoteDTO>>> GetPaginatedNotesForSession(int sessionId, [FromQuery] int page, [FromQuery] int pageSize)
+        public async Task<ActionResult<IEnumerable<NoteDTO>>> GetPaginatedNotesForSession(Guid sessionId, [FromQuery] int page, [FromQuery] int pageSize)
         {
             var (notes, totalCount) = await _service.GetPaginatedNotesForSession(sessionId, page, pageSize);
             var noteDTOs = notes.Select(note => (NoteDTO)note).ToList();

@@ -3,6 +3,7 @@ using System;
 using CampaignManager.Persistence.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CampaignManager.Persistence.Migrations
 {
     [DbContext(typeof(CampaignManagerDbContext))]
-    partial class CampaignManagerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241115080440_SessionIdGUID")]
+    partial class SessionIdGUID
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

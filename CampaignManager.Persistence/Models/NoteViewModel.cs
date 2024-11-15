@@ -16,7 +16,7 @@ namespace CampaignManager.Persistence.Models
         [DataType(DataType.MultilineText)]
         public string? Content { get; set; } // JSON-formatted text field
         public string? OwnerId { get; set; }
-        public int? SessionId { get; set; }
+        public Guid? SessionId { get; set; }
         public DateTime InGameDate { get; set; } // The date which the note is relevant to the game
         public Guid? NoteTypeId { get; set; }
     }

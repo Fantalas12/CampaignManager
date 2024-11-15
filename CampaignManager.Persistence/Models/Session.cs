@@ -10,7 +10,7 @@ namespace CampaignManager.Persistence.Models
     // A session can only have a single game master from the possible game masters in the campaign
     public class Session
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
         public string Name { get; set; } = null!;
@@ -45,6 +45,7 @@ namespace CampaignManager.Persistence.Models
 
         public Session()
         {
+            Id = Guid.NewGuid();
             SessionPlayers = new List<SessionPlayer>();
             Notes = new List<Note>();
         }

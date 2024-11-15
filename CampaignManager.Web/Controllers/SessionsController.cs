@@ -120,14 +120,14 @@ namespace CampaignManager.Web.Controllers
 
         // GET: Sessions/AddPlayer/5
         [HttpGet]
-        public async Task<IActionResult> AddPlayer(int? sessionId)
+        public async Task<IActionResult> AddPlayer(Guid? sessionId)
         {
             if (sessionId == null)
             {
                 return NotFound();
             }
 
-            var session = await _service.GetSessionById((int)sessionId);
+            var session = await _service.GetSessionById((Guid)sessionId);
             if (session == null)
             {
                 return NotFound();
@@ -164,7 +164,7 @@ namespace CampaignManager.Web.Controllers
 
             var model = new ManagePlayerViewModel
             {
-                SessionId = (int)sessionId,
+                SessionId = (Guid)sessionId,
                 Players = players
             };
 
@@ -237,14 +237,14 @@ namespace CampaignManager.Web.Controllers
 
         #region Read Methods
 
-        public async Task<IActionResult> Details(int? id, int page = 1, int pageSize = 5)
+        public async Task<IActionResult> Details(Guid? id, int page = 1, int pageSize = 5)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var session = await _service.GetSessionById((int)id);
+            var session = await _service.GetSessionById((Guid)id);
 
             if (session == null)
             {
@@ -271,7 +271,7 @@ namespace CampaignManager.Web.Controllers
                 return NotFound();
             }
 
-            var (notes, totalNotes) = await _service.GetPaginatedNotesForSession((int)id, page, pageSize);
+            var (notes, totalNotes) = await _service.GetPaginatedNotesForSession((Guid)id, page, pageSize);
 
             var viewModel = new SessionDetailsViewModel
             {
@@ -290,14 +290,14 @@ namespace CampaignManager.Web.Controllers
         #region Update Methods
 
         // GET: Sessions/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var session = await _service.GetSessionById((int)id);
+            var session = await _service.GetSessionById((Guid)id);
             if (session == null)
             {
                 return NotFound();
@@ -325,7 +325,7 @@ namespace CampaignManager.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? id, [Bind("Id,Name,Description,Date,GameTime,CampaignId,GameMasterId")] SessionViewModel viewModel)
+        public async Task<IActionResult> Edit(Guid? id, [Bind("Id,Name,Description,Date,GameTime,CampaignId,GameMasterId")] SessionViewModel viewModel)
         {
 
             if (id == null)
@@ -352,7 +352,7 @@ namespace CampaignManager.Web.Controllers
 
 
                 // We need existingCampaign variable to access the owner id so we can check if the user is the owner of the campaign
-                var existingSession = await _service.GetSessionById((int)id);
+                var existingSession = await _service.GetSessionById((Guid)id);
                 if (existingSession == null)
                 {
                     return NotFound();
@@ -404,7 +404,7 @@ namespace CampaignManager.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ChangeGameMaster(int? sessionId)
+        public async Task<IActionResult> ChangeGameMaster(Guid? sessionId)
         {
             if(sessionId == null) 
             { 
@@ -418,7 +418,7 @@ namespace CampaignManager.Web.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            var session = await _service.GetSessionById((int)sessionId);
+            var session = await _service.GetSessionById((Guid)sessionId);
             if (session == null)
             {
                 return NotFound();
@@ -465,9 +465,17 @@ namespace CampaignManager.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangeGameMaster(ChangeGameMasterViewModel viewModel)
         {
+
+            var session = await _service.GetSessionById(viewModel.SessionId);
+            if (session == null)
+            {
+                return NotFound();
+            }
+
             if (!ModelState.IsValid)
             {
-                var gameMasters = await _service.GetGMsForCampaign(viewModel.SessionId);
+
+                var gameMasters = await _service.GetGMsForCampaign(session.CampaignId);
                 viewModel.GameMasters = new SelectList(gameMasters.Select(gm => new SelectListItem
                 {
                     Value = gm.ApplicationUserId,
@@ -481,12 +489,6 @@ namespace CampaignManager.Web.Controllers
             {
                 TempData["ErrorMessage"] = "You need to be logged in to change the gamemaster";
                 return RedirectToAction("Login", "Account");
-            }
-
-            var session = await _service.GetSessionById(viewModel.SessionId);
-            if (session == null)
-            {
-                return NotFound();
             }
 
             if (userId != session.Campaign.OwnerId)
@@ -515,14 +517,14 @@ namespace CampaignManager.Web.Controllers
 
         #region Delete Methods
 
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var session = await _service.GetSessionById((int)id);
+            var session = await _service.GetSessionById((Guid)id);
             if (session == null)
             {
                 return NotFound();
@@ -542,14 +544,14 @@ namespace CampaignManager.Web.Controllers
         // POST: Sessions/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int? id)
+        public async Task<IActionResult> DeleteConfirmed(Guid? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var session = await _service.GetSessionById((int)id);
+            var session = await _service.GetSessionById((Guid)id);
             if (session == null)
             {
                 return NotFound();
@@ -569,7 +571,7 @@ namespace CampaignManager.Web.Controllers
                 return RedirectToAction("Details", "Campaigns", new { id = session.CampaignId });
             }
 
-            var result = await _service.DeleteSessionById((int)id);
+            var result = await _service.DeleteSessionById((Guid)id);
             if (result)
             {
                 return RedirectToAction("Details", "Campaigns", new { id = session.CampaignId });
@@ -582,14 +584,14 @@ namespace CampaignManager.Web.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> RemovePlayer(int? sessionId)
+        public async Task<IActionResult> RemovePlayer(Guid? sessionId)
         {
             if (sessionId == null)
             {
                 return NotFound();
             }
 
-            var session = await _service.GetSessionById((int)sessionId);
+            var session = await _service.GetSessionById((Guid)sessionId);
             if (session == null)
             {
                 return NotFound();
@@ -624,7 +626,7 @@ namespace CampaignManager.Web.Controllers
 
             var model = new ManagePlayerViewModel
             {
-                SessionId = (int)sessionId,
+                SessionId = (Guid)sessionId,
                 Players = players
             };
 

@@ -15,7 +15,7 @@ namespace CampaignManager.DTO
         public string Title { get; set; } = string.Empty;
         public string? Content { get; set; }
         public string? OwnerId { get; set; }
-        public int? SessionId { get; set; }
+        public Guid? SessionId { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime ModifiedDate { get; set; }
         public DateTime InGameDate { get; set; }

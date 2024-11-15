@@ -43,8 +43,8 @@ namespace CampaignManager.Persistence.Services
         // Session methods
         public Task<bool> AddSession(Session session);
         public Task<bool> UpdateSession(Session session);
-        public Task<bool> DeleteSessionById(int sessionId);
-        public Task<Session?> GetSessionById(int sessionId);
+        public Task<bool> DeleteSessionById(Guid sessionId);
+        public Task<Session?> GetSessionById(Guid sessionId);
         public Task<List<Session>> GetSessionsForCampaign(int campaignId);
         public Task<(List<Session> Sessions, int TotalCount)> GetPaginatedSessionsForCampaign(int campaignId, int page, int pageSize);
         public Task<bool> IsReservedSessionNameForCampaign(string name, int campaignId);
@@ -57,11 +57,10 @@ namespace CampaignManager.Persistence.Services
         // Note methods
         public Task<bool> AddNote(Note note);
         public Task<Note?> GetNoteById(Guid noteId);
-        public Task<(List<Note> Notes, int TotalCount)> GetPaginatedNotesForSession(int sessionId, int page, int pageSize);
+        public Task<(List<Note> Notes, int TotalCount)> GetPaginatedNotesForSession(Guid sessionId, int page, int pageSize);
         public Task<bool> UpdateNote(Note note);
         public Task<bool> DeleteNoteById(Guid noteId);
-        //public Task<IEnumerable<Note>> GetNotesForSession(int sessionId);
-        public Task<List<Note>> GetPaginatedNotesForSesson(int sessionId, int page, int pageSize);
+        //public Task<List<Note>> GetPaginatedNotesForSesson(Guid sessionId, int page, int pageSize);
 
         // NoteType methods
         public Task<bool> AddNoteType(NoteType noteType);

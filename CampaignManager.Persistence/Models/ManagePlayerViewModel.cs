@@ -6,7 +6,7 @@ namespace CampaignManager.Persistence.Models
 {
     public class ManagePlayerViewModel
     {
-        public int SessionId { get; set; }
+        public Guid SessionId { get; set; } = Guid.Empty;
 
         [Required]
         [Display(Name = "Player")]

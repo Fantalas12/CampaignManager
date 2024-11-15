@@ -3,6 +3,7 @@ using System;
 using CampaignManager.Persistence.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CampaignManager.Persistence.Migrations
 {
     [DbContext(typeof(CampaignManagerDbContext))]
-    partial class CampaignManagerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241114154142_Fix")]
+    partial class Fix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -230,8 +233,8 @@ namespace CampaignManager.Persistence.Migrations
                     b.Property<string>("OwnerId")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("SessionId")
-                        .HasColumnType("TEXT");
+                    b.Property<int?>("SessionId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Tags")
                         .IsRequired()
@@ -332,9 +335,9 @@ namespace CampaignManager.Persistence.Migrations
 
             modelBuilder.Entity("CampaignManager.Persistence.Models.Session", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("CampaignId")
                         .HasColumnType("INTEGER");
@@ -371,8 +374,8 @@ namespace CampaignManager.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("SessionId")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("SessionId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("SessonPlayerRole")
                         .IsRequired()

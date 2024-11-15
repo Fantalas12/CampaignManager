@@ -7,7 +7,7 @@ namespace CampaignManager.Persistence.Models
     public class SessionViewModel
     {
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         [Required]
         public string Name { get; set; } = null!;
         [DataType(DataType.MultilineText)]

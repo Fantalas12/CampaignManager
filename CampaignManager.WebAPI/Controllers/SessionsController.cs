@@ -21,7 +21,7 @@ namespace CampaignManager.WebAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<SessionDTO>> GetSessionById(int id)
+        public async Task<ActionResult<SessionDTO>> GetSessionById(Guid id)
         {
             Session? session = null;
             try
@@ -52,7 +52,7 @@ namespace CampaignManager.WebAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> PutSession(int id, [FromBody] SessionDTO sessionDTO)
+        public async Task<ActionResult> PutSession(Guid id, [FromBody] SessionDTO sessionDTO)
         {
             if (id != sessionDTO.Id)
             {
@@ -72,7 +72,7 @@ namespace CampaignManager.WebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteSessionById(int id)
+        public async Task<ActionResult> DeleteSessionById(Guid id)
         {
             if (await _service.DeleteSessionById(id))
             {
