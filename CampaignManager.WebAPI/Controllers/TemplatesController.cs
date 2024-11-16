@@ -13,9 +13,9 @@ namespace CampaignManager.WebAPI.Controllers
     [Route("api/[controller]")]
     public class TemplatesController : ControllerBase
     {
-        private readonly CampaignManagerService _service;
+        private readonly ICampaignManagerService _service;
 
-        public TemplatesController(CampaignManagerService service)
+        public TemplatesController(ICampaignManagerService service)
         {
             _service = service;
         }

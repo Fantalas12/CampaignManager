@@ -6,6 +6,7 @@
 
 <h1>Add Player</h1>
 
+<div class="details-view">
 <div>
     <h4>Select a player to add to the session:</h4>
     <hr />
@@ -22,6 +23,9 @@
         <a asp-action="Details" asp-route-id="@Model.SessionId" class="btn btn-secondary">Cancel</a>
     </form>
 </div>
+</div>
+
+<p></p>
 
 <a asp-action="Details" asp-route-id="@Model.SessionId" class="btn btn-primary">Back to Details</a>
 

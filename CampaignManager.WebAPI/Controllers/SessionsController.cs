@@ -13,9 +13,9 @@ namespace CampaignManager.WebAPI.Controllers
     [Route("api/[controller]")]
     public class SessionController : ControllerBase
     {
-        private readonly CampaignManagerService _service;
+        private readonly ICampaignManagerService _service;
 
-        public SessionController(CampaignManagerService service)
+        public SessionController(ICampaignManagerService service)
         {
             _service = service;
         }

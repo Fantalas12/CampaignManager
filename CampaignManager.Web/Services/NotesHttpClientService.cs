@@ -1,4 +1,5 @@
 ﻿using CampaignManager.DTO;
+using Newtonsoft.Json;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -8,12 +9,15 @@ namespace CampaignManager.Web.Services
     public class NotesHttpClientService
     {
         private readonly HttpClient _httpClient;
+        private readonly ILogger<NotesHttpClientService> _logger;
 
-        public NotesHttpClientService(HttpClient httpClient)
+        public NotesHttpClientService(HttpClient httpClient, ILogger<NotesHttpClientService> logger)
         {
             _httpClient = httpClient;
+            _logger = logger;
         }
 
+        /*
         public async Task<NoteDTO?> GetNoteByIdAsync(Guid id)
         {
             var response = await _httpClient.GetAsync($"api/Notes/{id}");
@@ -22,7 +26,21 @@ namespace CampaignManager.Web.Services
                 return await response.Content.ReadFromJsonAsync<NoteDTO>();
             }
             return null;
+        } */
+
+        public async Task<NoteDTO?> GetNoteByIdAsync(Guid id)
+        {
+            var response = await _httpClient.GetAsync($"api/notes/{id}");
+            var noteJson = await response.Content.ReadAsStringAsync();
+            _logger.LogInformation("API Response: {Response}", noteJson);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return JsonConvert.DeserializeObject<NoteDTO>(noteJson);
+            }
+            return null;
         }
+
 
         public async Task<bool> CreateNoteAsync(NoteDTO noteDTO)
         {

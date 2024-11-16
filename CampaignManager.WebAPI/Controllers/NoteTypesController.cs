@@ -11,9 +11,9 @@ namespace CampaignManager.WebAPI.Controllers
     [Route("api/[controller]")]
     public class NoteTypesController : ControllerBase
     {
-        private readonly CampaignManagerService _service;
+        private readonly ICampaignManagerService _service;
 
-        public NoteTypesController(CampaignManagerService service)
+        public NoteTypesController(ICampaignManagerService service)
         {
             _service = service;
         }

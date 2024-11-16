@@ -142,7 +142,7 @@ Script Execution Optimization...SignalR és asztali alkalmazással oldjuk meg az é
 NextRunInGameDate Updates from the Script, hogy ne manuálisan kelljen állítani a dátumot...
 JWT Authentikáció-val a  Web API végpontok védése
 Sessionök és Jegyzetek mentése Fil-be és feltöltése File-ból - Jegyzet tulajdonosának átállítása
-
+NoteAdmin, AccessControlList
 
 ...
 
