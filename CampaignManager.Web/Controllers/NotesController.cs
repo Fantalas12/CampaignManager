@@ -141,17 +141,17 @@ namespace CampaignManager.Web.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            //var note = await _service.GetNoteById((Guid)id);
-            //if (note == null)
-            var noteDTO = await _notesHttpClientService.GetNoteByIdAsync((Guid)id);
-            if (noteDTO == null)
+            var note = await _service.GetNoteById((Guid)id);
+            if (note == null)
+            //var noteDTO = await _notesHttpClientService.GetNoteByIdAsync((Guid)id);
+            //if (noteDTO == null)
             {
                 _logger.LogWarning("No note found with id: {Id}", id);
                 TempData["ErrorMessage"] = "Note does not belong to a session";
                 return RedirectToAction("Index", "Home");
             }
 
-            var note = (Note)noteDTO;
+            //var note = (Note)noteDTO;
 
             var sessionId = note.SessionId;
             if (sessionId == null)

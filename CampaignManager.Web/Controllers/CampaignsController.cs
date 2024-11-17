@@ -41,7 +41,7 @@ namespace CampaignManager.Web.Controllers
             _logger = logger;
         }
 
-        public async Task<IActionResult?> DisplayImage(int id)
+        public async Task<IActionResult?> DisplayImage(Guid id)
         {
             var campaign = await _service.GetCampaignById(id);
             if (campaign != null && campaign.Image != null)
@@ -372,7 +372,7 @@ namespace CampaignManager.Web.Controllers
                     break;
             }
 
-            var gameMasterCampaignIds = new List<int>();
+            var gameMasterCampaignIds = new List<Guid>();
 
             foreach (var campaign in campaigns)
             {
@@ -437,14 +437,14 @@ namespace CampaignManager.Web.Controllers
         }
 
         //The details are private so only relevant users can see the campaign details
-        public async Task<IActionResult> Details(int? id, int page = 1, int pageSize = 5)
+        public async Task<IActionResult> Details(Guid? id, int page = 1, int pageSize = 5)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var campaign = await _service.GetCampaignById((int)id);
+            var campaign = await _service.GetCampaignById((Guid)id);
             if (campaign == null)
             {
                 return NotFound();
@@ -465,7 +465,7 @@ namespace CampaignManager.Web.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            var (sessions, totalSessions) = await _service.GetPaginatedSessionsForCampaign((int)id, page, pageSize);
+            var (sessions, totalSessions) = await _service.GetPaginatedSessionsForCampaign((Guid)id, page, pageSize);
 
             var viewModel = new CampaignDetailsViewModel
             {
@@ -479,7 +479,7 @@ namespace CampaignManager.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> SaveCampaign(int id, bool useFromCampaign)
+        public async Task<IActionResult> SaveCampaign(Guid id, bool useFromCampaign)
         {
             var userId = _userManager.GetUserId(User);
             if (userId == null)
@@ -541,7 +541,7 @@ namespace CampaignManager.Web.Controllers
 
         #region Update Methods
 
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(Guid? id)
         {
 
             if (id == null)
@@ -549,7 +549,7 @@ namespace CampaignManager.Web.Controllers
                 return NotFound();
             }
 
-            var campaign = await _service.GetCampaignById((int)id);
+            var campaign = await _service.GetCampaignById((Guid)id);
             if (campaign == null)
             {
                 return NotFound();
@@ -562,7 +562,7 @@ namespace CampaignManager.Web.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            var isGameMaster = await IsUserGameMaster((int)id, userId);
+            var isGameMaster = await IsUserGameMaster((Guid)id, userId);
             if (campaign.OwnerId != userId && !isGameMaster)
             {
                 TempData["ErrorMessage"] = "You do not have access to edit this campaign.";
@@ -576,7 +576,7 @@ namespace CampaignManager.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? id, Campaign campaign, IFormFile? image)
+        public async Task<IActionResult> Edit(Guid? id, Campaign campaign, IFormFile? image)
         {
             if (id == null || campaign == null)
             {
@@ -628,14 +628,14 @@ namespace CampaignManager.Web.Controllers
         }
 
 
-        public async Task<IActionResult> EditRole(int? id)
+        public async Task<IActionResult> EditRole(Guid? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var campaign = await _service.GetCampaignById((int)id);
+            var campaign = await _service.GetCampaignById((Guid)id);
             if (campaign == null)
             {
                 return NotFound();
@@ -662,7 +662,7 @@ namespace CampaignManager.Web.Controllers
 
             var model = new EditRoleViewModel
             {
-                CampaignId = (int)id,
+                CampaignId = (Guid)id,
                 Participants = participants,
                 Roles = roles
             };
@@ -735,14 +735,14 @@ namespace CampaignManager.Web.Controllers
 
         #region Delete Methods
 
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var campaign = await _service.GetCampaignById((int)id);
+            var campaign = await _service.GetCampaignById((Guid)id);
             if (campaign == null)
             {
                 return NotFound();
@@ -761,7 +761,7 @@ namespace CampaignManager.Web.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int? id)
+        public async Task<IActionResult> DeleteConfirmed(Guid? id)
         {
             if (id == null)
             {
@@ -775,13 +775,13 @@ namespace CampaignManager.Web.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            var campaign = await _service.GetCampaignById((int)id);
+            var campaign = await _service.GetCampaignById((Guid)id);
             if (campaign == null)
             {
                 return NotFound();
             }
 
-            var result = await _service.DeleteCampaignById((int)id);
+            var result = await _service.DeleteCampaignById((Guid)id);
             if (!result)
             {
                 TempData["ErrorMessage"] = "An error occurred while trying to delete the campaign.";
@@ -791,14 +791,14 @@ namespace CampaignManager.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> LeaveCampaign(int? id)
+        public async Task<IActionResult> LeaveCampaign(Guid? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var campaign = await _service.GetCampaignById((int)id);
+            var campaign = await _service.GetCampaignById((Guid)id);
             if (campaign == null)
             {
                 return NotFound();
@@ -816,7 +816,7 @@ namespace CampaignManager.Web.Controllers
 
         [HttpPost, ActionName("LeaveCampaign")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> LeaveCampaignConfirmed(int? id)
+        public async Task<IActionResult> LeaveCampaignConfirmed(Guid? id)
         {
             if (id == null)
             {
@@ -830,7 +830,7 @@ namespace CampaignManager.Web.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            var campaign = await _service.GetCampaignById((int)id);
+            var campaign = await _service.GetCampaignById((Guid)id);
             if (campaign == null)
             {
                 return NotFound();
@@ -1050,7 +1050,7 @@ namespace CampaignManager.Web.Controllers
 
 
 
-        private async Task<bool> IsUserGameMaster(int campaignId, string userId)
+        private async Task<bool> IsUserGameMaster(Guid campaignId, string userId)
         {
             var gameMasters = await _service.GetGMsForCampaign(campaignId);
             return gameMasters.Any(gm => gm.ApplicationUserId == userId);

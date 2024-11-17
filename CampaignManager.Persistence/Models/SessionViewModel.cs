@@ -19,7 +19,7 @@ namespace CampaignManager.Persistence.Models
         //[DataType(DataType.DateTime)]
         //public DateTime GameTime { get; set; }
 
-        public int CampaignId { get; set; }
+        public Guid CampaignId { get; set; }
         public string? GameMasterId { get; set; } 
 
         public static SessionViewModel FromSession(Session session)

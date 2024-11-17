@@ -85,7 +85,7 @@ namespace CampaignManager.WebAPI.Controllers
         }
 
         [HttpGet("campaign/{campaignId}")]
-        public async Task<ActionResult<IEnumerable<SessionDTO>>> GetSessionsForCampaign(int campaignId)
+        public async Task<ActionResult<IEnumerable<SessionDTO>>> GetSessionsForCampaign(Guid campaignId)
         {
             var sessions = await _service.GetSessionsForCampaign(campaignId);
             var sessionDTOs = sessions.Select(session => (SessionDTO)session).ToList();
@@ -93,21 +93,21 @@ namespace CampaignManager.WebAPI.Controllers
         }
 
         [HttpGet("campaign/{campaignId}/paginated")]
-        public async Task<ActionResult<(List<SessionDTO> Sessions, int TotalCount)>> GetPaginatedSessionsForCampaign(int campaignId, [FromQuery] int page, [FromQuery] int pageSize)
+        public async Task<ActionResult<(List<SessionDTO> Sessions, int TotalCount)>> GetPaginatedSessionsForCampaign(Guid campaignId, [FromQuery] int page, [FromQuery] int pageSize)
         {
             var (sessions, totalCount) = await _service.GetPaginatedSessionsForCampaign(campaignId, page, pageSize);
             return Ok((sessions.Select(s => (SessionDTO)s).ToList(), totalCount));
         }
 
         [HttpGet("reserved/name")]
-        public async Task<ActionResult<bool>> IsReservedSessionNameForCampaign([FromQuery] string name, [FromQuery] int campaignId)
+        public async Task<ActionResult<bool>> IsReservedSessionNameForCampaign([FromQuery] string name, [FromQuery] Guid campaignId)
         {
             var result = await _service.IsReservedSessionNameForCampaign(name, campaignId);
             return Ok(result);
         }
 
         [HttpGet("reserved/date")]
-        public async Task<ActionResult<bool>> IsReservedSessionDateForCampaign([FromQuery] DateTime date, [FromQuery] int campaignId)
+        public async Task<ActionResult<bool>> IsReservedSessionDateForCampaign([FromQuery] DateTime date, [FromQuery] Guid campaignId)
         {
             var result = await _service.IsReservedSessionDateForCampaign(date, campaignId);
             return Ok(result);

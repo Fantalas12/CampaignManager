@@ -13,10 +13,10 @@ namespace CampaignManager.Persistence.Services
     public interface ICampaignManagerService
     {
         // Campaign methods
-        public Task<Campaign?> GetCampaignById(int campaignId);
+        public Task<Campaign?> GetCampaignById(Guid campaignId);
         public Task<bool> AddCampaign(Campaign campaign);
         public Task<bool> UpdateCampaign(Campaign campaign);
-        public Task<bool> DeleteCampaignById(int campaignId);
+        public Task<bool> DeleteCampaignById(Guid campaignId);
         public Task<List<Campaign>> GetOwnedCampaignsForUserById(string userId); // From Campaign table
         public Task<List<Campaign>> GetCampaignsForUserById(string userId);
         public Task<bool> SaveCampaignToFile(CampaignDTO campaignDto, string filePath);
@@ -27,16 +27,16 @@ namespace CampaignManager.Persistence.Services
         public Task<bool> AddCampaignParticipant(CampaignParticipant participant);
         public Task<bool> UpdateCampaignParticipant(CampaignParticipant participant);
         public Task<bool> DeleteCampaignParticipantById(int participantId);
-        public Task<List<CampaignParticipant>> GetPlayersForCampaign(int campaignId);
-        public Task<List<CampaignParticipant>> GetGMsForCampaign(int campaignId);
-        public Task<List<CampaignParticipant>> GetParticipantsForCampaign(int campaignId);
-        public Task<CampaignParticipant?> GetParticipantForCampaignByUserId(string participantId, int campaignId);
-        public Task<bool> IsUserParticipant(int campaignId, string userId);
+        public Task<List<CampaignParticipant>> GetPlayersForCampaign(Guid campaignId);
+        public Task<List<CampaignParticipant>> GetGMsForCampaign(Guid campaignId);
+        public Task<List<CampaignParticipant>> GetParticipantsForCampaign(Guid campaignId);
+        public Task<CampaignParticipant?> GetParticipantForCampaignByUserId(string participantId, Guid campaignId);
+        public Task<bool> IsUserParticipant(Guid campaignId, string userId);
 
         // Invitation methods
         public Task<bool> AddInvitation(Invitation invitation);
         public Task<bool> DeleteInvitationById(int invitationId);
-        public Task<bool> DeleteOtherInvitationsForCampaign(int campaignId, string userId);
+        public Task<bool> DeleteOtherInvitationsForCampaign(Guid campaignId, string userId);
         public Task<List<Invitation>> GetInvitationsForUserById(string userId);
         public Task<Invitation?> GetInvitationById(int invitationId);
 
@@ -45,10 +45,10 @@ namespace CampaignManager.Persistence.Services
         public Task<bool> UpdateSession(Session session);
         public Task<bool> DeleteSessionById(Guid sessionId);
         public Task<Session?> GetSessionById(Guid sessionId);
-        public Task<List<Session>> GetSessionsForCampaign(int campaignId);
-        public Task<(List<Session> Sessions, int TotalCount)> GetPaginatedSessionsForCampaign(int campaignId, int page, int pageSize);
-        public Task<bool> IsReservedSessionNameForCampaign(string name, int campaignId);
-        public Task<bool> IsReservedSessionDateForCampaign(DateTime date, int campaignId);
+        public Task<List<Session>> GetSessionsForCampaign(Guid campaignId);
+        public Task<(List<Session> Sessions, int TotalCount)> GetPaginatedSessionsForCampaign(Guid campaignId, int page, int pageSize);
+        public Task<bool> IsReservedSessionNameForCampaign(string name, Guid campaignId);
+        public Task<bool> IsReservedSessionDateForCampaign(DateTime date, Guid campaignId);
 
         // SessionPlayer methods
         public Task<bool> AddSessionPlayer(SessionPlayer sessionPlayer);

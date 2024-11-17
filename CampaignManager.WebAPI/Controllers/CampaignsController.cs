@@ -21,7 +21,7 @@ namespace CampaignManager.WebAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<CampaignDTO>> GetCampaignById(int id)
+        public async Task<ActionResult<CampaignDTO>> GetCampaignById(Guid id)
         {
             Campaign? campaign = null;
             try
@@ -52,7 +52,7 @@ namespace CampaignManager.WebAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> PutCampaign(int id, [FromBody] CampaignDTO campaignDTO)
+        public async Task<ActionResult> PutCampaign(Guid id, [FromBody] CampaignDTO campaignDTO)
         {
             if (id != campaignDTO.Id)
             {
@@ -72,7 +72,7 @@ namespace CampaignManager.WebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteCampaignById(int id)
+        public async Task<ActionResult> DeleteCampaignById(Guid id)
         {
             if (await _service.DeleteCampaignById(id))
             {

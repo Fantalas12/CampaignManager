@@ -9,7 +9,7 @@ namespace CampaignManager.Persistence.Models
 	//The players and game masters are stored in the CampaignParticipants table
 	public class Campaign
 	{
-		public int Id { get; set; }
+		public Guid Id { get; set; }
 		[Required]
 		public string Name { get; set; } = string.Empty;
 

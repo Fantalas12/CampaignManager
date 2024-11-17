@@ -34,7 +34,7 @@ namespace CampaignManager.Web.Controllers
         #region Create Methods
 
         [HttpGet]
-        public async Task<IActionResult> Create(int campaignId)
+        public async Task<IActionResult> Create(Guid campaignId)
         {
             _logger.LogInformation("Create GET method called with campaignId: {CampaignId}", campaignId);
             var campaign = await _service.GetCampaignById(campaignId);

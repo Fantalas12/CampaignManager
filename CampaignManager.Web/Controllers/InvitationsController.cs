@@ -29,14 +29,14 @@ namespace CampaignManager.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Create(int? campaignid)
+        public async Task<IActionResult> Create(Guid? campaignid)
         {
             if (campaignid == null)
             {
                 return NotFound();
             }
 
-            var campaign = await _service.GetCampaignById((int)campaignid);
+            var campaign = await _service.GetCampaignById((Guid)campaignid);
             if (campaign == null)
             {
                 return NotFound();
@@ -57,7 +57,7 @@ namespace CampaignManager.Web.Controllers
 
             var model = new CreateInvitationViewModel
             {
-                CampaignId = (int)campaignid,
+                CampaignId = (Guid)campaignid,
                 Roles = Enum.GetValues(typeof(Role)).Cast<Role>().Select(r => new SelectListItem
                 {
                     Value = r.ToString(),

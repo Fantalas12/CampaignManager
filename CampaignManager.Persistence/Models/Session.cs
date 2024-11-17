@@ -30,7 +30,7 @@ namespace CampaignManager.Persistence.Models
         public DateTime GameTime { get; set; } */
 
         //CampaignId is the ID of the campaign that the session is part of
-        public int CampaignId { get; set; }
+        public Guid CampaignId { get; set; }
         public virtual Campaign Campaign { get; set; } = null!;
 
         //GameMasterId is the user ID of the game master for the session

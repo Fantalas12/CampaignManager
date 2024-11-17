@@ -37,7 +37,7 @@ namespace CampaignManager.Persistence.Services // TODO Change to CampaignManager
 
         #region Campaign methods
 
-        public async Task<Campaign?> GetCampaignById(int campaignId)
+        public async Task<Campaign?> GetCampaignById(Guid campaignId)
         {
             return await _context.Campaigns
                 .Include(c => c.Participants)
@@ -92,7 +92,7 @@ namespace CampaignManager.Persistence.Services // TODO Change to CampaignManager
             return true;
         }
 
-        public async Task<bool> DeleteCampaignById(int id)
+        public async Task<bool> DeleteCampaignById(Guid id)
         {
             var campaign = await _context.Campaigns.FindAsync(id);
             if (campaign == null)
@@ -243,7 +243,7 @@ namespace CampaignManager.Persistence.Services // TODO Change to CampaignManager
             return true;
         }
 
-        public async Task<List<CampaignParticipant>> GetPlayersForCampaign(int campaignId)
+        public async Task<List<CampaignParticipant>> GetPlayersForCampaign(Guid campaignId)
 		{
 			return await _context.Participants
                 .Where(p => p.CampaignId == campaignId && (p.Role == Role.Player || p.Role == Role.PlayerAndGameMaster))
@@ -251,7 +251,7 @@ namespace CampaignManager.Persistence.Services // TODO Change to CampaignManager
                 .ToListAsync();
 		}
 
-		public async Task<List<CampaignParticipant>> GetGMsForCampaign(int campaignId)
+		public async Task<List<CampaignParticipant>> GetGMsForCampaign(Guid campaignId)
 		{
 			return await _context.Participants
                 .Where(p => p.CampaignId == campaignId && (p.Role == Role.GameMaster || p.Role == Role.PlayerAndGameMaster	))
@@ -259,7 +259,7 @@ namespace CampaignManager.Persistence.Services // TODO Change to CampaignManager
                 .ToListAsync();
 		}
 
-        public async Task<List<CampaignParticipant>> GetParticipantsForCampaign(int campaignId)
+        public async Task<List<CampaignParticipant>> GetParticipantsForCampaign(Guid campaignId)
         {
             return await _context.Participants
                 .Where(p => p.CampaignId == campaignId)
@@ -267,7 +267,7 @@ namespace CampaignManager.Persistence.Services // TODO Change to CampaignManager
                 .ToListAsync();
         }
 
-        public async Task<CampaignParticipant?> GetParticipantForCampaignByUserId(string participantId, int campaignId)
+        public async Task<CampaignParticipant?> GetParticipantForCampaignByUserId(string participantId, Guid campaignId)
         {
             return await _context.Participants
                 .Include(p => p.ApplicationUser)
@@ -275,7 +275,7 @@ namespace CampaignManager.Persistence.Services // TODO Change to CampaignManager
                 .FirstOrDefaultAsync(p => p.ApplicationUserId == participantId && p.CampaignId == campaignId);
         }
 
-        public async Task<bool> IsUserParticipant(int campaignId, string userId)
+        public async Task<bool> IsUserParticipant(Guid campaignId, string userId)
         {
             return await _context.Participants
                 .AnyAsync(cp => cp.CampaignId == campaignId && cp.ApplicationUserId == userId);
@@ -328,7 +328,7 @@ namespace CampaignManager.Persistence.Services // TODO Change to CampaignManager
             return true;
         }
 
-        public async Task<bool> DeleteOtherInvitationsForCampaign(int campaignId, string userId)
+        public async Task<bool> DeleteOtherInvitationsForCampaign(Guid campaignId, string userId)
         {
             try
             {
@@ -455,7 +455,7 @@ namespace CampaignManager.Persistence.Services // TODO Change to CampaignManager
                 .FirstOrDefaultAsync(s => s.Id == sessionId);
         }
 
-        public async Task<List<Session>> GetSessionsForCampaign(int campaignId)
+        public async Task<List<Session>> GetSessionsForCampaign(Guid campaignId)
         {
             return await _context.Sessions
                 .Where(s => s.CampaignId == campaignId)
@@ -465,7 +465,7 @@ namespace CampaignManager.Persistence.Services // TODO Change to CampaignManager
                 .ToListAsync();
         }
 
-        public async Task<(List<Session> Sessions, int TotalCount)> GetPaginatedSessionsForCampaign(int campaignId, int page, int pageSize)
+        public async Task<(List<Session> Sessions, int TotalCount)> GetPaginatedSessionsForCampaign(Guid campaignId, int page, int pageSize)
         {
             var query = _context.Sessions
                 .Where(s => s.CampaignId == campaignId)
@@ -483,13 +483,13 @@ namespace CampaignManager.Persistence.Services // TODO Change to CampaignManager
             return (sessions, totalCount);
         }
 
-        public async Task<bool> IsReservedSessionNameForCampaign(string name, int campaignId)
+        public async Task<bool> IsReservedSessionNameForCampaign(string name, Guid campaignId)
         {
             return await _context.Sessions.
                 AnyAsync(c => c.Name == name && c.CampaignId == campaignId);
         }
 
-        public async Task<bool> IsReservedSessionDateForCampaign(DateTime date, int campaignId)
+        public async Task<bool> IsReservedSessionDateForCampaign(DateTime date, Guid campaignId)
         {
             return await _context.Sessions.
                 AnyAsync(c => c.Date == date && c.CampaignId == campaignId);

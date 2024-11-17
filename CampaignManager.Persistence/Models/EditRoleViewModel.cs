@@ -5,7 +5,7 @@ namespace CampaignManager.Persistence.Models
 {
     public class EditRoleViewModel
     {
-        public int CampaignId { get; set; }
+        public Guid CampaignId { get; set; }
         [Required]
         public string ParticipantId { get; set; } = null!;
         [Required]

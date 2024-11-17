@@ -15,7 +15,7 @@ namespace CampaignManager.DTO
         public string? Description { get; set; }
         public DateTime Date { get; set; }
         //public DateTime GameTime { get; set; }
-        public int CampaignId { get; set; }
+        public Guid CampaignId { get; set; }
         public string? GameMasterId { get; set; }
         public List<SessionPlayerDTO> SessionPlayers { get; set; } = new List<SessionPlayerDTO>();
         public List<NoteDTO> Notes { get; set; } = new List<NoteDTO>();
