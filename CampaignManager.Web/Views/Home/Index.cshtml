@@ -10,7 +10,119 @@
     </div>
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f8ff; /* Light blue background */
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        p {
+            margin: 10px 0;
+        }
+        ul {
+            margin: 20px 0;
+            padding: 0;
+            list-style: none;
+        }
+        ul li {
+            background: #e6f7ff; /* Light cyan background */
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .example {
+            background: #f9f9f9;
+            padding: 10px;
+            border-left: 5px solid #007bff;
+            margin: 20px 0;
+        }
+        .example pre {
+            margin: 0;
+            padding: 10px;
+            background: #e2e2e2;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to the Roleplaying Campaign Manager</h1>
+        <p>Welcome to the Roleplaying Campaign Manager website where you can manage, customize and log your group's role-playing campaigns.</p>
+        <p>Ideal for handling role-playing system rules, handling your own house rules, or managing custom non-rule-based notes for campaign logging.</p>
+        <p>We have efficient navigation between Notes.</p>
+        <p>Choose between pre-provided templates, note types, and generators to create and customize your notes. Or create your own template, note types, or generators.</p>
+
+        <h2>How to Start:</h2>
+        <ul>
+            <li>Create a Campaign</li>
+            <li>Invite Players with appropriate roles</li>
+            <li>Create Sessions for the Campaign</li>
+            <li>Before, during, or after the game session create or add Notes</li>
+            <li>Read your notes during a game session to always be up to date with your game master plans. Use built-in Scripts (Generators) to modify the content of Notes which influences your campaign's state.</li>
+            <li>Read notes after a game session to refresh your memory about important data. Notes can describe any rulebook-based or non-rulebook-based data.</li>
+        </ul>
+
+        <h2>Important things to remember:</h2>
+        <ul>
+            <li>The generator script content must be written in C#.</li>
+            <li>The Note's Content must be a valid JSON string.</li>
+            <li>The Note's format is determined by the template the Note's NoteType uses. To inject the Note's JSON data into a Template use the "<---(.*?)--->" regular expression where (.*?) can be any word.</li>
+        </ul>
+
+        <div class="example">
+            <h3>Example:</h3>
+            <p>Given the JSON string:</p>
+            <pre>
+{
+    "name": "John Doe",
+    "position": "Software Engineer",
+    "status": "approved",
+    "company": "Tech Solutions"
+}
+            </pre>
+            <p>And the following Template:</p>
+            <pre>
+Hello, <---name--->!
+
+We are pleased to inform you that your application for the position of <---position---> has been <---status--->.
+
+Best regards,
+<---company---> Team
+            </pre>
+            <p>The result will be:</p>
+            <pre>
+Hello, John Doe!
+
+We are pleased to inform you that your application for the position of Software Engineer has been approved.
+
+Best regards,
+Tech Solutions Team
+            </pre>
+        </div>
+
+        <ul>
+            <li>The Notes have a run date in the campaigns. If a Campaign's game date changes and passes a generator's run date, then the system tries to compile and execute the generator's script.</li>
+        </ul>
+    </div>
+</body>
+</html>

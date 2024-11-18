@@ -1,20 +1,21 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    background-color: #f0f8ff; /* Light blue background */
 }
 
 img.item {
@@ -32,7 +33,7 @@ table {
 
     /* Table header styling */
     table th {
-        background-color: #f8f9fa;
+        background-color: #e6f7ff; /* Light cyan background */
         border: 1px solid #dee2e6;
         padding: 0.75rem;
         text-align: left;
@@ -48,7 +49,7 @@ table {
 
     /* Table row hover effect */
     table tbody tr:hover {
-        background-color: #f1f1f1;
+        background-color: #d1e7dd; /* Light green background */
     }
 
     /* Table row striping */
@@ -65,37 +66,37 @@ table {
     border-radius: 0.25rem;
 }
 
-.pagination li {
-    display: inline;
-}
+    .pagination li {
+        display: inline;
+    }
 
-.pagination li a {
-    position: relative;
-    display: block;
-    padding: 0.5rem 0.75rem;
-    margin-left: -1px;
-    line-height: 1.25;
-    color: #007bff;
-    background-color: #fff;
-    border: 1px solid #dee2e6;
-    text-decoration: none;
-}
+        .pagination li a {
+            position: relative;
+            display: block;
+            padding: 0.5rem 0.75rem;
+            margin-left: -1px;
+            line-height: 1.25;
+            color: #007bff;
+            background-color: #fff;
+            border: 1px solid #dee2e6;
+            text-decoration: none;
+        }
 
-.pagination li a:hover {
-    background-color: #e9ecef;
-    border-color: #dee2e6;
-}
+            .pagination li a:hover {
+                background-color: #e9ecef;
+                border-color: #dee2e6;
+            }
 
-.pagination li.active a {
-    z-index: 1;
-    color: #fff;
-    background-color: #007bff;
-    border-color: #007bff;
-}
+        .pagination li.active a {
+            z-index: 1;
+            color: #fff;
+            background-color: #007bff;
+            border-color: #007bff;
+        }
 
 /* Styling for details view container */
 .details-view {
-    background-color: #f9f9f9;
+    background-color: #e6f7ff; /* Light cyan background */
     border: 1px solid #ddd;
     border-radius: 5px;
     padding: 20px;

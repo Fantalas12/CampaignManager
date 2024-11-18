@@ -361,7 +361,7 @@ namespace CampaignManager.Service.Tests
 
             // Assert
             Assert.True(result);
-        }
+        }   
 
     }
 }

@@ -113,7 +113,7 @@ app.Run();
 
 
 
-ÉLES CLOUD VAGY BÁRMILYEN KIHELYEZÉS
+ÉLES CLOUD VAGY BÁRMILYEN KIHELYEZÉS...MAUI letöltési link és telepítési útmutató
 Dokumentáció
 
 
@@ -122,7 +122,7 @@ BEMUTATÁS ÉS LADÁS KÖZÖTT:
 Összs mûvelet jogosultságellenõrzésének és átírányításai helyességeinek ellenõrzése nem jogosult felhasználó esetén és átírása... és átírása...
 HTTPKLIENS-es Service-t beépíteni az alkalmazásba 
 
-HOME PAGE-t feltölteni !!!
+
 Alapadatok az INIT-ben !!!!
 Generator - Decription érték....
 
