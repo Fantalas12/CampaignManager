@@ -9,10 +9,10 @@ namespace CampaignManager.DTO
 {
     public class SessionPlayerDTO
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public Guid SessionId { get; set; }
         public string ApplicationUserId { get; set; } = string.Empty;
-        public string SessonPlayerRole { get; set; } = string.Empty;
+        //public string SessionPlayerRole { get; set; } = string.Empty;
 
 
         //Natural conversion between SessionPlayer and SessionPlayerDTO
@@ -21,7 +21,7 @@ namespace CampaignManager.DTO
             Id = sessionPlayerDTO.Id,
             SessionId = sessionPlayerDTO.SessionId,
             ApplicationUserId = sessionPlayerDTO.ApplicationUserId,
-            SessonPlayerRole = sessionPlayerDTO.SessonPlayerRole
+           // SessionPlayerRole = sessionPlayerDTO.SessonPlayerRole
         };
 
         public static explicit operator SessionPlayerDTO(SessionPlayer sessionPlayer) => new SessionPlayerDTO
@@ -29,7 +29,7 @@ namespace CampaignManager.DTO
             Id = sessionPlayer.Id,
             SessionId = sessionPlayer.SessionId,
             ApplicationUserId = sessionPlayer.ApplicationUserId,
-            SessonPlayerRole = sessionPlayer.SessonPlayerRole
+            //SessionPlayerRole = sessionPlayer.SessonPlayerRole
         };
 
         /*

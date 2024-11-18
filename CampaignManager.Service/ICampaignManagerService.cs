@@ -26,7 +26,7 @@ namespace CampaignManager.Persistence.Services
         // CampaignParticipant methods
         public Task<bool> AddCampaignParticipant(CampaignParticipant participant);
         public Task<bool> UpdateCampaignParticipant(CampaignParticipant participant);
-        public Task<bool> DeleteCampaignParticipantById(int participantId);
+        public Task<bool> DeleteCampaignParticipantById(Guid participantId);
         public Task<List<CampaignParticipant>> GetPlayersForCampaign(Guid campaignId);
         public Task<List<CampaignParticipant>> GetGMsForCampaign(Guid campaignId);
         public Task<List<CampaignParticipant>> GetParticipantsForCampaign(Guid campaignId);
@@ -60,7 +60,6 @@ namespace CampaignManager.Persistence.Services
         public Task<(List<Note> Notes, int TotalCount)> GetPaginatedNotesForSession(Guid sessionId, int page, int pageSize);
         public Task<bool> UpdateNote(Note note);
         public Task<bool> DeleteNoteById(Guid noteId);
-        //public Task<List<Note>> GetPaginatedNotesForSesson(Guid sessionId, int page, int pageSize);
 
         // NoteType methods
         public Task<bool> AddNoteType(NoteType noteType);
@@ -97,8 +96,6 @@ namespace CampaignManager.Persistence.Services
 
         public Task<bool> AddNoteLink(NoteLink noteLink);
         public Task<NoteLink?> GetNoteLinkById(Guid noteLinkId);
-        //public Task<(List<Note> Notes, int TotalCount)> GetPaginatedFromNotesForNote(Guid noteId, int page, int pageSize);
-        //public Task<(List<Note> Notes, int TotalCount)> GetPaginatedToNotesForNote(Guid noteId, int page, int pageSize);
         Task<(List<NoteLink> NoteLinks, int TotalCount)> GetPaginatedToNoteLinksForNote(Guid noteId, int page, int pageSize);
         public Task<bool> UpdateNoteLink(NoteLink noteLink);
         public Task<bool> DeleteNoteLinkById(Guid noteLinkId);

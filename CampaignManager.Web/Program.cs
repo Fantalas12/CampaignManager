@@ -119,10 +119,8 @@ Dokumentáció
 
 BEMUTATÁS ÉS LADÁS KÖZÖTT:
 
-Campaign Int ID-ról GUID-ra átírása
 Összs mûvelet jogosultságellenõrzésének és átírányításai helyességeinek ellenõrzése nem jogosult felhasználó esetén és átírása... és átírása...
 HTTPKLIENS-es Service-t beépíteni az alkalmazásba 
-Unit tesztek
 
 HOME PAGE-t feltölteni !!!
 Alapadatok az INIT-ben !!!!

@@ -7,12 +7,12 @@ namespace CampaignManager.Persistence.Models
     for providing extra information about the relationship */
     public class SessionPlayer
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public Guid SessionId { get; set; } = Guid.Empty;
         public virtual Session Session { get; set; } = null!;
         public string ApplicationUserId { get; set; } = null!;
         public virtual ApplicationUser ApplicationUser { get; set; } = null!;
-        public string SessonPlayerRole { get; set; } = null!;
+        //public string SessionPlayerRole { get; set; } = null!;
         //public bool IsPresent { get; set; }
 
         // This is a nullable field because the player can be deleted

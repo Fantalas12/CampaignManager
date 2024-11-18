@@ -219,7 +219,7 @@ namespace CampaignManager.Web.Controllers
             {
                 SessionId = model.SessionId,
                 ApplicationUserId = model.SelectedPlayerId,
-                SessonPlayerRole = "Player",
+                //SessonPlayerRole = "Player", //TODO - SessionPlayerRole
             };
 
             var result = await _service.AddSessionPlayer(sessionPlayer);

@@ -230,7 +230,7 @@ namespace CampaignManager.Persistence.Services // TODO Change to CampaignManager
             return true;
         }
 
-        public async Task<bool> DeleteCampaignParticipantById(int participantId)
+        public async Task<bool> DeleteCampaignParticipantById(Guid participantId)
         {
             CampaignParticipant? participant = await _context.Participants
                 .FirstOrDefaultAsync(i => i.Id == participantId);
@@ -780,80 +780,6 @@ namespace CampaignManager.Persistence.Services // TODO Change to CampaignManager
 
         #endregion
 
-        /*
-        #region AccessControlEntry methods
-
-        public async Task<bool> AddAccessControl(NoteAccess ace)
-        {
-            try
-            {
-                _context.NoteAccesses.Add(ace);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                return false;
-            }
-            catch (DbUpdateException)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        public async Task<NoteAccess?> GetAccessControlById(Guid aceId)
-        {
-            return await _context.NoteAccesses
-                .FirstOrDefaultAsync(ace => ace.Id == aceId);
-        }
-
-        public async Task<bool> UpdateAccessControl(NoteAccess ace)
-        {
-            try
-            {
-                _context.Update(ace);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                return false;
-            }
-            catch (DbUpdateException)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        public async Task<bool> DeleteAccessControlById(Guid aceId)
-        {
-            var ace = await _context.NoteAccesses.FindAsync(aceId);
-            if (ace == null)
-            {
-                return false;
-            }
-
-            try
-            {
-                _context.NoteAccesses.Remove(ace);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                return false;
-            }
-            catch (DbUpdateException)
-            {
-                return false;
-            }
-            return true;
-        }
-
-        #endregion
-        */
-
         #region Template methods
 
         public async Task<bool> AddTemplate(Template template)
@@ -1187,100 +1113,6 @@ namespace CampaignManager.Persistence.Services // TODO Change to CampaignManager
 
         #endregion
 
-        /*
-        #region NoteAdmin methods
-
-        public async Task<bool> AddNoteAdmin(NoteAdmin noteAdmin)
-        {
-            try
-            {
-                _context.NoteAdmins.Add(noteAdmin);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                return false;
-            }
-            catch (DbUpdateException)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        public Task<List<NoteAdmin>> GetNoteAdminsForCampaign(int campaignId)
-        {
-            return _context.NoteAdmins
-                .Include(na => na.ApplicationUser)
-                .Include(na => na.Campaign)
-                .Where(na => na.CampaignId == campaignId)
-                .ToListAsync();
-        }
-
-        public async Task<NoteAdmin?> GetNoteAdminById(Guid noteAdminId)
-        {
-            return await _context.NoteAdmins
-                .Include(na => na.ApplicationUser)
-                .Include(na => na.Campaign)
-                .FirstOrDefaultAsync(na => na.Id == noteAdminId);
-        }
-
-        public async Task<NoteAdmin?> GetNoteAdminByUserId(string userId, int campaignId)
-        {
-            return await _context.NoteAdmins
-                .Include(na => na.ApplicationUser)
-                .Include(na => na.Campaign)
-                .FirstOrDefaultAsync(na => na.ApplicationUserId == userId && na.CampaignId == campaignId);
-        }
-
-        public async Task<bool> UpdateNoteAdmin(NoteAdmin noteAdmin)
-        {
-            try
-            {
-                _context.Update(noteAdmin);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                return false;
-            }
-            catch (DbUpdateException)
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        public async Task<bool> DeleteNoteAdminById(Guid noteAdminId)
-        {
-            var noteAdmin = await _context.NoteAdmins.FindAsync(noteAdminId);
-            if (noteAdmin == null)
-            {
-                return false;
-            }
-
-            try
-            {
-                _context.NoteAdmins.Remove(noteAdmin);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                return false;
-            }
-            catch (DbUpdateException)
-            {
-                return false;
-            }
-            return true;
-        }
-
-
-        #endregion
-        */
-
         #region NoteGenerator methods
 
         public async Task<bool> AddNoteGenerator(NoteGenerator noteGenerator)
@@ -1367,42 +1199,178 @@ namespace CampaignManager.Persistence.Services // TODO Change to CampaignManager
 
         #endregion
 
+        /*
+     #region AccessControlEntry methods
+
+     public async Task<bool> AddAccessControl(NoteAccess ace)
+     {
+         try
+         {
+             _context.NoteAccesses.Add(ace);
+             await _context.SaveChangesAsync();
+         }
+         catch (DbUpdateConcurrencyException)
+         {
+             return false;
+         }
+         catch (DbUpdateException)
+         {
+             return false;
+         }
+
+         return true;
+     }
+
+     public async Task<NoteAccess?> GetAccessControlById(Guid aceId)
+     {
+         return await _context.NoteAccesses
+             .FirstOrDefaultAsync(ace => ace.Id == aceId);
+     }
+
+     public async Task<bool> UpdateAccessControl(NoteAccess ace)
+     {
+         try
+         {
+             _context.Update(ace);
+             await _context.SaveChangesAsync();
+         }
+         catch (DbUpdateConcurrencyException)
+         {
+             return false;
+         }
+         catch (DbUpdateException)
+         {
+             return false;
+         }
+
+         return true;
+     }
+
+     public async Task<bool> DeleteAccessControlById(Guid aceId)
+     {
+         var ace = await _context.NoteAccesses.FindAsync(aceId);
+         if (ace == null)
+         {
+             return false;
+         }
+
+         try
+         {
+             _context.NoteAccesses.Remove(ace);
+             await _context.SaveChangesAsync();
+         }
+         catch (DbUpdateConcurrencyException)
+         {
+             return false;
+         }
+         catch (DbUpdateException)
+         {
+             return false;
+         }
+         return true;
+     }
+
+     #endregion
+     */
+
+        /*
+    #region NoteAdmin methods
+
+    public async Task<bool> AddNoteAdmin(NoteAdmin noteAdmin)
+    {
+        try
+        {
+            _context.NoteAdmins.Add(noteAdmin);
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return false;
+        }
+        catch (DbUpdateException)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    public Task<List<NoteAdmin>> GetNoteAdminsForCampaign(int campaignId)
+    {
+        return _context.NoteAdmins
+            .Include(na => na.ApplicationUser)
+            .Include(na => na.Campaign)
+            .Where(na => na.CampaignId == campaignId)
+            .ToListAsync();
+    }
+
+    public async Task<NoteAdmin?> GetNoteAdminById(Guid noteAdminId)
+    {
+        return await _context.NoteAdmins
+            .Include(na => na.ApplicationUser)
+            .Include(na => na.Campaign)
+            .FirstOrDefaultAsync(na => na.Id == noteAdminId);
+    }
+
+    public async Task<NoteAdmin?> GetNoteAdminByUserId(string userId, int campaignId)
+    {
+        return await _context.NoteAdmins
+            .Include(na => na.ApplicationUser)
+            .Include(na => na.Campaign)
+            .FirstOrDefaultAsync(na => na.ApplicationUserId == userId && na.CampaignId == campaignId);
+    }
+
+    public async Task<bool> UpdateNoteAdmin(NoteAdmin noteAdmin)
+    {
+        try
+        {
+            _context.Update(noteAdmin);
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return false;
+        }
+        catch (DbUpdateException)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    public async Task<bool> DeleteNoteAdminById(Guid noteAdminId)
+    {
+        var noteAdmin = await _context.NoteAdmins.FindAsync(noteAdminId);
+        if (noteAdmin == null)
+        {
+            return false;
+        }
+
+        try
+        {
+            _context.NoteAdmins.Remove(noteAdmin);
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return false;
+        }
+        catch (DbUpdateException)
+        {
+            return false;
+        }
+        return true;
+    }
+
+
+    #endregion
+    */
 
         public async Task<IDbContextTransaction> BeginTransactionAsync()
         {
             return await _context.Database.BeginTransactionAsync();
         }
-
-        /*
-        public async Task TriggerNoteGeneratorNotification(NoteGenerator noteGenerator)
-        {
-            var noteGeneratorDTO = (NoteGeneratorDTO)noteGenerator;
-            NoteGeneratorNotification?.Invoke(noteGeneratorDTO);
-            await SendNotificationToApi(noteGeneratorDTO);
-        } */
-
-        /*
-        private async Task SendNotificationToApi(NoteGeneratorDTO noteGeneratorDTO)
-        {
-            var json = System.Text.Json.JsonSerializer.Serialize(noteGeneratorDTO);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            try
-            {
-                var response = await _httpClient.PostAsync("https://localhost:7148/api/notification/notify", content);
-                //Log the response status code
-                _logger?.LogInformation("Notification sent to the API. Status Code: {StatusCode}", response.StatusCode);
-                response.EnsureSuccessStatusCode();
-            }
-            catch (Exception ex)
-            {
-                // Log the exception (you can use a logging framework here)
-                _logger?.LogError(ex, "An error occurred while sending the notification to the API. Exception Type: {ExceptionType}, Message: {Message}, StackTrace: {StackTrace}", ex.GetType(), ex.Message, ex.StackTrace);
-
-
-                //Console.WriteLine($"Request error: {ex.Message}");
-            }
-        } */
 
     }
 }

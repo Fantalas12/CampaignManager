@@ -13,7 +13,7 @@
     // TODO - Delete the Player and GameMaster classes
     public class CampaignParticipant
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string ApplicationUserId { get; set; } = null!;
         public virtual ApplicationUser ApplicationUser { get; set; } = null!;
         public Guid CampaignId { get; set; }
