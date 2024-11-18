@@ -6,6 +6,8 @@
 
 <h1>Set Generator Next Run Date</h1>
 
+
+<div class="details-view">
 <form asp-action="SetGeneratorNextRunDate" method="post">
     <div class="form-group">
         <label asp-for="NextRunInGameDate" class="control-label">Next Run In-Game Date and Time</label>
@@ -19,7 +21,8 @@
         <input type="submit" value="Set Runtime" class="btn btn-primary" />
     </div>
 </form>
+</div>
 
 <div>
-    <a asp-action="Details" asp-route-id="@Model.NoteId">Back to Note</a>
+    <a asp-action="Details" asp-route-id="@Model.NoteId" class=" btn btn-primary">Back to Note</a>
 </div>

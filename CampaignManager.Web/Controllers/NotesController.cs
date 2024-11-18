@@ -186,12 +186,21 @@ namespace CampaignManager.Web.Controllers
                 PageSize = pageSize
             };
 
+            //log the Note's NoteType and Template and GameMaster Template
+            _logger.LogInformation("Note {NoteId} has NoteType {NoteType} and Template {Template}", note.Id, note.NoteType?.Name, note.NoteType?.PlayerTemplate?.Name);
+            //The GameMAterTemplate as well
+            _logger.LogInformation("Note {NoteId} has NoteType {NoteType} and Template {Template}", note.Id, note.NoteType?.Name, note.NoteType?.GameMasterTemplate?.Name);
+
+
+
+
+
             var isGameMaster = note.Session?.GameMasterId == userId;
             var templateContent = isGameMaster ? note.NoteType?.GameMasterTemplate?.Content : note.NoteType?.PlayerTemplate?.Content;
 
             if (templateContent == null)
             {
-                TempData["ErrorMessage"] = "Template not found.";
+                TempData["ErrorMessage"] = "Template content not found! Please set the template content manualy or make sure to use templates which has non null or empty content!";
                 return RedirectToAction("Details", "Sessions", new { id = sessionId });
             }
 

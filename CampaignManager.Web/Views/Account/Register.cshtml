@@ -6,6 +6,8 @@
 
 <h2>@ViewBag.Title</h2>
 
+
+<div class="details-view">
 <div class="row">
 	<div class="col-md-5">
 		<form asp-controller="Account" asp-action="Register" asp-route-returnUrl="@ViewBag.ReturnUrl" method="post">
@@ -29,6 +31,7 @@
 			<button class="btn btn-primary" type="submit">Registration</button>
 		</form>
 	</div>
+</div>
 </div>
 
 @section Scripts {
