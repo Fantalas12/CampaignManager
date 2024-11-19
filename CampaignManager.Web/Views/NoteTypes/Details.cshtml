@@ -90,11 +90,11 @@ else
 @if (Model.Owner?.Id == userId)
 {
     <p>
-        <a asp-action="AddGenerator" asp-route-noteTypeId="@Model.Id">Add Generator</a> |
-        <a asp-action="RemoveGenerator" asp-route-noteTypeId="@Model.Id">Remove Generator</a>
+        <a asp-action="AddGenerator" asp-route-noteTypeId="@Model.Id" class="btn btn-primary">Add Generator</a> |
+        <a asp-action="RemoveGenerator" asp-route-noteTypeId="@Model.Id" class="btn btn-danger">Remove Generator</a>
     </p>
 }
 
 <p>
-    <a class="btn btn-primary" asp-action="Index">Back to Index</a>
+    <a class="btn btn-primary" asp-action="Index" class="btn btn-primary">Back to Index</a>
 </p>

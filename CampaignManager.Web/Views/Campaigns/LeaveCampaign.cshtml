@@ -12,6 +12,7 @@
 }
 
 <h3>Are you sure you want to leave this campaign?</h3>
+<div class="details-view">
 <div>
     <h4>Campaign</h4>
     <hr/>
@@ -74,6 +75,13 @@
         @Html.AntiForgeryToken()
         <input type="hidden" asp-for="Id" />
         <button type="submit" class="btn btn-danger">Leave</button>
-        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+        <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary">Cancel</a>
     </form>
 </div>
+</div>
+
+<p></p>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

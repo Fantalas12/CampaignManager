@@ -84,9 +84,9 @@
 
         <h2>Important things to remember:</h2>
         <ul>
-            <li>The generator script content must be written in C#.</li>
             <li>The Note's Content must be a valid JSON string.</li>
-            <li>The Note's format is determined by the template the Note's NoteType uses. To inject the Note's JSON data into a Template use the "<---(.*?)--->" regular expression where (.*?) can be any word.</li>
+            <li>The generator script (content) must be written in C# and must return a string, which is assigned to the Note's (JSON) content, so must be a JSON string as well. Therefore the genrator's script is for JSON string and variable procesing</li>
+            <li>The Note's format is determined by the template, the Note's NoteType uses. To inject the Note's JSON data into a Template use the "<---(.*?)--->" regular expression where (.*?) can be any word.</li>
         </ul>
 
         <div class="example">
@@ -122,6 +122,7 @@ Tech Solutions Team
 
         <ul>
             <li>The Notes have a run date in the campaigns. If a Campaign's game date changes and passes a generator's run date, then the system tries to compile and execute the generator's script.</li>
+            <li>If you have any further questions please write to adamhuszar24@gmail.com</li>
         </ul>
     </div>
 </body>

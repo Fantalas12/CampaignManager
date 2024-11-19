@@ -6,6 +6,7 @@
 
 <h1>Add Generator</h1>
 
+<div class="details-view">
 <form asp-action="AddGenerator">
     <div class="form-group">
         <label asp-for="GeneratorId" class="control-label">Generator ID</label>
@@ -17,7 +18,8 @@
         <input type="submit" value="Add" class="btn btn-primary" />
     </div>
 </form>
+</div>
 
 <div>
-    <a asp-action="Details" asp-route-id="@Model.NoteTypeId">Back to NoteType</a>
+    <a asp-action="Details" asp-route-id="@Model.NoteTypeId" class="btn btn-primary">Back to NoteType</a>
 </div>
