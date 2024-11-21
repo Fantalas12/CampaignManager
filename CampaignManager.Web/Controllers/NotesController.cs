@@ -426,7 +426,7 @@ namespace CampaignManager.Web.Controllers
                 return View(model);
             }
 
-            if (model.GeneratorId == null || model.NoteId == null)
+            if (model.NoteId == null)
             {
                 return NotFound();
             }
@@ -541,7 +541,7 @@ namespace CampaignManager.Web.Controllers
                 return View(model);
             }
 
-            if (model.NoteId == null || model.GeneratorId == null)
+            if (model.NoteId == null)
             {
                 return NotFound();
             }

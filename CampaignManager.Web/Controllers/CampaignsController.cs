@@ -541,6 +541,7 @@ namespace CampaignManager.Web.Controllers
 
         #region Update Methods
 
+        [HttpGet]   
         public async Task<IActionResult> Edit(Guid? id)
         {
 
@@ -628,6 +629,7 @@ namespace CampaignManager.Web.Controllers
         }
 
 
+        [HttpGet]
         public async Task<IActionResult> EditRole(Guid? id)
         {
             if (id == null)
@@ -663,6 +665,7 @@ namespace CampaignManager.Web.Controllers
             var model = new EditRoleViewModel
             {
                 CampaignId = (Guid)id,
+                CampaignName = campaign.Name,
                 Participants = participants,
                 Roles = roles
             };

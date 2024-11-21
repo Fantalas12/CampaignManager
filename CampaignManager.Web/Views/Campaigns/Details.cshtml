@@ -275,29 +275,31 @@
     {
         <p>
             <a asp-controller="Invitations" asp-action="Create" asp-route-campaignid="@Model.Campaign.Id" class="btn btn-primary">Send Invitation</a>
-            <a asp-controller="Campaigns" asp-action="EditRole" asp-route-id="@Model.Campaign.Id" class="btn btn-warning">Change Participant Roles</a>
+            <a asp-controller="Campaigns" asp-action="SaveCampaign" asp-route-id="@Model.Campaign.Id" asp-route-useFromCampaign="false" class="btn btn-primary">Save to File</a>
             @* <a asp-controller="Campaigns" asp-action="AddNoteAdmin" asp-route-campaignId="@Model.Campaign.Id" class="btn btn-info">Add Note Admin</a> *@
             @* <a asp-controller="Campaigns" asp-action="RemoveNoteAdmin" asp-route-campaignId="@Model.Campaign.Id" class="btn btn-danger">Remove Note Admin</a> *@
          </p>
 
         <p>
-            <a asp-controller="Campaigns" asp-action="SaveCampaign" asp-route-id="@Model.Campaign.Id" asp-route-useFromCampaign="false" class="btn btn-primary">Save to File</a>
-            <a asp-controller="Campaigns" asp-action="SaveCampaign" asp-route-id="@Model.Campaign.Id" asp-route-useFromCampaign="true" class="btn btn-primary">Save to File (without user references)</a>
-
-
+            <a asp-controller="Campaigns" asp-action="EditRole" asp-route-id="@Model.Campaign.Id" class="btn btn-warning">Change Participant Roles</a>
             <a asp-controller="Campaigns" asp-action="Edit" asp-route-id="@Model.Campaign.Id" class="btn btn-warning">Edit</a>
-            <a asp-controller="Campaigns" asp-action="Delete" asp-route-id="@Model.Campaign.Id" class="btn btn-danger">Delete</a>
         </p>
     }
 
     <p>
+
         <a asp-controller="Campaigns" asp-action="LeaveCampaign" asp-route-id="@Model.Campaign.Id" class="btn btn-danger">Leave Campaign</a>
+        @if (userId == Model.Campaign.OwnerId)
+        {
+            <a asp-controller="Campaigns" asp-action="Delete" asp-route-id="@Model.Campaign.Id" class="btn btn-danger">Delete</a>
+        }
     </p>
 
-    <p>
-        <a class="btn btn-primary" asp-controller="Campaigns" asp-action="Index" class="btn btn-primary">Back To Your Campaigns</a>
-    </p>
 </div>
+
+<p>
+    <a class="btn btn-primary" asp-controller="Campaigns" asp-action="Index" class="btn btn-primary">Back To Your Campaigns</a>
+</p>
 
 @section Scripts {
     @{

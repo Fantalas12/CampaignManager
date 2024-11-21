@@ -8,6 +8,7 @@ namespace CampaignManager.Persistence.Models
         public Guid CampaignId { get; set; }
         [Required]
         public string ParticipantId { get; set; } = null!;
+        public string CampaignName {  get; set; } = null!;
         [Required]
         public Role Role { get; set; }
         public List<SelectListItem> Participants { get; set; } = new List<SelectListItem>();

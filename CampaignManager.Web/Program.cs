@@ -127,7 +127,6 @@ https://localhost:7187/Campaigns/LoadCampaign - No Back Link
 https://localhost:7187/Templates/Delete/84e35bdb-e3f0-4296-bb97-cad6ab1ebc31 Delete should hav same UI as details...
 https://localhost:7187/Generators/Delete/0e76147c-a604-4d63-8486-d92952b5645d .... Same
 https://localhost:7187/NoteTypes/Delete/88f8bbdc-e0d4-45e3-8880-de6f76411cc8 Delete should hav same UI as details...
-Linkek átrendezése a Campaign, Session és Note Detailsnél
 
 Alapadatok az INIT-ben !!!!
 
@@ -153,7 +152,6 @@ Ha egy kampánymesélõ kilép a játékból vagy játékossá válik a jogosultsága, akkor
 JWT Authentikáció/Web API végpontok védése ???
 JOBB UI... ("Back To" linkek... különbözõ Create, Edit és Delete formokban)
 AccountsController névjavítás
-Kampány és Session ID -k átírása GUID-ra
  Megtisztitatni a kódot a "|" jelektõl az indexben...Linkek "nyomógombos stílus szebbé tétele"
 Egységesíteni az UI...t a DELETE funkcióhoz ndm kel külön ûrlap...lehet a táblázaton belül...a törlés sok mindennél
 Kivenni a NoteAccest és a NoteAdmint...

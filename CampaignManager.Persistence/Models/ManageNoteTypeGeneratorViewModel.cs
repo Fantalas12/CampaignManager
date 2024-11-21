@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+
 
 namespace CampaignManager.Persistence.Models
 {
     public class ManageNoteTypeGeneratorViewModel
     {
-        public Guid? GeneratorId { get; set; }
+        [Required]
+        public Guid GeneratorId { get; set; }
         public Guid? NoteTypeId { get; set; }
     }
 }

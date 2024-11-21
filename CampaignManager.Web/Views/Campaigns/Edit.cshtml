@@ -48,8 +48,16 @@
 </div>
 </div>
 
+
 <div>
-    <a asp-controller="Campaigns" asp-action="IndexOwned" class="btn btn-primary">Back to your campaigns</a>
+    @if (Model != null)
+    {
+        <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-primary">Back to Details</a>
+    }
+    else
+    {
+        <a asp-action="Index" class="btn btn-primary">Back to Index</a>
+    }
 </div>
 
 @section Scripts {

@@ -329,7 +329,7 @@ namespace CampaignManager.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddGenerator(ManageNoteTypeGeneratorViewModel model)
         {
-            if (model.GeneratorId == null || model.NoteTypeId == null)
+            if (model.NoteTypeId == null)
             {
                 return NotFound();
             }
@@ -448,7 +448,7 @@ namespace CampaignManager.Web.Controllers
                 return View(model);
             }
 
-            if (model.NoteTypeId == null || model.GeneratorId == null)
+            if (model.NoteTypeId == null)
             {
                 return NotFound();
             }

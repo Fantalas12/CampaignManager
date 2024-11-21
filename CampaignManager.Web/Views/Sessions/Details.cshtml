@@ -148,23 +148,28 @@
 <div class="details-view">
 <p>
     <a asp-action="Create" asp-controller="Notes" asp-route-sessionId="@Model.Session.Id" class="btn btn-primary">Create Note</a>
+    @if (isGameMaster)  
+    {
+        <a asp-action="AddPlayer" asp-route-sessionId="@Model.Session.Id" class="btn btn-primary">Add Player</a>
+    }
 </p>
 
-@if (isGameMaster) 
-{
+
 <p>
-        <a asp-action="Edit" asp-route-id="@Model.Session.Id" class="btn btn-warning">Edit Session</a> |
-        <a asp-action="Delete" asp-route-id="@Model.Session.Id" class="btn btn-danger">Delete Session</a> |
-        <a asp-action="AddPlayer" asp-route-sessionId="@Model.Session.Id" class="btn btn-primary">Add Player</a> |
-        <a asp-action="RemovePlayer" asp-route-sessionId="@Model.Session.Id" class="btn btn-danger">Remove Player</a>
-</p>
-}
-
 @if(isCampaignOwner)
 {
-    <p>
-        <a asp-action="ChangeGameMaster" asp-route-sessionId="@Model.Session.Id" class="btn btn-warning">Change Game Master</a>
-    </p>
+    <a asp-action="ChangeGameMaster" asp-route-sessionId="@Model.Session.Id" class="btn btn-warning">Change Game Master</a>
+    @if (isGameMaster)
+    {
+        <a asp-action="Edit" asp-route-id="@Model.Session.Id" class="btn btn-warning">Edit</a>
+    }
+}
+</p>
+
+@if (isGameMaster)
+{
+    <a asp-action="RemovePlayer" asp-route-sessionId="@Model.Session.Id" class="btn btn-danger">Remove Player</a>
+    <a asp-action="Delete" asp-route-id="@Model.Session.Id" class="btn btn-danger">Delete</a>
 }
 
 </div>
