@@ -88,7 +88,7 @@ namespace CampaignManager.Persistence.Services
         public Task<Generator?> GetGeneratorById(Guid generatorId);
         public Task<(List<Generator> Generators, int TotalCount)> GetPaginatedGenerators(int page, int pageSize);
         public Task<List<Generator>> GetPaginatedGeneratorsForNoteType(Guid noteTypeId, int page, int pageSize);
-        public Task<List<Generator>> GetPaginaedGeneratorsForNote(Guid noteId, int page, int pageSize);
+        //public Task<List<Generator>> GetPaginaedGeneratorsForNote(Guid noteId, int page, int pageSize);
         public Task<bool> UpdateGenerator(Generator generator);
         public Task<bool> DeleteGeneratorById(Guid generatorId);
 

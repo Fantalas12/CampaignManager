@@ -100,9 +100,7 @@
                     <th>Title</th>
                     <th>Owner</th>
                     <th>Note Type</th>
-                    <th>Relevant Datetime</th>
-                    <th>Created</th>
-                    <th>Edited</th>
+                    <th>Datetime</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -115,8 +113,6 @@
                         <td>@(note.Owner?.UserName ?? "No User")</td>
                         <td>@(note.NoteType?.Name ?? "No type")</td>
                         <td>@note.InGameDate.ToString("yyyy/MM/dd HH:mm")</td>
-                        <td>@note.CreatedDate.ToString("yyyy/MM/dd HH:mm")</td>
-                        <td>@note.ModifiedDate.ToString("yyyy/MM/dd HH:mm")</td>
                         <td> <a asp-controller="Notes" asp-action="Details" asp-route-id="@note.Id" class="btn btn-info">Details</a>
                         @if (note.OwnerId == userId)
                         {

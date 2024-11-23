@@ -31,31 +31,31 @@ table {
     color: #212529;
 }
 
-    /* Table header styling */
-    table th {
-        background-color: #e6f7ff; /* Light cyan background */
-        border: 1px solid #dee2e6;
-        padding: 0.75rem;
-        text-align: left;
-        vertical-align: top;
-    }
+/* Table header styling */
+table th {
+    background-color: #e6f7ff; /* Light cyan background */
+    border: 1px solid #dee2e6;
+    padding: 0.75rem;
+    text-align: left;
+    vertical-align: top;
+}
 
-    /* Table body styling */
-    table td {
-        border: 1px solid #dee2e6;
-        padding: 0.75rem;
-        vertical-align: top;
-    }
+/* Table body styling */
+table td {
+    border: 1px solid #dee2e6;
+    padding: 0.75rem;
+    vertical-align: top;
+}
 
-    /* Table row hover effect */
-    table tbody tr:hover {
-        background-color: #d1e7dd; /* Light green background */
-    }
+/* Table row hover effect */
+table tbody tr:hover {
+    background-color: #d1e7dd; /* Light green background */
+}
 
-    /* Table row striping */
-    table tbody tr:nth-of-type(odd) {
-        background-color: #f9f9f9;
-    }
+/* Table row striping */
+table tbody tr:nth-of-type(odd) {
+    background-color: #f9f9f9;
+}
 
 /* Table pagination styling */
 .pagination {
@@ -70,29 +70,29 @@ table {
         display: inline;
     }
 
-        .pagination li a {
-            position: relative;
-            display: block;
-            padding: 0.5rem 0.75rem;
-            margin-left: -1px;
-            line-height: 1.25;
-            color: #007bff;
-            background-color: #fff;
-            border: 1px solid #dee2e6;
-            text-decoration: none;
-        }
+.pagination li a {
+    position: relative;
+    display: block;
+    padding: 0.5rem 0.75rem;
+    margin-left: -1px;
+    line-height: 1.25;
+    color: #007bff;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    text-decoration: none;
+}
 
-            .pagination li a:hover {
-                background-color: #e9ecef;
-                border-color: #dee2e6;
-            }
+.pagination li a:hover {
+    background-color: #e9ecef;
+    border-color: #dee2e6;
+}
 
-        .pagination li.active a {
-            z-index: 1;
-            color: #fff;
-            background-color: #007bff;
-            border-color: #007bff;
-        }
+.pagination li.active a {
+    z-index: 1;
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+}
 
 /* Styling for details view container */
 .details-view {
@@ -103,54 +103,106 @@ table {
     margin-bottom: 20px;
 }
 
-    /* Styling for the header */
-    .details-view h4 {
-        font-size: 1.5rem;
-        margin-bottom: 10px;
-    }
+/* Styling for the header */
+.details-view h4 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
 
-    /* Styling for the horizontal rule */
-    .details-view hr {
-        border: 0;
-        height: 1px;
-        background: #ddd;
-        margin: 10px 0;
-    }
+/* Styling for the horizontal rule */
+.details-view hr {
+    border: 0;
+    height: 1px;
+    background: #ddd;
+    margin: 10px 0;
+}
 
-    /* Styling for the definition list */
-    .details-view dl {
-        display: flex;
-        flex-wrap: wrap;
-    }
+/* Styling for the definition list */
+.details-view dl {
+    display: flex;
+    flex-wrap: wrap;
+}
 
-    /* Styling for the definition term */
-    .details-view dt {
-        font-weight: bold;
-        width: 20%;
-        margin-bottom: 10px;
-    }
+/* Styling for the definition term */
+.details-view dt {
+    font-weight: bold;
+    width: 20%;
+    margin-bottom: 10px;
+}
 
-    /* Styling for the definition description */
-    .details-view dd {
-        width: 80%;
-        margin-bottom: 10px;
-    }
+/* Styling for the definition description */
+.details-view dd {
+    width: 80%;
+    margin-bottom: 10px;
+}
 
-    /* Styling for unordered list inside details view */
-    .details-view ul {
-        list-style-type: disc;
-        padding-left: 20px;
-    }
+/* Styling for unordered list inside details view */
+.details-view ul {
+    list-style-type: disc;
+    padding-left: 20px;
+}
 
-    /* Styling for list items inside details view */
-    .details-view li {
-        margin-bottom: 5px;
-    }
+/* Styling for list items inside details view */
+.details-view li {
+    margin-bottom: 5px;
+}
 
-    /* Styling for preformatted text */
-    .details-view pre {
-        background-color: #f1f1f1;
-        padding: 10px;
-        border-radius: 5px;
-        white-space: pre-wrap; /* Allows text to wrap */
-    }
+/* Styling for preformatted text */
+.details-view pre {
+    background-color: #f1f1f1;
+    padding: 10px;
+    border-radius: 5px;
+    white-space: pre-wrap; /* Allows text to wrap */
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f8ff; /* Light blue background */
+}
+
+.container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+p {
+    margin: 10px 0;
+}
+
+ul {
+    margin: 20px 0;
+    padding: 0;
+    list-style: none;
+}
+
+ul li {
+    background: #e6f7ff; /* Light cyan background */
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.example {
+    background: #f9f9f9;
+    padding: 10px;
+    border-left: 5px solid #007bff;
+    margin: 20px 0;
+}
+
+.example pre {
+    margin: 0;
+    padding: 10px;
+    background: #e2e2e2;
+    border-radius: 5px;
+}

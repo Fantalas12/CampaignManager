@@ -57,8 +57,8 @@
 
     <form asp-action="Delete">
         @Html.AntiForgeryToken()
-        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="Id"/>
         <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-controller="Templates" asp-action="Index" class="btn btn-secondary">Cancel</a>
+        <a asp-controller="Sessions" asp-action="Details" asp-route-id="@Model.SessionId" class="btn btn-secondary">Cancel</a>
     </form>
 </div>

@@ -518,33 +518,6 @@ namespace CampaignManager.Persistence.Services // TODO Change to CampaignManager
             return true;
         }
 
-        /*
-        public async Task<bool> RemoveSessionPlayer(int sessionId, string userId)
-        {
-            var sessionPlayer = await _context.SessionPlayers
-                .FirstOrDefaultAsync(sp => sp.SessionId == sessionId && sp.ApplicationUserId == userId);
-
-            if (sessionPlayer == null)
-            {
-                return false;
-            }
-
-            try
-            {
-                _context.SessionPlayers.Remove(sessionPlayer);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                return false;
-            }
-            catch (DbUpdateException)
-            {
-                return false;
-            }
-
-            return true;
-        } */
 
         public async Task<bool> RemoveSessionPlayer(SessionPlayer sessionPlayer)
         {
@@ -930,6 +903,7 @@ namespace CampaignManager.Persistence.Services // TODO Change to CampaignManager
             return generators;
         }
 
+        /*
         public async Task<List<Generator>> GetPaginaedGeneratorsForNote(Guid noteId, int page, int pageSize)
         {
             var query = _context.Generators
@@ -944,7 +918,7 @@ namespace CampaignManager.Persistence.Services // TODO Change to CampaignManager
                 .ToListAsync();
 
             return generators;
-        }
+        } */
 
 
         public async Task<bool> UpdateGenerator(Generator generator)

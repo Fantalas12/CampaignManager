@@ -20,7 +20,7 @@
 
 <h1>Load Campaign</h1>
 
-
+<div class="details-view">
 <form asp-action="LoadCampaign" method="post" enctype="multipart/form-data">
     <div class="form-group">
         <label for="jsonFile">Select file (JSON)</label>
@@ -28,4 +28,11 @@
     </div>
     <button type="submit" class="btn btn-primary">Load Campaign</button>
 </form>
+</div>
+
+<p></p>
+
+<div>
+    <a asp-controller="Campaigns" asp-action="Index" class="btn btn-primary">Back to your campaigns</a>
+</div>
 

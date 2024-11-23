@@ -110,10 +110,13 @@ app.Run();
 
 
 /*
+//Ásványi Tibortól kérdések:
+Táblázat...Egyéni gyed kapcsolat diagram..Osztálydiagramm
+
+
  RÖGTÖN:
 
 ÉLES CLOUD VAGY BÁRMILYEN KIHELYEZÉS...MAUI letöltési link és telepítési útmutató
-Dokumentáció
 
 
 BEMUTATÁS ÉS LADÁS KÖZÖTT:
@@ -123,17 +126,11 @@ HTTPKLIENS-es Service-t beépíteni az alkalmazásba
 
 UI FIX:
 
-https://localhost:7187/Campaigns/LoadCampaign - No Back Link
 https://localhost:7187/Templates/Delete/84e35bdb-e3f0-4296-bb97-cad6ab1ebc31 Delete should hav same UI as details...
-https://localhost:7187/Generators/Delete/0e76147c-a604-4d63-8486-d92952b5645d .... Same
+https://localhost:7187/Generators/Delete/0e76147c-a604-4d63-8486-d92952b5645d Delte same UI as details
 https://localhost:7187/NoteTypes/Delete/88f8bbdc-e0d4-45e3-8880-de6f76411cc8 Delete should hav same UI as details...
 
 Alapadatok az INIT-ben !!!!
-
-Extrák:
-Run Time current date-tel inicializálódik
-Generator - Decription érték....
-
 
 Dokumentációban leírt továbbfejlesztési lehetõségek - Nem valósul meg...:
 

@@ -285,6 +285,7 @@ namespace CampaignManager.Web.Controllers
                 existingNote.Title = note.Title;
                 existingNote.Content = note.Content;
                 existingNote.InGameDate = note.InGameDate;
+                existingNote.ModifiedDate = DateTime.Now;
 
 
                 var result = await _service.UpdateNote(existingNote);
@@ -954,7 +955,7 @@ namespace CampaignManager.Web.Controllers
             if(userId != note.OwnerId)
             {
                 TempData["ErrorMessage"] = "You do not have permission to run the note's generators";
-                return RedirectToAction("Details", "Notes", new { id = noteId });
+                return RedirectToAction("Details", new { id = noteId });
             }
             
 
@@ -1019,15 +1020,17 @@ namespace CampaignManager.Web.Controllers
             }
             catch (CompilationErrorException ex)
             {
-                _logger.LogError(ex, $"Script compilation errors for NoteGenerator {noteGenerator.Id}: {string.Join(Environment.NewLine, ex.Diagnostics)}!");
-                TempData["ErrorMessage"] = "Script compilation errors!";
-                return RedirectToAction("Index", "Home");
+                // Log compilation errors
+                _logger.LogError(ex, $"Script compilation errors for NoteGenerator {noteGeneratorId}: {string.Join(Environment.NewLine, ex.Diagnostics)}!");
+                TempData["ErrorMessage"] = $"Error compiling script: {string.Join(Environment.NewLine, ex.Diagnostics.Select(d => d.ToString()))}";
+                return RedirectToAction("Details", new { id = noteId });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"Error executing script for NoteGenerator {noteGenerator.Id}");
-                TempData["ErrorMessage"] = "Script execution errors!";
-                return RedirectToAction("Index", "Home");
+                // Log runtime errors
+                _logger.LogError(ex, $"Error executing script for NoteGenerator {noteGeneratorId}");
+                TempData["ErrorMessage"] = $"Error executing script: {ex.Message}";
+                return RedirectToAction("Details", new { id = noteId });
             }
         }
     }

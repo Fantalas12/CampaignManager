@@ -36,7 +36,9 @@ namespace CampaignManager.Service.Tests
         public async Task GetCampaignById_ShouldReturnCampaign_WhenCampaignExists()
         {
             // Arrange
-            var campaignId = _context.Campaigns.First().Id;
+            var random = new Random();
+            var skipValue = random.Next(0, 3);
+            var campaignId = _context.Campaigns.Skip(skipValue).First().Id;
 
             // Act
             var result = await _service.GetCampaignById(campaignId);
@@ -63,7 +65,9 @@ namespace CampaignManager.Service.Tests
         public async Task UpdateCampaign_ShouldReturnTrue_WhenCampaignIsUpdated()
         {
             // Arrange
-            var campaign = _context.Campaigns.First();
+            var random = new Random();
+            var skipValue = random.Next(0, 3);
+            var campaign = _context.Campaigns.Skip(skipValue).First();
             campaign.Name = "Updated Campaign";
 
             // Act
@@ -77,7 +81,9 @@ namespace CampaignManager.Service.Tests
         public async Task DeleteCampaignById_ShouldReturnTrue_WhenCampaignIsDeleted()
         {
             // Arrange
-            var campaign = _context.Campaigns.First();
+            var random = new Random();
+            var skipValue = random.Next(0, 3);
+            var campaign = _context.Campaigns.Skip(skipValue).First();
 
             // Act
             var result = await _service.DeleteCampaignById(campaign.Id);
@@ -90,7 +96,9 @@ namespace CampaignManager.Service.Tests
         public async Task GetOwnedCampaignsForUserById_ShouldReturnCampaigns_WhenUserOwnsCampaigns()
         {
             // Arrange
-            var userId = _context.Users.First().Id;
+            var random = new Random();
+            var skipValue = random.Next(0, _context.Users.Count());
+            var userId = _context.Users.Skip(skipValue).First().Id;
 
             // Act
             var result = await _service.GetOwnedCampaignsForUserById(userId);
@@ -103,7 +111,9 @@ namespace CampaignManager.Service.Tests
         public async Task GetCampaignsForUserById_ShouldReturnCampaigns_WhenUserIsParticipant()
         {
             // Arrange
-            var userId = _context.Users.First().Id;
+            var random = new Random();
+            var skipValue = random.Next(0, 3);
+            var userId = _context.Users.Skip(skipValue).First().Id;
 
             // Act
             var result = await _service.GetCampaignsForUserById(userId);
@@ -154,7 +164,9 @@ namespace CampaignManager.Service.Tests
         public async Task IsReservedCampaignNameForUser_ShouldReturnTrue_WhenNameIsReserved()
         {
             // Arrange
-            var campaign = _context.Campaigns.First();
+            var random = new Random();
+            var skipValue = random.Next(0, 3);
+            var campaign = _context.Campaigns.Skip(skipValue).First();
             var userId = campaign.OwnerId;
 
             // Act
@@ -171,12 +183,14 @@ namespace CampaignManager.Service.Tests
         [Fact]
         public async Task AddSession_ShouldReturnTrue_WhenSessionIsAdded()
         {
+            var random = new Random();
+            var skipValue = random.Next(0, 3);
             // Arrange
             var session = new Session
             {
                 Id = Guid.NewGuid(),
                 Name = "New Session",
-                CampaignId = _context.Campaigns.First().Id,
+                CampaignId = _context.Campaigns.Skip(skipValue).First().Id,
                 Date = DateTime.UtcNow
             };
 
@@ -191,7 +205,9 @@ namespace CampaignManager.Service.Tests
         public async Task UpdateSession_ShouldReturnTrue_WhenSessionIsUpdated()
         {
             // Arrange
-            var session = _context.Sessions.First();
+            var random = new Random();
+            var skipValue = random.Next(0, 3);
+            var session = _context.Sessions.Skip(skipValue).First();
             session.Name = "Updated Session";
 
             // Act
@@ -205,7 +221,9 @@ namespace CampaignManager.Service.Tests
         public async Task DeleteSessionById_ShouldReturnTrue_WhenSessionIsDeleted()
         {
             // Arrange
-            var session = _context.Sessions.First();
+            var random = new Random();
+            var skipValue = random.Next(0, 3);
+            var session = _context.Sessions.Skip(skipValue).First();
 
             // Act
             var result = await _service.DeleteSessionById(session.Id);
@@ -218,7 +236,9 @@ namespace CampaignManager.Service.Tests
         public async Task GetSessionById_ShouldReturnSession_WhenSessionExists()
         {
             // Arrange
-            var sessionId = _context.Sessions.First().Id;
+            var random = new Random();
+            var skipValue = random.Next(0, 3);
+            var sessionId = _context.Sessions.Skip(skipValue).First().Id;
 
             // Act
             var result = await _service.GetSessionById(sessionId);
@@ -232,7 +252,9 @@ namespace CampaignManager.Service.Tests
         public async Task GetSessionsForCampaign_ShouldReturnSessions_WhenCampaignHasSessions()
         {
             // Arrange
-            var campaignId = _context.Campaigns.First().Id;
+            var random = new Random();
+            var skipValue = random.Next(0, 3);
+            var campaignId = _context.Campaigns.Skip(skipValue).First().Id;
 
             // Act
             var result = await _service.GetSessionsForCampaign(campaignId);
@@ -245,7 +267,9 @@ namespace CampaignManager.Service.Tests
         public async Task GetPaginatedSessionsForCampaign_ShouldReturnPaginatedSessions_WhenCampaignHasSessions()
         {
             // Arrange
-            var campaignId = _context.Campaigns.First().Id;
+            var random = new Random();
+            var skipValue = random.Next(0, 3);
+            var campaignId = _context.Campaigns.Skip(skipValue).First().Id;
             int page = 1;
             int pageSize = 2;
 
@@ -261,7 +285,9 @@ namespace CampaignManager.Service.Tests
         public async Task IsReservedSessionNameForCampaign_ShouldReturnTrue_WhenNameIsReserved()
         {
             // Arrange
-            var session = _context.Sessions.First();
+            var random = new Random();
+            var skipValue = random.Next(0, 3);
+            var session = _context.Sessions.Skip(skipValue).First();
             var campaignId = session.CampaignId;
             var name = session.Name;
 
@@ -276,7 +302,9 @@ namespace CampaignManager.Service.Tests
         public async Task IsReservedSessionDateForCampaign_ShouldReturnTrue_WhenDateIsReserved()
         {
             // Arrange
-            var session = _context.Sessions.First();
+            var random = new Random();
+            var skipValue = random.Next(0, 3);
+            var session = _context.Sessions.Skip(skipValue).First();
             var campaignId = session.CampaignId;
             var date = session.Date;
 
@@ -290,11 +318,13 @@ namespace CampaignManager.Service.Tests
         [Fact]
         public async Task AddNote_ShouldReturnTrue_WhenNoteIsAdded()
         {
+            var random = new Random();
+            var skipValue = random.Next(0, 3);
             // Arrange
             var note = new Note
             {
                 Id = Guid.NewGuid(),
-                SessionId = _context.Sessions.Skip(1).First().Id, // Select the second session
+                SessionId = _context.Sessions.Skip(skipValue).First().Id,
                 Content = "New Note",
                 NoteTypeId = _context.NoteTypes.First().Id
             };
@@ -310,7 +340,9 @@ namespace CampaignManager.Service.Tests
         public async Task GetNoteById_ShouldReturnNote_WhenNoteExists()
         {
             // Arrange
-            var noteId = _context.Notes.Skip(1).First().Id;
+            var random = new Random();
+            var skipValue = random.Next(0, 3);
+            var noteId = _context.Notes.Skip(skipValue).First().Id;
 
             // Act
             var result = await _service.GetNoteById(noteId);
@@ -324,7 +356,9 @@ namespace CampaignManager.Service.Tests
         public async Task GetPaginatedNotesForSession_ShouldReturnPaginatedNotes_WhenSessionHasNotes()
         {
             // Arrange
-            var sessionId = _context.Sessions.First().Id;
+            var random = new Random();
+            var skipValue = random.Next(0, 3);
+            var sessionId = _context.Sessions.Skip(skipValue).First().Id;
             int page = 1;
             int pageSize = 2;
 
@@ -340,7 +374,9 @@ namespace CampaignManager.Service.Tests
         public async Task UpdateNote_ShouldReturnTrue_WhenNoteIsUpdated()
         {
             // Arrange
-            var note = _context.Notes.Skip(1).First();
+            var random = new Random();
+            var skipValue = random.Next(0, 3);
+            var note = _context.Notes.Skip(skipValue).First();
             note.Content = "Updated Note";
 
             // Act
@@ -354,14 +390,404 @@ namespace CampaignManager.Service.Tests
         public async Task DeleteNoteById_ShouldReturnTrue_WhenNoteIsDeleted()
         {
             // Arrange
-            var note = _context.Notes.Skip(2).First();
+            var random = new Random();
+            var skipValue = random.Next(0, 3);
+            var note = _context.Notes.Skip(skipValue).First();
 
             // Act
             var result = await _service.DeleteNoteById(note.Id);
 
             // Assert
             Assert.True(result);
-        }   
+        }
+
+        [Fact]
+        public async Task AddCampaignParticipant_ShouldAddParticipant()
+        {
+            // Arrange
+            var random = new Random();
+            var userId = _context.Users.Skip(random.Next(0, _context.Users.Count())).First().Id;
+            var campaignId = _context.Campaigns.Skip(random.Next(0, _context.Campaigns.Count())).First().Id;
+            var participant = new CampaignParticipant
+            {
+                Id = Guid.NewGuid(),
+                ApplicationUserId = userId,
+                CampaignId = campaignId,
+                Role = Role.Player
+            };
+
+            // Act
+            var result = await _service.AddCampaignParticipant(participant);
+
+            // Assert
+            Assert.True(result);
+            Assert.Contains(_context.Participants, p => p.Id == participant.Id);
+        }
+
+        [Fact]
+        public async Task UpdateCampaignParticipant_ShouldUpdateParticipant()
+        {
+            // Arrange
+            var participant = _context.Participants.First();
+            participant.Role = Role.GameMaster;
+
+            // Act
+            var result = await _service.UpdateCampaignParticipant(participant);
+
+            // Assert
+            Assert.True(result);
+            Assert.Equal(Role.GameMaster, _context.Participants.First(p => p.Id == participant.Id).Role);
+        }
+
+        [Fact]
+        public async Task DeleteCampaignParticipantById_ShouldDeleteParticipant()
+        {
+            // Arrange
+            var participant = _context.Participants.First();
+
+            // Act
+            var result = await _service.DeleteCampaignParticipantById(participant.Id);
+
+            // Assert
+            Assert.True(result);
+            Assert.DoesNotContain(_context.Participants, p => p.Id == participant.Id);
+        }
+
+        [Fact]
+        public async Task GetPlayersForCampaign_ShouldReturnPlayers()
+        {
+            // Arrange
+            var campaignId = _context.Campaigns.First().Id;
+
+            // Act
+            var players = await _service.GetPlayersForCampaign(campaignId);
+
+            // Assert
+            Assert.NotEmpty(players);
+            Assert.All(players, p => Assert.True(p.Role == Role.Player || p.Role == Role.PlayerAndGameMaster));
+        }
+
+        [Fact]
+        public async Task GetGMsForCampaign_ShouldReturnGMs()
+        {
+            // Arrange
+            var campaignId = _context.Campaigns.First().Id;
+
+            // Act
+            var gms = await _service.GetGMsForCampaign(campaignId);
+
+            // Assert
+            Assert.NotEmpty(gms);
+            Assert.All(gms, p => Assert.True(p.Role == Role.GameMaster || p.Role == Role.PlayerAndGameMaster));
+        }
+
+        [Fact]
+        public async Task GetParticipantsForCampaign_ShouldReturnParticipants()
+        {
+            // Arrange
+            var random = new Random();
+            var skipValue = random.Next(0, 3);
+            var campaignId = _context.Campaigns.Skip(skipValue).First().Id;
+
+            // Act
+            var participants = await _service.GetParticipantsForCampaign(campaignId);
+
+            // Assert
+            Assert.NotEmpty(participants);
+        }
+
+        [Fact]
+        public async Task GetParticipantForCampaignByUserId_ShouldReturnParticipant()
+        {
+            // Arrange
+            var random = new Random();
+            var skipValue = random.Next(0, 3);
+            var participant = _context.Participants.Skip(skipValue).First();
+
+            // Act
+            var result = await _service.GetParticipantForCampaignByUserId(participant.ApplicationUserId, participant.CampaignId);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(participant.Id, result.Id);
+        }
+
+        [Fact]
+        public async Task IsUserParticipant_ShouldReturnTrueIfUserIsParticipant()
+        {
+            // Arrange
+            var random = new Random();
+            var skipValue = random.Next(0, 3);
+            var participant = _context.Participants.Skip(skipValue).First();
+
+            // Act
+            var result = await _service.IsUserParticipant(participant.CampaignId, participant.ApplicationUserId);
+
+            // Assert
+            Assert.True(result);
+        }
+
+        [Fact]
+        public async Task AddSessionPlayer_ShouldReturnTrue_WhenSessionPlayerIsAdded()
+        {
+            // Arrange
+            var random = new Random();
+            var skipValue = random.Next(0, 3);
+            var sessionId = _context.Sessions.Skip(skipValue).First().Id;
+            var userId = _context.Users.Skip(skipValue).First().Id;
+            var sessionPlayer = new SessionPlayer
+            {
+                Id = Guid.NewGuid(),
+                SessionId = sessionId,
+                ApplicationUserId = userId
+            };
+
+            // Act
+            var result = await _service.AddSessionPlayer(sessionPlayer);
+
+            // Assert
+            Assert.True(result);
+            Assert.Contains(_context.SessionPlayers, sp => sp.Id == sessionPlayer.Id);
+        }
+
+        [Fact]
+        public async Task RemoveSessionPlayer_ShouldReturnTrue_WhenSessionPlayerIsRemoved()
+        {
+            var random = new Random();
+            var skipValue = random.Next(0, 3);
+            // Arrange
+            var sessionPlayer = new SessionPlayer
+            {
+                Id = Guid.NewGuid(),
+                SessionId = _context.Sessions.Skip(skipValue).First().Id,
+                ApplicationUserId = _context.Users.First().Id
+            };
+            _context.SessionPlayers.Add(sessionPlayer);
+            await _context.SaveChangesAsync();
+
+            // Act
+            var result = await _service.RemoveSessionPlayer(sessionPlayer);
+
+            // Assert
+            Assert.True(result);
+            Assert.DoesNotContain(_context.SessionPlayers, sp => sp.Id == sessionPlayer.Id);
+        }
+
+        [Fact]
+        public async Task AddInvitation_ShouldReturnTrue_WhenInvitationIsAdded()
+        {
+            var random = new Random();
+            var skipValue = random.Next(0, 3);
+            // Arrange
+            var invitation = new Invitation
+            {
+                Id = 4,
+                CampaignId = _context.Campaigns.Skip(skipValue).First().Id,
+                ApplicationUserId = _context.Users.First().Id
+            };
+
+            // Act
+            var result = await _service.AddInvitation(invitation);
+
+            // Assert
+            Assert.True(result);
+            Assert.Contains(_context.Invitations, i => i.Id == invitation.Id);
+        }
+
+        [Fact]
+        public async Task DeleteInvitationById_ShouldReturnTrue_WhenInvitationIsDeleted()
+        {
+            // Arrange
+            var random = new Random();
+            var skipValue = random.Next(0, 3);
+            var invitation = _context.Invitations.Skip(skipValue).First();
+
+            // Act
+            var result = await _service.DeleteInvitationById(invitation.Id);
+
+            // Assert
+            Assert.True(result);
+            Assert.DoesNotContain(_context.Invitations, i => i.Id == invitation.Id);
+        }
+
+        [Fact]
+        public async Task DeleteOtherInvitationsForCampaign_ShouldReturnTrue_WhenInvitationsAreDeleted()
+        {
+            // Arrange
+            var random = new Random();
+            var skipValue = random.Next(0, 3);
+            var campaignId = _context.Campaigns.Skip(skipValue).First().Id;
+            var userId = _context.Users.First().Id;
+
+            // Act
+            var result = await _service.DeleteOtherInvitationsForCampaign(campaignId, userId);
+
+            // Assert
+            Assert.True(result);
+            Assert.DoesNotContain(_context.Invitations, i => i.CampaignId == campaignId && i.ApplicationUserId == userId);
+        }
+
+        [Fact]
+        public async Task GetInvitationsForUserById_ShouldReturnInvitations_WhenUserHasInvitations()
+        {
+            // Arrange
+            var random = new Random();
+            var skipValue = random.Next(0, 3);
+            var userId = _context.Users.Skip(skipValue).First().Id;
+
+            // Act
+            var result = await _service.GetInvitationsForUserById(userId);
+
+            // Assert
+            Assert.NotEmpty(result);
+            Assert.All(result, i => Assert.Equal(userId, i.ApplicationUserId));
+        }
+
+        [Fact]
+        public async Task GetInvitationById_ShouldReturnInvitation_WhenInvitationExists()
+        {
+            // Arrange
+            var random = new Random();
+            var skipValue = random.Next(0, 3);
+            var invitationId = _context.Invitations.Skip(skipValue).First().Id;
+
+            // Act
+            var result = await _service.GetInvitationById(invitationId);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(invitationId, result.Id);
+        }
+
+        [Fact]
+        public async Task AddTemplate_ShouldReturnTrue_WhenTemplateIsAdded()
+        {
+            var template = new Template { Id = Guid.NewGuid(), Name = "New Template" };
+            var result = await _service.AddTemplate(template);
+            Assert.True(result);
+        }
+
+        [Fact]
+        public async Task GetTemplateById_ShouldReturnTemplate_WhenTemplateExists()
+        {
+            var random = new Random();
+            var skipValue = random.Next(0, 3);
+            var template = _context.Templates.Skip(skipValue).First();
+            var result = await _service.GetTemplateById(template.Id);
+            Assert.NotNull(result);
+            Assert.Equal(template.Id, result.Id);
+        }
+
+        [Fact]
+        public async Task GetPaginatedTemplates_ShouldReturnTemplates_WhenTemplatesExist()
+        {
+            var (templates, totalCount) = await _service.GetPaginatedTemplates(1, 10);
+            Assert.NotEmpty(templates);
+            Assert.Equal(_context.Templates.Count(), totalCount);
+        }
+
+        [Fact]
+        public async Task UpdateTemplate_ShouldReturnTrue_WhenTemplateIsUpdated()
+        {
+            var random = new Random();
+            var skipValue = random.Next(0, 3);
+            var template = _context.Templates.Skip(skipValue).First();
+            template.Name = "Updated Template";
+            var result = await _service.UpdateTemplate(template);
+            Assert.True(result);
+        }
+
+        [Fact]
+        public async Task DeleteTemplateById_ShouldReturnTrue_WhenTemplateIsDeleted()
+        {
+            var random = new Random();
+            var skipValue = random.Next(0, 3);
+            var template = _context.Templates.Skip(skipValue).First();
+            var result = await _service.DeleteTemplateById(template.Id);
+            Assert.True(result);
+        }
+
+        [Fact]
+        public async Task GetGeneratorById_ShouldReturnGenerator_WhenGeneratorExists()
+        {
+            // Arrange
+            var random = new Random();
+            var skipValue = random.Next(0, _context.Generators.Count());
+            var generatorId = _context.Generators.Skip(skipValue).First().Id;
+
+            // Act
+            var result = await _service.GetGeneratorById(generatorId);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(generatorId, result.Id);
+        }
+
+        [Fact]
+        public async Task GetPaginatedGenerators_ShouldReturnPaginatedGenerators_WhenGeneratorsExist()
+        {
+            // Arrange
+            int page = 1;
+            int pageSize = 2;
+
+            // Act
+            var (generators, totalCount) = await _service.GetPaginatedGenerators(page, pageSize);
+
+            // Assert
+            Assert.NotEmpty(generators);
+            Assert.True(totalCount > 0);
+        }
+
+        [Fact]
+        public async Task GetPaginatedGeneratorsForNoteType_ShouldReturnPaginatedGenerators_WhenGeneratorsExist()
+        {
+            // Arrange
+            var random = new Random();
+            var skipValue = random.Next(0, _context.NoteTypes.Count());
+            var noteTypeId = _context.NoteTypes.Skip(skipValue).First().Id;
+            int page = 1;
+            int pageSize = 2;
+
+            // Act
+            var generators = await _service.GetPaginatedGeneratorsForNoteType(noteTypeId, page, pageSize);
+
+            // Assert
+            Assert.NotEmpty(generators);
+        }
+
+        [Fact]
+        public async Task UpdateGenerator_ShouldReturnTrue_WhenGeneratorIsUpdated()
+        {
+            // Arrange
+            var random = new Random();
+            var skipValue = random.Next(0, _context.Generators.Count());
+            var generator = _context.Generators.Skip(skipValue).First();
+            generator.Name = "Updated Generator";
+
+            // Act
+            var result = await _service.UpdateGenerator(generator);
+
+            // Assert
+            Assert.True(result);
+        }
+
+        [Fact]
+        public async Task DeleteGeneratorById_ShouldReturnTrue_WhenGeneratorIsDeleted()
+        {
+            // Arrange
+            var random = new Random();
+            var skipValue = random.Next(0, _context.Generators.Count());
+            var generator = _context.Generators.Skip(skipValue).First();
+
+            // Act
+            var result = await _service.DeleteGeneratorById(generator.Id);
+
+            // Assert
+            Assert.True(result);
+            Assert.DoesNotContain(_context.Generators, g => g.Id == generator.Id);
+        }
+
+
 
     }
 }
