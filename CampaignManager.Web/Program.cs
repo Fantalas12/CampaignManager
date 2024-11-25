@@ -121,16 +121,15 @@ Táblázat...Egyéni gyed kapcsolat diagram..Osztálydiagramm
 
 BEMUTATÁS ÉS LADÁS KÖZÖTT:
 
+DOKUMENTÁCIÓ ÚJRA ELOLVASÁSA ÉS JAVÍTÁSA
 Összs mûvelet jogosultságellenõrzésének és átírányításai helyességeinek ellenõrzése nem jogosult felhasználó esetén és átírása... és átírása...
-HTTPKLIENS-es Service-t beépíteni az alkalmazásba 
+HTTPKLIENS-es Service-t beépíteni az alkalmazásba
 
 UI FIX:
 
 https://localhost:7187/Templates/Delete/84e35bdb-e3f0-4296-bb97-cad6ab1ebc31 Delete should hav same UI as details...
 https://localhost:7187/Generators/Delete/0e76147c-a604-4d63-8486-d92952b5645d Delte same UI as details
 https://localhost:7187/NoteTypes/Delete/88f8bbdc-e0d4-45e3-8880-de6f76411cc8 Delete should hav same UI as details...
-
-Alapadatok az INIT-ben !!!!
 
 Dokumentációban leírt továbbfejlesztési lehetõségek - Nem valósul meg...:
 
@@ -141,17 +140,11 @@ Script Execution Optimization...SignalR és asztali alkalmazással oldjuk meg az é
 NextRunInGameDate Updates from the Script, hogy ne manuálisan kelljen állítani a dátumot...
 JWT Authentikáció-val a  Web API végpontok védése
 Sessionök és Jegyzetek mentése Fil-be és feltöltése File-ból - Jegyzet tulajdonosának átállítása
-NoteAdmin, AccessControlList
-
 ...
 
-Ha egy kampánymesélõ kilép a játékból vagy játékossá válik a jogosultsága, akkor az összes Session aminek mesélõje õ volt, nullázódjon... - Nem kell mert a kampánytulajdonosnak van a jogosultsága a kampányhoz és a kampányhoz tartozó sessionökhöz is
+
 JWT Authentikáció/Web API végpontok védése ???
-JOBB UI... ("Back To" linkek... különbözõ Create, Edit és Delete formokban)
 AccountsController névjavítás
- Megtisztitatni a kódot a "|" jelektõl az indexben...Linkek "nyomógombos stílus szebbé tétele"
-Egységesíteni az UI...t a DELETE funkcióhoz ndm kel külön ûrlap...lehet a táblázaton belül...a törlés sok mindennél
-Kivenni a NoteAccest és a NoteAdmint...
 Ellenõrizni minden metódusra hogy reagál az alaklmazás ha nem jó a jogosultság és ezt egységesíteni...
 
 

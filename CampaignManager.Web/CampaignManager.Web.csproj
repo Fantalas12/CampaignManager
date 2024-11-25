@@ -26,4 +26,8 @@
     <ProjectReference Include="..\CampaignManager.WebAPI\CampaignManager.WebAPI.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="SavedCampaigns\" />
+  </ItemGroup>
+
 </Project>

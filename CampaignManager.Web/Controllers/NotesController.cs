@@ -17,6 +17,7 @@ using CampaignManager.Web.Services;
 using CampaignManager.DTO;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
+using Newtonsoft.Json.Linq;
 
 namespace CampaignManager.Web.Controllers
 {
@@ -901,12 +902,37 @@ namespace CampaignManager.Web.Controllers
 
             try
             {
-                var data = JsonConvert.DeserializeObject<Dictionary<string, string>>(noteContent);
+                var data = JsonConvert.DeserializeObject<Dictionary<string, object>>(noteContent);
                 string pattern = @"<---(.*?)--->";
                 string result = Regex.Replace(templateContent, pattern, match =>
                 {
                     string key = match.Groups[1].Value.Trim();
-                    return data != null && data.ContainsKey(key) ? data[key] : match.Value;
+                    if (data != null)
+                    {
+                        // Check if the key contains an array index
+                        var arrayMatch = Regex.Match(key, @"(\w+)\[(\d+)\](\.\w+)?");
+                        if (arrayMatch.Success)
+                        {
+                            string arrayKey = arrayMatch.Groups[1].Value;
+                            int index = int.Parse(arrayMatch.Groups[2].Value);
+                            string? property = arrayMatch.Groups[3].Value.TrimStart('.');
+
+                            if (data.ContainsKey(arrayKey) && data[arrayKey] is JArray array && array.Count > index)
+                            {
+                                var arrayItem = array[index];
+                                if (property != null && arrayItem is JObject jObject && jObject.TryGetValue(property, out var jValue))
+                                {
+                                    return jValue.ToString();
+                                }
+                                return arrayItem.ToString();
+                            }
+                        }
+                        else
+                        {
+                            return GetValueFromJson(data, key) ?? match.Value;
+                        }
+                    }
+                    return match.Value;
                 });
 
                 return result;
@@ -915,9 +941,45 @@ namespace CampaignManager.Web.Controllers
             {
                 _logger.LogError(ex, "Invalid JSON content: {NoteContent}", noteContent);
                 return $"Error rendering content: Invalid JSON format. Raw content: {noteContent}";
-
             }
         }
+
+        private string? GetValueFromJson(Dictionary<string, object> data, string key)
+        {
+            var keys = key.Split('.');
+            object? current = data;
+
+            foreach (var k in keys)
+            {
+                if (current is Dictionary<string, object> dict && dict.TryGetValue(k, out var value))
+                {
+                    current = value;
+                }
+                else if (current is JObject jObject && jObject.TryGetValue(k, out var jValue))
+                {
+                    current = jValue;
+                }
+                else if (current is JArray jArray)
+                {
+                    var arrayKey = k.Trim('[', ']');
+                    if (int.TryParse(arrayKey, out int index) && index < jArray.Count)
+                    {
+                        current = jArray[index];
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+            return current?.ToString();
+        }
+
 
 
         [HttpPost]

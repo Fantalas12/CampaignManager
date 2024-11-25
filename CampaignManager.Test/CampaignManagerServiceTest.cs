@@ -787,7 +787,88 @@ namespace CampaignManager.Service.Tests
             Assert.DoesNotContain(_context.Generators, g => g.Id == generator.Id);
         }
 
+        [Fact]
+        public async Task AddNoteLink_ShouldReturnTrue_WhenNoteLinkIsAdded()
+        {
+            // Arrange
+            var noteLink = new NoteLink
+            {
+                Id = Guid.NewGuid(),
+                FromNoteId = Guid.NewGuid(),
+                ToNoteId = Guid.NewGuid(),
+                LinkType = "New Link"
+            };
 
+            // Act
+            var result = await _service.AddNoteLink(noteLink);
 
+            // Assert
+            Assert.True(result);
+            Assert.NotNull(await _context.NoteLinks.FindAsync(noteLink.Id));
+        }
+
+        [Fact]
+        public async Task GetNoteLinkById_ShouldReturnNoteLink_WhenNoteLinkExists()
+        {
+            // Arrange
+            var random = new Random();
+            var noteLink = _context.NoteLinks.Skip(random.Next(0, _context.NoteLinks.Count())).First();
+
+            // Act
+            var result = await _service.GetNoteLinkById(noteLink.Id);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(noteLink.Id, result.Id);
+        }
+
+        [Fact]
+        public async Task GetPaginatedToNoteLinksForNote_ShouldReturnPaginatedNoteLinks_WhenNoteLinksExist()
+        {
+            // Arrange
+            var random = new Random();
+            var fromNoteId = _context.NoteLinks.Skip(random.Next(0, _context.NoteLinks.Count())).First().FromNoteId;
+
+            // Act
+            var (result, totalCount) = await _service.GetPaginatedToNoteLinksForNote(fromNoteId, 1, 1);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.True(totalCount > 0);
+            Assert.Single(result);
+        }
+
+        [Fact]
+        public async Task UpdateNoteLink_ShouldReturnTrue_WhenNoteLinkIsUpdated()
+        {
+            // Arrange
+            var random = new Random();
+            var noteLink = _context.NoteLinks.Skip(random.Next(0, _context.NoteLinks.Count())).First();
+            noteLink.LinkType = "Updated";
+
+            // Act
+            var result = await _service.UpdateNoteLink(noteLink);
+
+            // Assert
+            Assert.True(result);
+        }
+
+        [Fact]
+        public async Task DeleteNoteLinkById_ShouldReturnTrue_WhenNoteLinkIsDeleted()
+        {
+            // Arrange
+            var random = new Random();
+            var noteLink = _context.NoteLinks.Skip(random.Next(0, _context.NoteLinks.Count())).First();
+
+            // Act
+            var result = await _service.DeleteNoteLinkById(noteLink.Id);
+
+            // Assert
+            Assert.True(result);
+            Assert.Null(await _context.NoteLinks.FindAsync(noteLink.Id));
+        }
     }
+
+
+
 }

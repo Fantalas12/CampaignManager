@@ -20,13 +20,13 @@
             </div>
             <div class="form-group">
                 <label asp-for="Content" class="control-label"></label>
-                <textarea asp-for="Content" class="form-control"></textarea>
+                <textarea asp-for="Content" class="form-control" style="width: 100%; height: 200px;"></textarea>
                 <span asp-validation-for="Content" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="InGameDate" class="control-label"></label>
-                <input asp-for="InGameDate" class="form-control" type="datetime-local" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
-                <span asp-validation-for="InGameDate" class="text-danger"></span>
+                    <label class="control-label">Gamedate</label>
+                    <input asp-for="InGameDate" class="form-control" type="datetime-local" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
+                    <span asp-validation-for="InGameDate" class="text-danger"></span>
             </div>
             <input type="hidden" asp-for="Id" />
             <input type="hidden" asp-for="SessionId" />
