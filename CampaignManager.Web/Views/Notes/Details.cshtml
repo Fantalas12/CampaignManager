@@ -18,6 +18,8 @@
     }
 }
 
+<h1>Note Details:</h1>
+
 <div class="details-view">
     <h4>@Html.DisplayFor(model => model.Note.Title)</h4>
     <hr />
@@ -69,7 +71,6 @@
 <p></p>
 
 <div class="details-view">
-<h4>Note Content:</h4>
 <p></p>
     @Html.Raw(ViewData["RenderedContent"] ?? Model.Note.Content)
 </div>

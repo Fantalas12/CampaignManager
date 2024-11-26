@@ -118,6 +118,8 @@ Táblázat...Egyéni gyed kapcsolat diagram..Osztálydiagramm
 
 ÉLES CLOUD VAGY BÁRMILYEN KIHELYEZÉS...MAUI letöltési link és telepítési útmutató
 
+EXPLAIN the Script, 
+Explain RenderContent
 
 BEMUTATÁS ÉS LADÁS KÖZÖTT:
 

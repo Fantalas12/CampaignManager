@@ -128,4 +128,4 @@ bld/
 !/CampaignManager.Service/
 !/CampaignManager.MAUI/
 !/CampaignManager.Test/
-
+!/.github/

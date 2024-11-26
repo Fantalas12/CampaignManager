@@ -1039,7 +1039,8 @@ namespace CampaignManager.Web.Controllers
                     typeof(ILogger).Assembly,
                     typeof(Note).Assembly,
                     typeof(DateTime).Assembly,
-                    AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == "System.Runtime")
+                    AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == "System.Runtime"),
+                    AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == "Newtonsoft.Json")
                 )
                 .AddImports(
                     "System",
@@ -1047,6 +1048,7 @@ namespace CampaignManager.Web.Controllers
                     "System.Collections.Generic",
                     "System.Text.Json",
                     "System.Text.Json.Nodes",
+                    "Newtonsoft.Json",
                     "Microsoft.Extensions.Logging",
                     "CampaignManager.Persistence.Models"
                 );
