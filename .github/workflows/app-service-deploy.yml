@@ -27,7 +27,7 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore CampaignManager.sln
 
       - name: Build Web project
         run: dotnet build CampaignManager.Web/CampaignManager.Web.csproj --configuration Release
