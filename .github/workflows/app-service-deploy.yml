@@ -21,8 +21,11 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore CampaignManager.Web/CampaignManager.Web.csproj
 
-      - name: Build with dotnet
+      - name: Build Web project
         run: dotnet build CampaignManager.Web/CampaignManager.Web.csproj --configuration Release
+
+      - name: Build WebAPI project
+        run: dotnet build CampaignManager.WebAPI/CampaignManager.WebAPI.csproj --configuration Release
 
       - name: Publish Web project
         run: dotnet publish CampaignManager.Web/CampaignManager.Web.csproj --configuration Release --output ./publish/CampaignManager.Web
@@ -30,31 +33,51 @@ jobs:
       - name: Publish WebAPI project
         run: dotnet publish CampaignManager.WebAPI/CampaignManager.WebAPI.csproj --configuration Release --output ./publish/CampaignManager.WebAPI
 
-      - name: Upload artifact for deployment job
+      - name: Upload Web project artifact
         uses: actions/upload-artifact@v3
         with:
-          name: .net-app
-          path: ./publish
+          name: web-app
+          path: ./publish/CampaignManager.Web
+
+      - name: Upload WebAPI project artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: webapi-app
+          path: ./publish/CampaignManager.WebAPI
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
 
     steps:
-      - name: Download artifact from build job
+      - name: Download Web project artifact
         uses: actions/download-artifact@v3
         with:
-          name: .net-app
+          name: web-app
+          path: ./publish/CampaignManager.Web
+
+      - name: Download WebAPI project artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: webapi-app
+          path: ./publish/CampaignManager.WebAPI
 
       - name: Azure Login
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Deploy to Azure Web App
+      - name: Deploy Web project to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: ./publish/CampaignManager.Web
+
+      - name: Deploy WebAPI project to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: ./publish/CampaignManager.WebAPI
 
