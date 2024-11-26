@@ -96,18 +96,5 @@ namespace CampaignManager.WebAPI.Controllers
             Response.Headers.Append("X-Total-Count", totalCount.ToString());
             return Ok(noteDTOs);
         }
-
-        /* Paginated Notes for Session 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<NoteDTO>>> GetNotes([FromQuery] int sessionId)
-        {
-            // Implement filtering logic here
-            // For now, return all notes
-            var notes = await _service.GetNotesForSession(sessionId);
-            var noteDTOs = notes.Select(note => (NoteDTO)note).ToList();
-            return noteDTOs;
-        } */
-
-        /* Paginated Notes for Session  */
     }
 }

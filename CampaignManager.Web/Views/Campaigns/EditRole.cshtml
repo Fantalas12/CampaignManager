@@ -27,6 +27,7 @@
         <form asp-action="EditRole">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="CampaignId" />
+            <input type="hidden" asp-for="CampaignName" />
             <div class="form-group">
                 <label asp-for="ParticipantId" class="control-label">Participant</label>
                 <select asp-for="ParticipantId" class="form-control" asp-items="Model.Participants"></select>

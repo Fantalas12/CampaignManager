@@ -673,11 +673,17 @@ namespace CampaignManager.Web.Controllers
             return View(model);
         }
 
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditRole(EditRoleViewModel model)
         {
-            var campaign = await _service.GetCampaignById(model.CampaignId);
+            if(model.CampaignId == null)
+            {
+                return NotFound();
+            }
+
+            var campaign = await _service.GetCampaignById((Guid)model.CampaignId);
             if (campaign == null)
             {
                 return NotFound();
@@ -713,7 +719,12 @@ namespace CampaignManager.Web.Controllers
                 return NotFound();
             }
 
-            var existingParticipant = await _service.GetParticipantForCampaignByUserId(model.ParticipantId, model.CampaignId);
+            if (model.ParticipantId == null)
+            {
+                return BadRequest("ParticipantId cannot be null.");
+            }
+
+            var existingParticipant = await _service.GetParticipantForCampaignByUserId(model.ParticipantId, (Guid)model.CampaignId);
             if (existingParticipant == null)
             {
                 return NotFound();
