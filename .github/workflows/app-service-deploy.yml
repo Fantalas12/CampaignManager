@@ -24,8 +24,11 @@ jobs:
       - name: Build with dotnet
         run: dotnet build CampaignManager.Web/CampaignManager.Web.csproj --configuration Release
 
-      - name: Publish with dotnet
-        run: dotnet publish CampaignManager.Web/CampaignManager.Web.csproj --configuration Release --output ./publish
+      - name: Publish Web project
+        run: dotnet publish CampaignManager.Web/CampaignManager.Web.csproj --configuration Release --output ./publish/CampaignManager.Web
+
+      - name: Publish WebAPI project
+        run: dotnet publish CampaignManager.WebAPI/CampaignManager.WebAPI.csproj --configuration Release --output ./publish/CampaignManager.WebAPI
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
@@ -53,5 +56,5 @@ jobs:
         with:
           app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: .
+          package: ./publish/CampaignManager.Web
 
