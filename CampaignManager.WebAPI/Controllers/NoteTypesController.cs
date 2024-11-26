@@ -4,6 +4,7 @@ using CampaignManager.Persistence.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace CampaignManager.WebAPI.Controllers
 {
