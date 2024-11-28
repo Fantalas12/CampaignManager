@@ -24,7 +24,6 @@
   <ItemGroup>
     <ProjectReference Include="..\CampaignManager.Persistence\CampaignManager.Persistence.csproj" />
     <ProjectReference Include="..\CampaignManager.Service\CampaignManager.Service.csproj" />
-    <ProjectReference Include="..\CampaignManager.WebAPI\CampaignManager.WebAPI.csproj" />
   </ItemGroup>
 
   <ItemGroup>

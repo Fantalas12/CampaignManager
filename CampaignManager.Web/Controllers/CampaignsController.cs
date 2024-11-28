@@ -867,96 +867,6 @@ namespace CampaignManager.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        /*
-        [HttpGet]
-        public async Task<IActionResult> RemoveNoteAdmin(int? campaignId)
-        {
-            if (campaignId == null)
-            {
-                return NotFound();
-            }
-
-            var campaign = await _service.GetCampaignById((int)campaignId);
-            if (campaign == null)
-            {
-                return NotFound();
-            }
-
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                TempData["ErrorMessage"] = "You need to be logged in to remove note admins from this campaign.";
-                return RedirectToAction("Login", "Account");
-            }
-
-            if (campaign.OwnerId != user.Id)
-            {
-                TempData["ErrorMessage"] = "You do not have permission to remove note admins from this campaign.";
-                return RedirectToAction("Details", new { id = campaignId });
-            }
-
-            // Fetch NoteAdmins for the given campaign
-            var noteAdmins = await _service.GetNoteAdminsForCampaign((int)campaignId);
-
-            // Create a SelectList from the NoteAdmins
-            var participants = new SelectList(noteAdmins.Select(na => new
-            {
-                na.ApplicationUserId,
-                UserName = na.ApplicationUser.UserName
-            }), "ApplicationUserId", "UserName");
-
-            var model = new ManageNoteAdminViewModel
-            {
-                CampaignId = campaignId.Value,
-                Participants = participants
-            };
-
-            return View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> RemoveNoteAdmin(ManageNoteAdminViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
-
-            var campaign = await _service.GetCampaignById(model.CampaignId);
-            if (campaign == null)
-            {
-                return NotFound();
-            }
-
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                TempData["ErrorMessage"] = "You need to be logged in to remove note admins from this campaign.";
-                return RedirectToAction("Login", "Account");
-            }
-
-            if (campaign.OwnerId != user.Id)
-            {
-                TempData["ErrorMessage"] = "You do not have permission to remove note admins from this campaign.";
-                return RedirectToAction("Details", new { id = model.CampaignId });
-            }
-
-            var noteAdmin = await _service.GetNoteAdminByUserId(model.SelectedParticipantId, model.CampaignId);
-            if (noteAdmin == null)
-            {
-                ModelState.AddModelError("", "NoteAdmin not found.");
-                return View(model);
-            }
-
-            await _service.DeleteNoteAdminById(noteAdmin.Id);
-            TempData["SuccessMessage"] = "NoteAdmin removed successfully.";
-            return RedirectToAction("Details", new { id = model.CampaignId });
-
-        }
-        */
-
-
         #endregion
 
 
@@ -1002,7 +912,8 @@ namespace CampaignManager.Web.Controllers
                                     typeof(ILogger).Assembly,
                                     typeof(Note).Assembly,
                                     typeof(DateTime).Assembly,
-                                    AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == "System.Runtime")
+                                    AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == "System.Runtime"),
+                                    AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == "Newtonsoft.Json")
                                 )
                                 .AddImports(
                                     "System",
@@ -1010,6 +921,7 @@ namespace CampaignManager.Web.Controllers
                                     "System.Collections.Generic",
                                     "System.Text.Json",
                                     "System.Text.Json.Nodes",
+                                    "Newtonsoft.Json",
                                     "Microsoft.Extensions.Logging",
                                     "CampaignManager.Persistence.Models"
                                 );

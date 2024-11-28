@@ -2,8 +2,6 @@ using CampaignManager.Persistence.Services;
 using CampaignManager.Persistence.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using CampaignManager.Web.Services;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -71,11 +69,6 @@ builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
 
-builder.Services.AddHttpClient<NotesHttpClientService>(client =>
-{
-    client.BaseAddress = new Uri("https://localhost:7218/");
-});
-
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
@@ -110,9 +103,6 @@ app.Run();
 
 
 /*
-//Ásványi Tibortól kérdések:
-Táblázat...Egyéni gyed kapcsolat diagram..Osztálydiagramm
-
 
  RÖGTÖN:
 
@@ -125,27 +115,8 @@ BEMUTATÁS ÉS LADÁS KÖZÖTT:
 
 DOKUMENTÁCIÓ ÚJRA ELOLVASÁSA ÉS JAVÍTÁSA
 Összs mûvelet jogosultságellenõrzésének és átírányításai helyességeinek ellenõrzése nem jogosult felhasználó esetén és átírása... és átírása...
-HTTPKLIENS-es Service-t beépíteni az alkalmazásba
-
-UI FIX:
-
-https://localhost:7187/Templates/Delete/84e35bdb-e3f0-4296-bb97-cad6ab1ebc31 Delete should hav same UI as details...
-https://localhost:7187/Generators/Delete/0e76147c-a604-4d63-8486-d92952b5645d Delte same UI as details
-https://localhost:7187/NoteTypes/Delete/88f8bbdc-e0d4-45e3-8880-de6f76411cc8 Delete should hav same UI as details...
-
-Dokumentációban leírt továbbfejlesztési lehetõségek - Nem valósul meg...:
-
-Note "Tag"-ek hozzáadása és törlése KÉSÕBB!!!!
-A Sessionhöz és a Jegyzetekhez tartozó kapcsolt jegyzetek mindkét irányba listázva legyenek
-Privát Template-k...hogy a mesélõ által létrehozott jegyzetet publikusan ne lehessen megnézni
-Script Execution Optimization...SignalR és asztali alkalmazással oldjuk meg az értesítéseket valós idejû értesítésekkel párhuzamosítva
-NextRunInGameDate Updates from the Script, hogy ne manuálisan kelljen állítani a dátumot...
-JWT Authentikáció-val a  Web API végpontok védése
-Sessionök és Jegyzetek mentése Fil-be és feltöltése File-ból - Jegyzet tulajdonosának átállítása
-...
 
 
-JWT Authentikáció/Web API végpontok védése ???
 AccountsController névjavítás
 Ellenõrizni minden metódusra hogy reagál az alaklmazás ha nem jó a jogosultság és ezt egységesíteni...
 
@@ -169,15 +140,6 @@ DTO-k javítása...vagyis a NoteDTO-ban a NoteTypeDTO-nak legyen egy Note hivatkoz
 Session és Note exportálása fájlba és fileból
 
 
-    Képkezelés "File kiváalsztása" szöveget átírni angolra:
-    "When I select an image for a   when I    or    a new campaign the text displayed is in hungarian: "Fájl kiválasztása" and "Nincs fájl kiválasztva" How can I change the display texts to english?"
-    <script>
-        document.querySelector('.custom-file-input').addEventListener('change', function (e) {
-            var fileName = document.getElementById("customFile").files[0].name;
-            var nextSibling = e.target.nextElementSibling
-            nextSibling.innerText = fileName
-        })
-    </script>
 
 
     
@@ -218,16 +180,11 @@ Program javítási és továbbfejleztési javaslatok:
 Jobb felhasználói élmény a jegyzetprmitívek és jegyzetkomponensek CRUD mûveleteihez és, hogy ne kelljen az ID-t megadni... hogy ne kelljen a GUI-okkal bajlódni
 
 Szakdolgozat után:
-.NET 6 -> .NET 8 átírás
-WPF -> MAUI átírás
 NOTE képek kezelése manuálisan és/vagy generativ mesterséges intelligenciával
 Átírni a Template, Generatorokat specális jegyzettipusokra a NoteLinkek LinkType-ja által
 Generativ AI által generált kép jegyzettartalomhoz...
 
 Követelményspeci: TODOLIST:
 
-E.L.T.E-s formázást megcsinálni
-M.A.G.U.S-os ídézet a követelményleírás bevezetõjének elejére...ha lesz még hely...
-Javított bemutatójáék: Gergõ: "Kockadobás nem sok van benne, megnézett információ sem, stb" - Szerepjáték bemutató és Felhasználói követelményleírás összevonása
 
 */

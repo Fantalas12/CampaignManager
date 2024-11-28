@@ -13,7 +13,6 @@ using System.Security.Claims;
 using static System.Net.Mime.MediaTypeNames;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
-using CampaignManager.Web.Services;
 using CampaignManager.DTO;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
@@ -24,17 +23,15 @@ namespace CampaignManager.Web.Controllers
     public class NotesController : Controller
     {
         private readonly ICampaignManagerService _service;
-        private readonly NotesHttpClientService _notesHttpClientService;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<CampaignsController> _logger;
 
-        public NotesController(ICampaignManagerService service, NotesHttpClientService notesHttpClientService, UserManager<ApplicationUser> userManager, ILogger<CampaignsController> logger)
+        public NotesController(ICampaignManagerService service, UserManager<ApplicationUser> userManager, ILogger<CampaignsController> logger)
         {
             _service = service;
-            _notesHttpClientService = notesHttpClientService;
             _userManager = userManager;
             _logger = logger;
-        }
+        }   
 
         // GET: Notes/Create
         [HttpGet]
