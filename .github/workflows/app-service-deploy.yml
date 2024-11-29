@@ -33,13 +33,13 @@ jobs:
         run: dotnet build CampaignManager.Web/CampaignManager.Web.csproj --configuration Release
 
       - name: Publish Web project
-        run: dotnet publish CampaignManager.Web/CampaignManager.Web.csproj --configuration Release --output ./publish/CampaignManager.Web
+        run: dotnet publish CampaignManager.Web/CampaignManager.Web.csproj --configuration Release --output ./publish
 
       - name: Upload Web project artifact
         uses: actions/upload-artifact@v3
         with:
           name: web-app
-          path: ./publish/CampaignManager.Web
+          path: ./publish
 
   deploy:
     runs-on: ubuntu-latest
@@ -50,6 +50,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: web-app
+          path: ./publish
 
       - name: Azure Login
         uses: azure/login@v1
@@ -61,4 +62,4 @@ jobs:
         with:
           app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: ./publish/CampaignManager.Web
+          package: ./publish

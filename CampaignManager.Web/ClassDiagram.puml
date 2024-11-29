@@ -1,1 +1,72 @@
-﻿
+﻿@startuml
+
+class CampaignManagerService {
+    -CampaignManagerDbContext _context
+    +CampaignManagerService(CampaignManagerDbContext context)
+    +GetCampaignById(Guid campaignId) : Task<Campaign?>
+    +AddCampaign(Campaign campaign) : Task<bool>
+    +UpdateCampaign(Campaign campaign) : Task<bool>
+    +DeleteCampaignById(Guid campaignId) : Task<bool>
+    +GetOwnedCampaignsForUserById(string userId) : Task<List<Campaign>>
+    +GetCampaignsForUserById(string userId) : Task<List<Campaign>>
+    +SaveCampaignToFile(CampaignDTO campaignDto, string filePath) : Task<bool>
+    +LoadCampaignFromFile(string filePath) : Task<Campaign?>
+    +IsReservedCampaignNameForUser(string name, string userId) : Task<bool>
+    +AddCampaignParticipant(CampaignParticipant participant) : Task<bool>
+    +UpdateCampaignParticipant(CampaignParticipant participant) : Task<bool>
+    +DeleteCampaignParticipantById(Guid participantId) : Task<bool>
+    +GetPlayersForCampaign(Guid campaignId) : Task<List<CampaignParticipant>>
+    +GetGMsForCampaign(Guid campaignId) : Task<List<CampaignParticipant>>
+    +GetParticipantsForCampaign(Guid campaignId) : Task<List<CampaignParticipant>>
+    +GetParticipantForCampaignByUserId(string participantId, Guid campaignId) : Task<CampaignParticipant?>
+    +IsUserParticipant(Guid campaignId, string userId) : Task<bool>
+    +AddInvitation(Invitation invitation) : Task<bool>
+    +DeleteInvitationById(int invitationId) : Task<bool>
+    +DeleteOtherInvitationsForCampaign(Guid campaignId, string userId) : Task<bool>
+    +GetInvitationsForUserById(string userId) : Task<List<Invitation>>
+    +GetInvitationById(int invitationId) : Task<Invitation?>
+    +AddSession(Session session) : Task<bool>
+    +UpdateSession(Session session) : Task<bool>
+    +DeleteSessionById(Guid sessionId) : Task<bool>
+    +GetSessionById(Guid sessionId) : Task<Session?>
+    +GetSessionsForCampaign(Guid campaignId) : Task<List<Session>>
+    +GetPaginatedSessionsForCampaign(Guid campaignId, int page, int pageSize) : Task<(List<Session> Sessions, int TotalCount)>
+    +IsReservedSessionNameForCampaign(string name, Guid campaignId) : Task<bool>
+    +IsReservedSessionDateForCampaign(DateTime date, Guid campaignId) : Task<bool>
+    +AddSessionPlayer(SessionPlayer sessionPlayer) : Task<bool>
+    +RemoveSessionPlayer(SessionPlayer sessionPlayer) : Task<bool>
+    +AddNote(Note note) : Task<bool>
+    +GetNoteById(Guid noteId) : Task<Note?>
+    +GetPaginatedNotesForSession(Guid sessionId, int page, int pageSize) : Task<(List<Note> Notes, int TotalCount)>
+    +UpdateNote(Note note) : Task<bool>
+    +DeleteNoteById(Guid noteId) : Task<bool>
+    +AddNoteType(NoteType noteType) : Task<bool>
+    +GetNoteTypeById(Guid noteTypeId) : Task<NoteType?>
+    +GetPaginatedNoteTypes(int page, int pageSize) : Task<(List<NoteType> NoteTypes, int TotalCount)>
+    +UpdateNoteType(NoteType noteType) : Task<bool>
+    +DeleteNoteTypeById(Guid noteTypeId) : Task<bool>
+    +AddTemplate(Template template) : Task<bool>
+    +GetTemplateById(Guid templateId) : Task<Template?>
+    +GetPaginatedTemplates(int page, int pageSize) : Task<(List<Template> Templates, int TotalCount)>
+    +UpdateTemplate(Template template) : Task<bool>
+    +DeleteTemplateById(Guid templateId) : Task<bool>
+    +AddGenerator(Generator generator) : Task<bool>
+    +GetGeneratorById(Guid generatorId) : Task<Generator?>
+    +GetPaginatedGenerators(int page, int pageSize) : Task<(List<Generator> Generators, int TotalCount)>
+    +GetPaginatedGeneratorsForNoteType(Guid noteTypeId, int page, int pageSize) : Task<List<Generator>>
+    +UpdateGenerator(Generator generator) : Task<bool>
+    +DeleteGeneratorById(Guid generatorId) : Task<bool>
+    +AddNoteLink(NoteLink noteLink) : Task<bool>
+    +GetNoteLinkById(Guid noteLinkId) : Task<NoteLink?>
+    +GetPaginatedToNoteLinksForNote(Guid noteId, int page, int pageSize) : Task<(List<NoteLink> NoteLinks, int TotalCount)>
+    +UpdateNoteLink(NoteLink noteLink) : Task<bool>
+    +DeleteNoteLinkById(Guid noteLinkId) : Task<bool>
+    +AddNoteGenerator(NoteGenerator noteGenerator) : Task<bool>
+    +GetNoteGeneratorById(Guid noteGeneratorId) : Task<NoteGenerator?>
+    +GetPaginatedNoteGenerators(int page, int pageSize) : Task<(List<NoteGenerator> NoteGenerators, int TotalCount)>
+    +UpdateNoteGenerator(NoteGenerator noteGenerator) : Task<bool>
+    +DeleteNoteGeneratorById(Guid noteGeneratorId) : Task<bool>
+    +BeginTransactionAsync() : Task<IDbContextTransaction>
+}
+
+@enduml
