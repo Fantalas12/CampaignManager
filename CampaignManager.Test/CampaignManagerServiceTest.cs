@@ -173,7 +173,7 @@ namespace CampaignManager.Service.Tests
             bool result = false;
             if (userId != null)
             {
-              result = await _service.IsReservedCampaignNameForUser(campaign.Name, userId);
+                result = await _service.IsReservedCampaignNameForUser(campaign.Name, userId);
             }
             // Assert
             Assert.True(result);
@@ -867,8 +867,94 @@ namespace CampaignManager.Service.Tests
             Assert.True(result);
             Assert.Null(await _context.NoteLinks.FindAsync(noteLink.Id));
         }
+    
+
+    
+        [Fact]
+        public async Task AddNoteGenerator_ShouldReturnTrue_WhenNoteGeneratorIsAdded()
+        {
+            // Arrange
+            var random = new Random();
+            var noteId = _context.Notes.Skip(random.Next(0, _context.Notes.Count())).First().Id;
+            var generatorId = _context.Generators.Skip(random.Next(0, _context.Generators.Count())).First().Id;
+            var noteGenerator = new NoteGenerator
+            {
+                Id = Guid.NewGuid(),
+                NoteId = noteId,
+                GeneratorId = generatorId,
+                NextRunInGameDate = DateTime.Now.AddDays(1)
+            };
+
+            // Act
+            var result = await _service.AddNoteGenerator(noteGenerator);
+
+            // Assert
+            Assert.True(result);
+            Assert.Contains(_context.NoteGenerators, ng => ng.Id == noteGenerator.Id);
+        }
+
+        [Fact]
+        public async Task GetNoteGeneratorById_ShouldReturnNoteGenerator_WhenNoteGeneratorExists()
+        {
+            // Arrange
+            var random = new Random();
+            var noteGeneratorId = _context.NoteGenerators.Skip(random.Next(0, _context.NoteGenerators.Count())).First().Id;
+
+            // Act
+            var result = await _service.GetNoteGeneratorById(noteGeneratorId);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(noteGeneratorId, result.Id);
+        }
+
+        [Fact]
+        public async Task GetPaginatedNoteGenerators_ShouldReturnPaginatedNoteGenerators_WhenNoteGeneratorsExist()
+        {
+            // Arrange
+            int page = 1;
+            int pageSize = 2;
+
+            // Act
+            var (noteGenerators, totalCount) = await _service.GetPaginatedNoteGenerators(page, pageSize);
+
+            // Assert
+            Assert.NotEmpty(noteGenerators);
+            Assert.True(totalCount > 0);
+        }
+
+        [Fact]
+        public async Task UpdateNoteGenerator_ShouldReturnTrue_WhenNoteGeneratorIsUpdated()
+        {
+            // Arrange
+            var random = new Random();
+            var noteGenerator = _context.NoteGenerators.Skip(random.Next(0, _context.NoteGenerators.Count())).First();
+            noteGenerator.NextRunInGameDate = DateTime.Now.AddDays(2);
+
+            // Act
+            var result = await _service.UpdateNoteGenerator(noteGenerator);
+
+            // Assert
+            Assert.True(result);
+            Assert.Equal(DateTime.Now.AddDays(2).Date, _context.NoteGenerators.First(ng => ng.Id == noteGenerator.Id).NextRunInGameDate?.Date);
+        }
+
+        [Fact]
+        public async Task DeleteNoteGeneratorById_ShouldReturnTrue_WhenNoteGeneratorIsDeleted()
+        {
+            // Arrange
+            var random = new Random();
+            var noteGenerator = _context.NoteGenerators.Skip(random.Next(0, _context.NoteGenerators.Count())).First();
+
+            // Act
+            var result = await _service.DeleteNoteGeneratorById(noteGenerator.Id);
+
+            // Assert
+            Assert.True(result);
+            Assert.DoesNotContain(_context.NoteGenerators, ng => ng.Id == noteGenerator.Id);
+        }
+
+
+
     }
-
-
-
 }

@@ -924,7 +924,7 @@ namespace CampaignManager.Web.Controllers
                                     "Newtonsoft.Json",
                                     "Microsoft.Extensions.Logging",
                                     "CampaignManager.Persistence.Models"
-                                );
+                                );      
 
                             var globals = new ScriptGlobals { Note = note, Logger = _logger };
 

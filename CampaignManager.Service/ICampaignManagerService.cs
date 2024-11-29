@@ -68,14 +68,6 @@ namespace CampaignManager.Persistence.Services
         public Task<bool> UpdateNoteType(NoteType noteType);
         public Task<bool> DeleteNoteTypeById(Guid noteTypeId);
 
-        /*
-        //AccessControlEntry methods
-        public Task<bool> AddAccessControl(NoteAccess ace);
-        public Task<NoteAccess?> GetAccessControlById(Guid aceId);
-        public Task<bool> UpdateAccessControl(NoteAccess ace);
-        public Task<bool> DeleteAccessControlById(Guid aceId);
-        */
-
         // Template methods
         public Task<bool> AddTemplate(Template template);
         public Task<Template?> GetTemplateById(Guid templateId);
@@ -100,17 +92,8 @@ namespace CampaignManager.Persistence.Services
         public Task<bool> UpdateNoteLink(NoteLink noteLink);
         public Task<bool> DeleteNoteLinkById(Guid noteLinkId);
 
-        /*
-        //NoteAdmin methods
-        public Task<bool> AddNoteAdmin(NoteAdmin noteAdmin);
-        public Task<List<NoteAdmin>> GetNoteAdminsForCampaign(int campaignId);
-        public Task<NoteAdmin?> GetNoteAdminById(Guid noteAdminId);
-        public Task<NoteAdmin?> GetNoteAdminByUserId(string userId, int campaignId);
-        public Task<bool> UpdateNoteAdmin(NoteAdmin noteAdmin);
-        public Task<bool> DeleteNoteAdminById(Guid noteAdminId);
-        */
-
         //NoteGenerator methods
+
         public Task<bool> AddNoteGenerator(NoteGenerator noteGenerator);
         public Task<NoteGenerator?> GetNoteGeneratorById(Guid noteGeneratorId);
         public Task<(List<NoteGenerator> NoteGenerators, int TotalCount)> GetPaginatedNoteGenerators(int page, int pageSize);

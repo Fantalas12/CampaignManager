@@ -27,31 +27,19 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Restore dependencies
-        run: dotnet restore C:\Own\Szakdolgozat\8.0\CampaignManager\CampaignManager.sln
+        run: dotnet restore CampaignManager.Web/CampaignManager.Web.csproj
 
       - name: Build Web project
-        run: dotnet build C:\Own\Szakdolgozat\8.0\CampaignManager\CampaignManager.Web\CampaignManager.Web.csproj --configuration Release
-
-      - name: Build WebAPI project
-        run: dotnet build C:\Own\Szakdolgozat\8.0\CampaignManager\CampaignManager.WebAPI\CampaignManager.WebAPI.csproj --configuration Release
+        run: dotnet build CampaignManager.Web/CampaignManager.Web.csproj --configuration Release
 
       - name: Publish Web project
-        run: dotnet publish C:\Own\Szakdolgozat\8.0\CampaignManager\CampaignManager.Web\CampaignManager.Web.csproj --configuration Release --output C:\Own\Szakdolgozat\8.0\CampaignManager\publish\CampaignManager.Web
-
-      - name: Publish WebAPI project
-        run: dotnet publish C:\Own\Szakdolgozat\8.0\CampaignManager\CampaignManager.WebAPI\CampaignManager.WebAPI.csproj --configuration Release --output C:\Own\Szakdolgozat\8.0\CampaignManager\publish\CampaignManager.WebAPI
+        run: dotnet publish CampaignManager.Web/CampaignManager.Web.csproj --configuration Release --output ./publish/CampaignManager.Web
 
       - name: Upload Web project artifact
         uses: actions/upload-artifact@v3
         with:
           name: web-app
-          path: C:\Own\Szakdolgozat\8.0\CampaignManager\publish\CampaignManager.Web
-
-      - name: Upload WebAPI project artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: webapi-app
-          path: C:\Own\Szakdolgozat\8.0\CampaignManager\publish\CampaignManager.WebAPI
+          path: ./publish/CampaignManager.Web
 
   deploy:
     runs-on: ubuntu-latest
@@ -62,13 +50,6 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: web-app
-          path: C:\Own\Szakdolgozat\8.0\CampaignManager\publish\CampaignManager.Web
-
-      - name: Download WebAPI project artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: webapi-app
-          path: C:\Own\Szakdolgozat\8.0\CampaignManager\publish\CampaignManager.WebAPI
 
       - name: Azure Login
         uses: azure/login@v1
@@ -80,11 +61,4 @@ jobs:
         with:
           app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: C:\Own\Szakdolgozat\8.0\CampaignManager\publish\CampaignManager.Web
-
-      - name: Deploy WebAPI project to Azure Web App
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-          package: C:\Own\Szakdolgozat\8.0\CampaignManager\publish\CampaignManager.WebAPI
+          package: ./publish/CampaignManager.Web

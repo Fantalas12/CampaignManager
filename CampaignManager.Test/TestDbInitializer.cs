@@ -109,6 +109,17 @@ namespace CampaignManager.Service.Tests
 
             context.NoteLinks.AddRange(noteLinks);
 
+            // Add NoteGenerators
+            var noteGenerators = new List<NoteGenerator>
+            {
+                new NoteGenerator { Id = Guid.NewGuid(), NoteId = note1.Id, GeneratorId = generator1.Id, NextRunInGameDate = DateTime.Now.AddDays(1) },
+                new NoteGenerator { Id = Guid.NewGuid(), NoteId = note2.Id, GeneratorId = generator2.Id, NextRunInGameDate = DateTime.Now.AddDays(2) },
+                new NoteGenerator { Id = Guid.NewGuid(), NoteId = note3.Id, GeneratorId = generator3.Id, NextRunInGameDate = DateTime.Now.AddDays(3) }
+            };
+
+            context.NoteGenerators.AddRange(noteGenerators);
+
+
             context.SaveChanges();
         }
     }
