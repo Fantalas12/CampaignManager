@@ -46,9 +46,6 @@ $RECYCLE.BIN/
 # ASP.NET Scaffolding
 ScaffoldingReadMe.txt
 
-# SQlite database
-CampaignManagerCore6.db
-
 # Ignore build directories
 **/bin/
 **/obj/
@@ -90,3 +87,6 @@ CampaignManager.MAUI/obj/
 !/CampaignManager.MAUI/
 !/CampaignManager.Test/
 !/.github/
+
+# Allow SQLite database file
+!CampaignManagerCore6.db
