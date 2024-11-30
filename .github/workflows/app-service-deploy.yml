@@ -70,7 +70,9 @@ jobs:
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: ./publish
 
-      - name: Run database migrations
-        run: dotnet ef database update --project CampaignManager.Persistence/CampaignManager.Persistence.csproj --context CampaignManagerDbContext
-        env:
-          ASPNETCORE_ENVIRONMENT: Production
+      # Exclude the migration step
+      # - name: Run database migrations
+      #   run: dotnet ef database update --project CampaignManager.Persistence/CampaignManager.Persistence.csproj --context CampaignManagerDbContext
+      #   env:
+      #     ASPNETCORE_ENVIRONMENT: Production
+      #     ConnectionStrings__DefaultConnection: "Data Source=CampaignManagerCore6.db"
