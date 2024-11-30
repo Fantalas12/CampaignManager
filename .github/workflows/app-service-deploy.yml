@@ -25,7 +25,7 @@ jobs:
         run: echo "${HOME}/.dotnet/tools" >> $GITHUB_PATH
 
       - name: Cache NuGet packages
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.nuget/packages
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
@@ -42,7 +42,7 @@ jobs:
         run: dotnet publish CampaignManager.Web/CampaignManager.Web.csproj --configuration Release --output ./publish
 
       - name: Upload Web project artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: web-app
           path: ./publish
@@ -53,7 +53,7 @@ jobs:
 
     steps:
       - name: Download Web project artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: web-app
           path: ./publish
@@ -74,4 +74,4 @@ jobs:
         run: dotnet ef database update --project CampaignManager.Persistence/CampaignManager.Persistence.csproj --context CampaignManagerDbContext
         env:
           ASPNETCORE_ENVIRONMENT: Production
-          ConnectionStrings__DefaultConnection: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}
+          ConnectionStrings__DefaultConnection: "Data Source=../CampaignManagerCore6.db"
