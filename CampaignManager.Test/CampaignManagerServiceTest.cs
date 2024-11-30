@@ -954,6 +954,78 @@ namespace CampaignManager.Service.Tests
             Assert.DoesNotContain(_context.NoteGenerators, ng => ng.Id == noteGenerator.Id);
         }
 
+        [Fact]
+        public async Task AddNoteType_ShouldReturnTrue_WhenNoteTypeIsAdded()
+        {
+            // Arrange
+            var noteType = new NoteType { Id = Guid.NewGuid(), Name = "New NoteType" };
+
+            // Act
+            var result = await _service.AddNoteType(noteType);
+
+            // Assert
+            Assert.True(result);
+            Assert.Contains(_context.NoteTypes, nt => nt.Id == noteType.Id);
+        }
+
+        [Fact]
+        public async Task GetNoteTypeById_ShouldReturnNoteType_WhenNoteTypeExists()
+        {
+            // Arrange
+            var noteType = _context.NoteTypes.First();
+
+            // Act
+            var result = await _service.GetNoteTypeById(noteType.Id);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(noteType.Id, result.Id);
+        }
+
+        [Fact]
+        public async Task GetPaginatedNoteTypes_ShouldReturnPaginatedNoteTypes_WhenNoteTypesExist()
+        {
+            // Arrange
+            int page = 1;
+            int pageSize = 2;
+
+            // Act
+            var (noteTypes, totalCount) = await _service.GetPaginatedNoteTypes(page, pageSize);
+
+            // Assert
+            Assert.NotEmpty(noteTypes);
+            Assert.True(totalCount > 0);
+        }
+
+        [Fact]
+        public async Task UpdateNoteType_ShouldReturnTrue_WhenNoteTypeIsUpdated()
+        {
+            // Arrange
+            var noteType = _context.NoteTypes.First();
+            noteType.Name = "Updated NoteType";
+
+            // Act
+            var result = await _service.UpdateNoteType(noteType);
+
+            // Assert
+            Assert.True(result);
+            Assert.Equal("Updated NoteType", _context.NoteTypes.First(nt => nt.Id == noteType.Id).Name);
+        }
+
+        [Fact]
+        public async Task DeleteNoteTypeById_ShouldReturnTrue_WhenNoteTypeIsDeleted()
+        {
+            // Arrange
+            var noteType = _context.NoteTypes.First();
+
+            // Act
+            var result = await _service.DeleteNoteTypeById(noteType.Id);
+
+            // Assert
+            Assert.True(result);
+            Assert.DoesNotContain(_context.NoteTypes, nt => nt.Id == noteType.Id);
+        }
+
 
 
     }

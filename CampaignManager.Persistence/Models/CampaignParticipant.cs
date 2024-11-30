@@ -9,8 +9,6 @@
 
 
     //This class represents the many-to-many relationship between users and campaigns...
-    //Unifying the Player and GameMaster classes by using a Role property
-    // TODO - Delete the Player and GameMaster classes
     public class CampaignParticipant
     {
         public Guid Id { get; set; }

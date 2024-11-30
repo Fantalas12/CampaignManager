@@ -20,7 +20,7 @@ namespace CampaignManager.Web.Controllers
 {
     public enum SortOrder { NAME_DESC, NAME_ASC, CREATED_DESC, CREATED_ASC, EDITED_DECS, EDITED_ASC }
 
-    [Authorize] //TODO - Add custom policy and roles
+    [Authorize]
     public class CampaignsController : Controller
     {
         private readonly ICampaignManagerService _service;

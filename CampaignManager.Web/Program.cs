@@ -45,7 +45,7 @@ builder.Services.AddHttpClient<CampaignManagerService>(client =>
 
 builder.Services.AddScoped<ICampaignManagerService, CampaignManagerService>();
 
-builder.Services.AddLogging(); // TODO - remove this line in production
+builder.Services.AddLogging(); // Logging in production can be useful for identifying issues
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Logging.AddDebug();
@@ -63,7 +63,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    //app.UseExceptionHandler("/Home/Error");
+    app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }

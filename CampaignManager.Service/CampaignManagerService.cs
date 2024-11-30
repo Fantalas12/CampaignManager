@@ -14,9 +14,7 @@ using System.Text;
 using System.Text.Json;
 
 
-
-//TODO - Implement generic repository pattern
-namespace CampaignManager.Persistence.Services // TODO Change to CampaignManager.Service
+namespace CampaignManager.Persistence.Services
 {
     //This class is used for defining the methods which manipulate the data in the database.
     public class CampaignManagerService : ICampaignManagerService
