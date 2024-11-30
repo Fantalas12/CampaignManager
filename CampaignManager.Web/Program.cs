@@ -11,11 +11,12 @@ builder.Services.AddDbContext<CampaignManagerDbContext>(options =>
     IConfigurationRoot configuration = builder.Configuration;
 
     // Use the connection string from environment variables if available, otherwise use the one from appsettings.json
-    var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
-                           ?? configuration.GetConnectionString("SqliteConnection");
+    /* var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
+                           ?? configuration.GetConnectionString("SqliteConnection"); */
 
     // Use Sqlite database
-    options.UseSqlite(connectionString);
+    //options.UseSqlite(connectionString);
+    options.UseSqlite("Data Source=../CampaignManagerCore6.db");
 
     // Use lazy loading (don't forget the virtual keyword on the navigational properties also)
     options.UseLazyLoadingProxies();
