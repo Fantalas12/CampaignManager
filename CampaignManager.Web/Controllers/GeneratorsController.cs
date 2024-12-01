@@ -248,7 +248,7 @@ namespace CampaignManager.Web.Controllers
             var result = await _service.DeleteGeneratorById((Guid)id);
             if (!result)
             {
-                TempData["ErrorMessage"] = "Unable to delete generator. Please try again.";
+                TempData["ErrorMessage"] = "Unable to delete generator. Please ensure the generator is not used in campaigns";
                 return RedirectToAction(nameof(Delete), new { id });
             }
 

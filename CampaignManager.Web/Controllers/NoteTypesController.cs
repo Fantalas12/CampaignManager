@@ -280,7 +280,7 @@ namespace CampaignManager.Web.Controllers
             var result = await _service.DeleteNoteTypeById((Guid)id);
             if (!result)
             {
-                TempData["ErrorMessage"] = "Unable to delete note type. Please try again.";
+                TempData["ErrorMessage"] = "Unable to delete note type. Please ensure the note type is not used in campaigns";
                 return RedirectToAction(nameof(Delete), new { id });
             }
 

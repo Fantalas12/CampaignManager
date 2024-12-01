@@ -30,10 +30,4 @@
     <Folder Include="SavedCampaigns\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="CampaignManagerCore6.db">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

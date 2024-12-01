@@ -247,7 +247,7 @@ namespace CampaignManager.Web.Controllers
             var result = await _service.DeleteTemplateById(id.Value);
             if (!result)
             {
-                TempData["ErrorMessage"] = "Unable to delete template. Please try again.";
+                TempData["ErrorMessage"] = "Unable to delete template. Please ensure the template is not used in campaigns";
                 return RedirectToAction(nameof(Delete), new { id });
             }
 
