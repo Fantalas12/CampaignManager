@@ -1,0 +1,508 @@
+# CampaignManager
+
+## Overview
+CampaignManager is a web application for managing RPG (Role-Playing Game) campaigns. Users can authenticate and manage their own campaigns with full CRUD operations, participant management, and invitation system. Users can also view and participate in campaigns they've joined. The application includes detailed campaign views and session management capabilities with session-specific participant management and note creation functionality with granular access control, note linking capabilities, and tag management for better note organization. The application also supports metadata notes for enhanced content management and dynamic content substitution capabilities that automatically replace placeholders in session notes with values from linked metadata notes.
+
+## Authentication
+- Users authenticate using Internet Identity
+- Only authenticated users can access campaign management features
+
+## User Profile Management
+- **Username Setup**: When a user sets their username for the first time, the system validates that the chosen username is unique across all users
+- **Username Uniqueness Validation**: The system checks for username uniqueness only when the user clicks the "Create Profile" button, not in real time as they type
+- **Username Error Handling**: If a chosen username already exists, the system displays a clear error message and prevents profile creation, requiring the user to select a different, unique username before proceeding
+- **Username Registration**: Users cannot proceed with application features until they have successfully registered a unique username
+
+## Core Features
+
+### Campaign Management
+- **Create Campaign**: Authenticated users can create new RPG campaigns with an in-game date and time
+- **Automatic Owner Participation**: When a campaign is created, the campaign owner is automatically added as a participant with the GM role
+- **View Own Campaigns**: Users can view a list of all campaigns they own/created including the in-game date and time
+- **View Participated Campaigns**: Users can view a list of all campaigns they participate in (both owned and joined) including the in-game date and time
+- **Campaign Detail View**: Users can click on any campaign to view a detailed view that displays all campaign data including the full description
+- **Edit Campaign**: Users can modify their existing campaigns including updating the in-game date and time from the Campaign Details page
+- **Delete Campaign**: Users can remove their campaigns from the Campaign Details page
+
+### Session Management
+- **Create Sessions**: Only users with the GM role in a campaign can create sessions for that campaign, regardless of whether they are the campaign owner or not
+- **Session Data**: Each session has a name, description, and a real-world date (without hours or minutes)
+- **View Sessions**: All campaign participants can view the list of sessions within the campaign detail view
+- **Session Detail View**: Users can click on any session to view a detailed view that displays all session data including the full description and associated notes list
+- **Edit Sessions**: Only the session owner (the user who created the session) can edit their own sessions from the Session Details page. Other GMs in the campaign cannot edit sessions they did not create.
+- **Delete Sessions**: Only the session owner (the user who created the session) can delete their own sessions from the Session Details page. Other GMs in the campaign cannot delete sessions they did not create.
+- **Session Deletion Confirmation**: Before deleting a session, a confirmation step is required to prevent accidental removals
+- **Automatic Session List Refresh**: After a session is successfully deleted, the session list automatically refreshes to remove the deleted session from the UI without requiring a page reload
+- **Session Authorization**: Only users with GM role (including GM+Player combinations) can create sessions. Campaign owners without GM role cannot create sessions. If a campaign owner's role is changed to GM or both GM and Player, session creation becomes available to them.
+- **Session Display**: Sessions are displayed in a list format similar to the campaigns list within the campaign detail view
+
+### Session Notes Management
+- **View Session Notes**: Campaign participants can view notes associated with each session within the session detail view based on their assigned access levels
+- **Notes Display**: Notes are displayed in a list format similar to how sessions are listed for campaigns within the session detail view
+- **Note Detail View**: Users can click on any note to view a detailed view that displays the note content (both player and GM content) according to their access permissions with dynamic content substitution applied
+- **Empty Notes List**: The notes list can be empty and should display appropriately when no notes exist for a session
+- **Create Session Notes**: Only the session owner (GameMaster who created the session) can create notes for their sessions
+- **Note Data**: Each note has a name, player content field, GM content field, an optional in-game datetime field, and a list of tags
+- **Dual Content Fields**: Notes contain separate text content for player view and GM view, allowing note creators to provide different information to different user types
+- **Note Creation Authorization**: Only session owners can create notes for their sessions, other campaign participants cannot create notes
+- **Note Access Control**: Each note has access levels for each campaign participant using a bitflag system with four permission types: Player Read, Game Master Read, Write, and Execute
+- **Note Content Visibility**: Users can only see note content according to their assigned access levels - Player content if they have Player Read permission, GM content if they have Game Master Read permission, or both content types if they have both read permissions
+- **Note Owner Full Permissions**: Note owners automatically have full permissions (Player Read, Game Master Read, Write, and Execute) for their notes, which cannot be modified or removed. This is consistently enforced throughout the application.
+- **Manage Note Access**: Note owners can assign or modify access levels for campaign participants (excluding themselves) through a dedicated access management interface. The note owner is automatically excluded from the participant list and always has full permissions by default, which cannot be modified or removed through the UI.
+- **Edit Notes**: The note owner and any user with "Write" access can edit notes from the Note Details page. Other campaign participants without Write access cannot edit notes.
+- **Note Name Uniqueness During Editing**: When editing a note, the uniqueness check for the note name allows the current note's name if it is unchanged, but prevents duplication with other notes in the same campaign. Users can edit a note without changing its name, while still enforcing that note names remain unique within each campaign.
+- **Automatic Note Detail Refresh**: After a note is successfully edited, the Note Details page automatically refreshes to display the latest content without requiring a manual reload
+- **Delete Notes**: The note owner and any user with "Write" access can delete notes from the Note Details page. Other campaign participants without Write access cannot delete notes.
+- **Note Deletion Confirmation**: Before deleting a note, a confirmation step is required to prevent accidental removals
+- **Automatic Notes List Refresh**: After a note is successfully deleted, the notes list automatically refreshes to remove the deleted note from the UI without requiring a page reload
+- **Campaign-Scoped Unique Note Names**: Note names must be unique within each campaign to enable proper note linking functionality and prevent conflicts during note creation and editing
+- **Note Linking**: The note owner and any user with "Write" access can link their notes to other notes within the same campaign by providing the target note's name, regardless of which session the target note belongs to
+- **Name-Based Note Linking**: Note linking uses note names as identifiers, allowing users to create links by specifying the exact name of the target note within the same campaign
+- **Self-Linking Prevention**: Users cannot link a session note to itself - the system prevents users from creating links where the source and target note are the same
+- **Duplicate Link Prevention**: Users cannot create a link between two session notes if a link already exists between them - the system validates for existing links and prevents duplicate link creation with clear error messaging
+- **Bidirectional Note Links**: When a note link is established, the relationship is automatically bidirectional, meaning both notes reference each other
+- **Cross-Session Linking**: Notes can be linked to notes from different sessions as long as both notes belong to the same campaign
+- **Campaign-Scoped Linking**: Note linking is restricted to notes within the same campaign only, preventing links to notes from other campaigns
+- **Linked Notes Display**: The Note Details page displays a list of all notes linked to the current note with navigation capabilities to view linked notes. Each linked note entry shows the actual note name, the session name it belongs to, and the tags associated with the linked note, with clickable navigation to view the linked note's details page.
+- **Linked Notes Navigation**: Users can click and navigate to any linked note where they are either the note owner or have at least one type of read access (Player Read or GM Read), regardless of which session the note belongs to within the same campaign. Clicking on any accessible linked note in the linked notes section navigates directly to that note's details page, enabling smooth navigation between linked notes within the same campaign.
+- **Linked Notes Access Control**: Linked notes are displayed as clickable links if the user is either the note owner or has at least one read permission (Player Read or GM Read) for the linked note. When the user is the note owner or has read access, the link is clickable and allows navigation to the linked note's details page. When the user is neither the note owner nor has read permissions, the linked note is displayed as non-clickable text with a "No read access" message instead of the navigation icon.
+- **Linked Notes Visibility**: Users can always see the complete list of linked notes, but can only navigate to those for which they are the note owner or have read permissions
+- **Link Management**: The note owner and any user with "Write" access can add and remove links to other notes within their campaign through the Note Details page using note names as identifiers
+- **Manage Note Links Dialog**: The note owner and any user with "Write" access can access a dedicated "Manage Note Links" dialog from the Note Details page that provides session note link management functionality
+- **Session Note Link Management in Dialog**: Within the "Manage Note Links" dialog, users can view all currently linked session notes, add new session note links by entering exact note names, and remove existing session note links with confirmation
+- **Note Tag Management**: The note owner and any user with "Write" access can add and remove tags for their notes. Tags are single-word strings that help categorize and organize notes within campaigns.
+- **Tag Display**: Tags are displayed both in the Note Details page and in the session notes list, providing visual identification and categorization of notes
+- **Dynamic Tag Updates**: Tags can be added or removed dynamically by the note owner or users with Write access, with immediate updates to both the note details view and the session notes list
+- **HTML Content Rendering**: Both player and GM content fields in session notes support HTML tags and render them with native browser styling, unaffected by the application's global or custom CSS
+- **Native HTML Styling**: When displaying note content with HTML, native HTML elements (like h1, li, ul, etc.) use browser default styles without additional application styles or Tailwind classes applied, allowing for natural spacing, font sizes, and formatting
+- **HTML Container Isolation**: Wrappers or containers around rendered note content are designed to avoid overriding native HTML styles, preserving the browser's default rendering of HTML elements
+- **Custom Heading and List Spacing**: The `.native-html-content` class includes custom CSS styles that reduce the margin-top and margin-bottom spacing for h2, h3, h4, h5, and h6 heading tags compared to browser defaults, and also adjusts the spacing between list items (li) to create tighter, more compact lists while maintaining readability and native HTML appearance
+- **Dynamic Content Substitution**: Session notes support dynamic content substitution where placeholders in the format `<---field--->` are automatically replaced with corresponding values from linked metadata notes. The system supports nested field access using dot notation (e.g., `<---character.name--->`) and array access using bracket notation (e.g., `<---items[0].name--->`). When displaying or editing notes, the substituted content is shown in both player and GM views, allowing users to see the live, rendered result with metadata values populated in place of placeholders.
+- **Linked Metadata Notes Display**: The Note Details page displays a list of all metadata notes linked to the current session note, showing each metadata note's name and relevant summary information with navigation capabilities to view the metadata note's details page
+- **Metadata Note Navigation**: Users can click and navigate to any linked metadata note where they have appropriate access permissions, allowing smooth navigation from session notes to their linked metadata notes
+- **Metadata Note Unlinking**: Users with appropriate permissions can unlink metadata notes from session notes through the Note Details page, with a confirmation dialog required before unlinking to prevent accidental removals
+- **Automatic Metadata Link Updates**: After unlinking a metadata note from a session note, the linked metadata notes list automatically updates to remove the unlinked metadata note from the UI without requiring a page reload
+
+### Metadata Notes Management
+- **Create Metadata Notes**: Session owners can always create metadata notes for their sessions, regardless of their note permissions. Additionally, users with "Write" permission on any session note within a campaign can create metadata notes from the main session notes dashboard area only
+- **Metadata Note Data**: Each metadata note has a name, a JSON content field (validated for correct JSON format), an owner (creator), and support for linking to multiple session notes
+- **Campaign-Scoped Unique Metadata Note Names**: Metadata note names must be unique within each campaign to prevent conflicts and enable proper identification during metadata note creation and editing
+- **JSON Validation**: The JSON content field is validated to ensure correct JSON format before metadata note creation, with clear error feedback for invalid JSON
+- **Metadata Note Visibility**: Metadata notes are only visible to users who are participants in the campaign where the metadata note is linked, or to the metadata note's owner. Users outside the campaign cannot see or access metadata notes.
+- **Campaign-Based Metadata Note Association**: Metadata notes are directly associated with campaigns rather than individual sessions, ensuring they can be properly identified and retrieved for all campaign participants and linking operations
+- **Metadata Note Display**: Metadata notes are stored and displayed separately from regular session notes but are visible in the session notes dashboard alongside session notes for authorized users only
+- **Immediate Metadata Note Loading**: Metadata notes are automatically loaded and displayed immediately when the session notes dashboard is accessed, without requiring prior navigation to any Note Details page or other dependency, but only for users with proper access permissions
+- **Dashboard Metadata Query**: The metadata notes query is triggered automatically on dashboard load, ensuring metadata notes are always available and visible from the initial dashboard access for authorized users
+- **Metadata Note Linking**: Metadata notes can be linked to multiple session notes within the same campaign using session note names, with linking functionality available only from the metadata note creation or editing interface
+- **Dynamic Content Source**: Metadata notes serve as the data source for dynamic content substitution in session notes, with their JSON content being parsed and used to replace placeholders in linked session notes
+- **Metadata Note Access**: Metadata notes inherit the same access control principles as session notes, with the creator having full permissions
+- **Metadata Note Details View**: Only the owner of the metadata note or users who have write access to at least one of its linked session notes can view the metadata note details page. The details page displays the name, JSON content (formatted for readability), owner information, and a list of all session notes linked to the metadata note.
+- **Metadata Note Details Access Control**: Users who are not the metadata note owner and do not have write access to any of the linked session notes cannot access or view the metadata note details page
+- **Metadata Note Navigation**: Users can navigate to metadata note details from the linked metadata notes list in session note details pages only if they meet the access requirements (owner or have write access to at least one linked session note)
+- **Linked Session Note Navigation**: In the metadata note details view, each linked session note name is displayed as a clickable link if the user is either the note owner or has at least one type of read permission (Player Read or GM Read) for that session note. When clicked, users navigate directly to that session note's details page. If the user does not have read access and is not the note owner, the session note name is displayed as plain text with a "No read access" indicator.
+- **Campaign Metadata Note Retrieval**: The system ensures all metadata notes associated with a campaign are correctly identified and retrieved for display in the session notes dashboard and linking dialogs, regardless of when or how they were created
+- **Reliable Metadata Note Detection**: Backend queries for metadata notes are designed to consistently find and return all metadata notes belonging to a campaign, ensuring no metadata notes are missed due to timing, creation conditions, or data inconsistencies
+- **Campaign-Level Metadata Note Validation**: When linking a metadata note by name, the system validates that the metadata note belongs to the current campaign by checking that its campaignId matches, regardless of owner or participant status
+
+### Session Participant Management
+- **Add SessionPlayers**: Session owners can add campaign participants as SessionPlayers to their sessions
+- **SessionPlayer Eligibility**: Only campaign participants with the Player role (or both Player and GM roles) are eligible to be added as SessionPlayers
+- **Remove SessionPlayers**: Session owners can remove SessionPlayers from their sessions
+- **SessionPlayer Removal Confirmation**: Before removing a SessionPlayer from a session, a confirmation step is required to prevent accidental removals
+- **View SessionPlayers**: All campaign participants can view the list of SessionPlayers for each session
+- **SessionPlayer Management Authorization**: Only the session owner can add or remove SessionPlayers from their sessions
+
+### In-Game Date and Time Management
+- Each campaign has an associated in-game date and time that can be set during creation
+- The in-game date and time can be modified when editing existing campaigns
+- Users interact with the in-game date and time through a text field input where they can manually enter the date
+- The date input includes comprehensive validation to ensure data integrity:
+  - Days must not exceed the valid range for each month (accounting for different month lengths)
+  - February validation includes proper leap year handling
+  - Months must not exceed 12
+  - No negative values are accepted
+  - Only integer values are accepted for numeric components
+  - User-friendly format validation with clear error messages
+- The in-game date and time is displayed in the campaign listing and details
+- **Note In-Game DateTime**: Notes can have an optional in-game datetime field with the same input format and validation logic as campaign creation
+
+### Campaign Participant Management
+- **Role Assignment**: Campaign owners can assign roles to participants as GM (Game Master), player, or both
+- **Multiple Roles**: A campaign can have multiple GMs and multiple players
+- **Participant Overview**: All campaign participants, including the currently logged-in user, can view all participants and their assigned roles in the campaign's participant list
+- **Role Editing**: Campaign owners can edit and change the roles of all participants directly from the participant management interface, including their own role, allowing them to switch between GM, player, or both roles
+- **Owner Self-Role Modification**: Campaign owners can modify their own roles within their campaigns, giving them the flexibility to change from GM to player, or assign themselves both roles as needed
+- **Immediate Role Updates**: Role changes are immediately reflected in the campaign's participant list and stored in the backend
+- **Role Modification Authorization**: Only campaign owners can modify participant roles, with proper authorization enforcement
+- **Participant Removal**: Campaign owners can remove participants from their campaigns with mandatory confirmation
+- **Mandatory Removal Confirmation**: When a campaign owner attempts to remove a participant, a confirmation modal dialog must appear that clearly displays the participant's name and requires explicit confirmation before the removal action is executed. The confirmation dialog must include clear "Confirm" and "Cancel" options, and the removal only proceeds if the owner explicitly confirms the action.
+- **Accidental Removal Prevention**: The participant removal process is designed to prevent accidental removals by requiring a deliberate confirmation step that cannot be bypassed
+- **Owner Visibility**: Campaign owners appear in the participant list alongside other participants
+- **Self-Leave Campaign**: Any campaign participant (except the campaign owner) can leave the campaign on their own without requiring owner intervention. Campaign owners cannot leave their own campaigns using this feature.
+
+### Invitation System
+- **Send Invitations by Username**: Campaign owners can invite users to join their campaigns by providing the invitee's username and specifying their intended role (GM, player, or both)
+- **Username Validation**: The system validates that the provided username exists before sending the invitation
+- **View Invitations**: Users can view all pending invitations they have received
+- **Accept Invitations**: Users can accept invitations, which adds them to the campaign with the specified role
+- **Reject Invitations**: Users can reject invitations, which removes the invitation
+- **Invitation Status**: Campaign owners can see the status of sent invitations (pending, accepted, rejected)
+
+### Navigation Tag System
+- **Tag-Based Navigation**: The main navigation menu displays all note tags from campaigns the user participates in, providing quick access to notes by category
+- **Tag Collection**: The system aggregates all unique tags from notes in campaigns where the user is a participant (both owned and joined campaigns)
+- **Tag Filtering**: Users can click on tags in the navigation menu to view all notes with that specific tag across all their campaigns
+- **Cross-Campaign Tag View**: Tag navigation shows notes from all campaigns the user participates in that contain the selected tag, regardless of which specific campaign the notes belong to
+- **Tag-Based Note Access**: When viewing notes through tag navigation, users can only see notes they have access to based on their permissions (note ownership or read access)
+- **Dynamic Tag Updates**: The navigation tag list automatically updates when tags are added or removed from notes in any of the user's campaigns
+
+### Access Control
+- Only campaign owners can edit or delete their own campaigns from the Campaign Details page
+- Only campaign owners can manage participants, edit participant roles (including their own), and send invitations for their campaigns
+- Users cannot modify campaigns created by other users
+- Campaign participants can view campaign details but cannot modify them unless they are also the owner
+- Campaign participants (except owners) can leave campaigns they participate in
+- Only users with GM role can create sessions for campaigns they participate in as GMs, regardless of campaign ownership
+- Only session owners can edit or delete their own sessions from the Session Details page, other GMs cannot modify sessions they did not create
+- Only session owners can add or remove SessionPlayers from their sessions
+- All campaign participants can view sessions and their SessionPlayers
+- Campaign participants can view session details and associated notes based on their assigned access levels
+- Only session owners can create notes for their sessions
+- Note owners automatically have full permissions (Player Read, Game Master Read, Write, and Execute) for their notes, which is consistently enforced throughout the application
+- The note owner and any user with "Write" access can edit, delete, link, unlink, and manage tags for notes from the Note Details page. Other campaign participants without Write access cannot modify notes.
+- Only note owners can manage access levels for their notes, excluding themselves from the access management interface
+- Note content visibility is controlled by individual access permissions for each campaign participant, with separate player and GM content displayed based on user permissions in the Note Details page
+- The note owner and any user with "Write" access can create and manage links between notes within the same campaign using note names as identifiers
+- Note linking is restricted to notes within the same campaign only
+- Users cannot link a session note to itself - the system prevents self-linking during note link creation
+- Users cannot create duplicate links between two session notes - the system validates for existing links and prevents duplicate link creation with clear error messaging
+- The note owner and any user with "Write" access can add or remove tags for their notes
+- Linked notes navigation is controlled by note ownership or read permissions - users can navigate to linked notes if they are either the note owner or have at least one read permission (Player Read or GM Read), regardless of which session the linked note belongs to within the same campaign
+- Tag-based navigation respects note access permissions - users can only view notes through tag navigation if they have proper access (note ownership or read permissions)
+- Session owners can always create metadata notes for their sessions, regardless of their note permissions. Additionally, users with "Write" permission on any session note within a campaign can create metadata notes from the main session notes dashboard area only
+- Metadata note creators have full permissions for their metadata notes, similar to session note ownership
+- Metadata notes are only visible to users who are participants in the campaign where the metadata note is linked, or to the metadata note's owner
+- Only the owner of the metadata note or users who have write access to at least one of its linked session notes can view the metadata note details page
+- Dynamic content substitution respects note access permissions - users can only see substituted content in notes they have access to view
+- Users with appropriate permissions can unlink metadata notes from session notes, with proper authorization checks
+- Users can view metadata note details only if they are the metadata note owner or have write access to at least one session note linked to that metadata note
+- Linked session note navigation from metadata note details is controlled by note ownership or read permissions - users can navigate to linked session notes if they are either the note owner or have at least one read permission (Player Read or GM Read)
+- Linked metadata note navigation from session note details is controlled by appropriate access permissions - users can navigate to linked metadata notes only if they are the metadata note owner or have write access to at least one of its linked session notes
+- The note owner and any user with "Write" access can manage session note links through the "Manage Note Links" dialog, with proper validation and confirmation for all link operations
+- **Metadata Note Linking Access Control**: Metadata notes can only be linked to session notes from the metadata note creation or editing interface, not from the session note side. The "Manage Note Links" dialog on session notes only supports session note linking functionality.
+
+## Data Storage
+The backend must store:
+- Campaign data including campaign details, metadata, and in-game date and time
+- User ownership information linking campaigns to their creators
+- User profile data including usernames for invitation lookup with username uniqueness constraints
+- Campaign participant data including user identities and their assigned roles, with automatic inclusion of campaign owners as GM participants
+- Invitation data including sender, recipient, campaign, intended role, and invitation status
+- Session data including session name, description, real-world date, associated campaign, and creator information with session ownership tracking
+- SessionPlayer data linking sessions to their participating campaign members
+- Note data including note name, player content field, GM content field, optional in-game datetime, associated session, creator information, and tags list
+- Note access control data using bitflag system storing access permissions (Player Read, Game Master Read, Write, Execute) for each campaign participant per note
+- Note linking data storing bidirectional relationships between notes within the same campaign using note names as identifiers
+- Metadata note data including name, JSON content field, owner information, and direct campaign association for reliable identification and retrieval
+- Metadata note linking data storing relationships between metadata notes and multiple session notes within the same campaign using session note names
+- User authentication state and identity mapping
+- Campaign-scoped note name uniqueness constraints to prevent duplicate note names within the same campaign
+- Campaign-scoped metadata note name uniqueness constraints to prevent duplicate metadata note names within the same campaign
+- Note tags data as a list of single-word strings associated with each note
+- Username uniqueness validation data to prevent duplicate usernames across all users
+- Tag aggregation data for efficient navigation menu population across user's campaigns
+- Metadata note access control data to enforce visibility restrictions based on campaign participation and ownership
+- Campaign-metadata note association data to ensure reliable identification and retrieval of all metadata notes belonging to a campaign
+
+## Backend Operations
+- Store and retrieve campaign data including in-game dates and times
+- Automatically add campaign owners as participants with GM role during campaign creation
+- Retrieve campaigns where a user is a participant (both owned and joined campaigns)
+- Retrieve campaigns owned by a specific user
+- Retrieve detailed campaign information for campaign detail views
+- Manage user profiles and username registration with uniqueness validation
+- **Validate Username Uniqueness**: Check if a proposed username already exists in the system and return validation results
+- **Enforce Username Uniqueness**: Prevent registration of duplicate usernames and return appropriate error responses
+- Validate username existence for invitation sending
+- Manage campaign participants and their role assignments
+- Handle participant role editing and updates with proper authorization checks
+- Process role changes and persist updated participant roles in the backend
+- Handle invitation creation, retrieval, acceptance, and rejection
+- Manage user authentication and session state
+- Enforce ownership permissions for campaign operations and role editing
+- Handle campaign CRUD operations with proper authorization checks
+- Update campaign in-game dates and times when modified
+- Process participant role changes and removals
+- Process participant self-leave operations with proper authorization (only non-owners can leave)
+- Store and retrieve session data with proper authorization checks
+- Validate GM role permissions for session creation regardless of campaign ownership
+- Handle session editing operations with session ownership validation
+- Handle session deletion operations with session ownership validation
+- Retrieve sessions associated with specific campaigns
+- Retrieve detailed session information for session detail views
+- Manage SessionPlayer assignments for sessions with proper authorization checks
+- Add and remove SessionPlayers from sessions with session ownership validation
+- Retrieve SessionPlayer lists for sessions
+- Validate Player role eligibility for SessionPlayer assignments
+- Store and retrieve note data with dual content fields (player and GM content), tags list, and proper authorization checks
+- Handle note creation operations with session ownership validation for both player and GM content fields and tags
+- Handle note editing operations with note ownership or Write access validation including tag updates
+- **Note Name Uniqueness Validation During Editing**: Validate note name uniqueness during editing operations, allowing the current note's name if it is unchanged, but preventing duplication with other notes in the same campaign. This enables users to edit a note without changing its name while still enforcing campaign-scoped uniqueness constraints.
+- Handle note deletion operations with note ownership or Write access validation
+- Retrieve notes associated with specific sessions based on user access permissions including tags data
+- Retrieve detailed note information for note detail views including tags
+- Validate session ownership permissions for note creation
+- Validate note ownership or Write access permissions for note editing, deletion, and tag management
+- Store and manage note access control data using bitflag system for each campaign participant
+- Handle note access level modifications with proper note ownership validation
+- Retrieve note access permissions for specific users and notes
+- Filter note content visibility based on user access levels, returning appropriate content (player content for Player Read permission, GM content for Game Master Read permission)
+- Store and retrieve metadata note data including name, JSON content, owner information, and direct campaign association
+- Validate JSON format for metadata note content before storage
+- Handle metadata note creation operations with proper session ownership or Write permission validation
+- **Retrieve Metadata Notes with Access Control**: Retrieve metadata notes associated with specific campaigns only for users who are participants in the campaign where the metadata note is linked, or for the metadata note's owner
+- **Validate Metadata Note Visibility**: Ensure metadata notes are only visible to authorized users (campaign participants or metadata note owners) and filter out unauthorized metadata notes from query results
+- Handle metadata note linking operations to multiple session notes within the same campaign using session note names, with linking functionality restricted to metadata note creation or editing interface only
+- **Metadata Note Linking Restriction**: Ensure metadata note linking to session notes is only available from the metadata note creation or editing interface, not from the session note side
+- Validate session ownership or Write permissions for metadata note creation across campaign participants
+- **Dynamic Content Substitution Processing**: Process session note content to identify placeholders in the format `<---field--->` and replace them with corresponding values from linked metadata notes. Support nested field access using dot notation and array access using bracket notation. Apply substitution to both player and GM content fields based on user access permissions.
+- **Metadata Note Content Parsing**: Parse JSON content from metadata notes to extract field values for dynamic content substitution, supporting nested objects and arrays
+- **Placeholder Resolution**: Resolve placeholder references by matching field names in metadata note JSON content, handling complex data structures and providing appropriate fallback values when fields are not found
+- Ensure proper canister initialization and deployment compatibility
+- Handle stable memory management for data persistence across upgrades
+- Retrieve complete participant lists including all users (owners and invited participants) for display
+- **Enforce campaign-scoped unique note names**: Validate note name uniqueness within each campaign during note creation and editing, preventing duplicate note names in the same campaign
+- **Enforce campaign-scoped unique metadata note names**: Validate metadata note name uniqueness within each campaign during metadata note creation and editing, preventing duplicate metadata note names in the same campaign
+- **Validate note linking by name**: Validate note linking requests using note names as identifiers to ensure both notes belong to the same campaign and the target note exists
+- **Prevent self-linking**: Validate note linking requests to ensure users cannot link a session note to itself, rejecting self-linking attempts with appropriate error messages
+- **Prevent duplicate linking**: Validate note linking requests to ensure a link does not already exist between two session notes, rejecting duplicate link attempts with appropriate error messages
+- Create and manage bidirectional note links between notes within the same campaign using note names as identifiers
+- Retrieve linked notes for display in Note Details pages with complete note and session information
+- Handle note link creation and removal operations using note names with proper note ownership or Write access validation
+- Validate target note existence by name and campaign membership for note linking operations
+- Remove all associated note links when a note is deleted to maintain data integrity
+- Retrieve linked note details including note names, associated session names, and tags for proper display in the Note Details page
+- **Retrieve linked note access permissions and ownership**: For each linked note, retrieve both the user's access permissions and note ownership status to determine if they are either the note owner or have at least one read permission (Player Read or GM Read) for proper display control in the Note Details page
+- Handle note tag addition and removal operations with proper note ownership or Write access validation
+- Store and retrieve note tags as single-word strings associated with each note
+- Update note tags dynamically when modified by note owners or users with Write access
+- **Enforce note owner full permissions**: Consistently enforce that note owners automatically have full permissions (Player Read, Game Master Read, Write, and Execute) for their notes throughout all backend operations and access control checks
+- **Aggregate Campaign Tags**: Retrieve all unique tags from notes in campaigns where the user is a participant for navigation menu population
+- **Filter Notes by Tag**: Retrieve all notes with a specific tag from campaigns where the user is a participant, respecting access permissions
+- **Cross-Campaign Tag Search**: Search and retrieve notes by tag across all campaigns the user participates in with proper access control validation
+- **Tag navigation updates**: Ensure the tag navigation system automatically reflects changes when tags are added or removed from notes, with efficient update mechanisms that don't require full page reloads
+- **Linked note tag retrieval**: Implement efficient retrieval of tags for linked notes to display alongside note names and session names in the linked notes section of the Note Details page
+- **JSON validation system**: Implement robust JSON format validation for metadata note content with proper error handling and user feedback
+- **Metadata note storage system**: Implement efficient storage and retrieval system for metadata notes with proper indexing and direct campaign association, using "name" field instead of "title"
+- **Metadata note linking system**: Implement system for linking metadata notes to multiple session notes within campaigns using session note names with proper validation and data integrity, restricted to metadata note creation or editing interface only
+- **Retrieve Linked Metadata Notes**: Retrieve all metadata notes linked to a specific session note for display in the Note Details page, but only for users with proper access permissions
+- **Handle Metadata Note Unlinking**: Process requests to unlink metadata notes from session notes with proper authorization validation and data integrity maintenance
+- **Retrieve Metadata Note Details with Access Control**: Retrieve detailed information about metadata notes including name, JSON content, owner, and all linked session notes for the metadata note details view, but only for users who are the metadata note owner or have write access to at least one of its linked session notes
+- **Validate Metadata Note Details Access**: Determine if users have access to view metadata note details based on being the metadata note owner or having write access to at least one of its linked session notes
+- **Retrieve Linked Session Note Access Permissions and Ownership**: For each session note linked to a metadata note, retrieve both the user's access permissions and note ownership status to determine if they are either the note owner or have at least one read permission (Player Read or GM Read) for proper display control in the metadata note details page
+- **Filter Metadata Notes by Campaign Participation**: Ensure metadata notes are only returned to users who are participants in the campaign where the metadata note is linked, or to the metadata note's owner, filtering out unauthorized metadata notes from all query results
+- **Campaign-Based Metadata Note Queries**: Implement robust backend queries that reliably identify and retrieve all metadata notes associated with a campaign by using direct campaign association rather than indirect session-based relationships
+- **Comprehensive Metadata Note Detection**: Ensure backend operations consistently find and return all metadata notes belonging to a campaign, regardless of creation timing, conditions, or data state, by implementing comprehensive query logic that accounts for all possible metadata note states and associations
+- **Metadata Note Campaign Association Validation**: Validate and maintain proper campaign association for all metadata notes to ensure reliable identification and retrieval in all UI contexts and linking operations
+
+## User Interface
+- **Username Setup Interface**: Form for first-time username registration with username uniqueness validation that only occurs when the user clicks the "Create Profile" button
+- **Username Validation Feedback**: Clear error feedback when a username is already taken after form submission, with guidance to choose a different username
+- **Username Registration Flow**: Users must successfully register a unique username before accessing other application features
+- **Tag Navigation Menu**: Main navigation menu displays all unique note tags from campaigns the user participates in, providing quick access to note categories. Tags are displayed as clickable navigation items that allow users to filter and view notes by category across all their campaigns.
+- **Tag-Based Note Filtering**: Interface for viewing all notes with a selected tag from the navigation menu, showing notes from all campaigns the user participates in that contain the selected tag, with proper access control enforcement
+- **Cross-Campaign Tag View**: Dedicated view that displays notes filtered by the selected tag from the navigation menu, showing notes from multiple campaigns in a unified list with clear campaign identification for each note
+- Campaign listing view showing user's owned campaigns with in-game dates and times (without campaign management actions)
+- Separate campaign listing view showing all campaigns the user participates in (both owned and joined) with in-game dates and times
+- **Campaign Detail View**: Detailed view accessible by clicking on campaigns that displays all campaign data including the full description, participant list, and sessions list. Campaign management actions (Edit and Delete) are accessible only from this view.
+- **Session List**: Within the campaign detail view, display sessions in a list format similar to the campaigns list showing session names, descriptions, and real-world dates (without session management actions)
+- **Session Detail View**: Detailed view accessible by clicking on sessions that displays all session data including the full description and associated notes list. Session management actions (Edit and Delete) are accessible only from this view.
+- **Session Notes List**: Within the session detail view, display notes in a list format similar to how sessions are listed for campaigns. The notes list can be empty and should display appropriately when no notes exist. Notes are filtered based on user access permissions and display note names and tags (without note content).
+- **Session Notes Dashboard**: Dedicated dashboard or index page that displays both session notes and metadata notes, with clear visual distinction between the two types of notes. The metadata note creation button is available only in the main dashboard area, not within the metadata notes tab itself. Metadata notes are automatically loaded and displayed immediately when the dashboard is accessed, but only for users with proper access permissions.
+- **Immediate Metadata Notes Display**: Metadata notes are displayed immediately upon dashboard load for authorized users, with the metadata notes query triggered automatically on dashboard access to ensure metadata notes are always available and visible from the initial dashboard visit for users with proper access permissions
+- **Metadata Notes Display**: Metadata notes are stored and displayed separately from regular session notes but are visible in the session notes dashboard alongside session notes with clear identification, but only for users who are participants in the campaign where the metadata note is linked, or for the metadata note's owner
+- **Reliable Metadata Notes Loading**: The session notes dashboard ensures all metadata notes associated with the current campaign are correctly identified and displayed, with robust loading logic that consistently finds and lists all campaign metadata notes regardless of creation conditions or timing
+- **Note Detail View**: Detailed view accessible by clicking on notes that displays the note content (both player and GM content) according to the user's access permissions, along with the note's tags, with dynamic content substitution applied to show rendered results where placeholders are replaced with metadata values. Users with Player Read permission can see player content with substitutions, users with Game Master Read permission can see GM content with substitutions, and users with both permissions can see both content types with substitutions applied. Note management actions (Edit and Delete) are accessible from this view to the note owner and users with Write access.
+- **Content Substitution Display**: Note content is displayed with dynamic content substitution applied, showing the rendered result where placeholders like `<---field--->` are automatically replaced with corresponding values from linked metadata notes. The substituted content is visible in both player and GM views based on user access permissions.
+- **Native HTML Content Rendering**: Both player and GM content fields in session notes are rendered with HTML support using native browser styling, unaffected by the application's global or custom CSS. Native HTML elements (like h1, li, ul, etc.) use browser default styles without additional application styles or Tailwind classes applied, allowing for natural spacing, font sizes, and formatting as defined by the browser.
+- **HTML Container Isolation**: Wrappers or containers around rendered note content are designed to avoid overriding native HTML styles, preserving the browser's default rendering of HTML elements and preventing custom CSS from affecting native HTML formatting.
+- **Custom Heading and List Spacing Styles**: The `.native-html-content` class includes custom CSS styles that specifically target h2, h3, h4, h5, and h6 heading tags to reduce their margin-top and margin-bottom spacing compared to browser defaults, and also adjusts the spacing between list items (li) to create tighter, more compact lists while maintaining readability and native HTML appearance.
+- **Linked Notes Display**: Within the Note Detail View, display a list of all notes linked to the current note with conditional navigation based on user permissions and ownership. Each linked note entry displays the actual note name, the session name it belongs to, and the tags associated with the linked note. For linked notes where the user is either the note owner or has at least one read permission (Player Read or GM Read), the entry is clickable and allows direct navigation to the linked note's details page, regardless of which session the linked note belongs to within the same campaign. For linked notes where the user is neither the note owner nor has read permissions, the entry is displayed as non-clickable text with a "No read access" message instead of the navigation icon.
+- **Linked Notes Navigation**: Each linked note in the linked notes section with proper ownership or read permissions is clickable and navigates directly to that note's details page when clicked, enabling smooth navigation between accessible linked notes within the same campaign, regardless of which session the linked note belongs to
+- **Note Linking Interface**: Interface accessible to note owners and users with Write access within the Note Detail View for creating and managing links to other notes within the same campaign using note names as identifiers. The interface should allow adding links by providing target note names and removing existing links, with clear indication that note names are used for linking. The interface must prevent users from linking a note to itself and display appropriate error messages when self-linking is attempted. The interface must also prevent users from creating duplicate links between two notes and display appropriate error messages when duplicate linking is attempted.
+- **Manage Note Links Dialog**: Dialog accessible to note owners and users with Write access from the Note Detail View that provides session note link management functionality only. The dialog does not include metadata note linking capabilities.
+- **Session Note Link Management in Dialog**: Within the "Manage Note Links" dialog, display all currently linked session notes with their names, session information, and tags. Provide functionality to add new session note links by entering exact note names and remove existing session note links with confirmation. The dialog must validate for existing links and prevent duplicate link creation with clear error messaging.
+- **Note Tag Management Interface**: Interface accessible to note owners and users with Write access within the Note Detail View for adding and removing tags for their notes. The interface should allow addition and removal of single-word string tags with immediate visual feedback.
+- **Metadata Note Creation Interface**: Form accessible to session owners (regardless of their note permissions) and users with "Write" permission on any session note within a campaign from the main session notes dashboard area only for creating new metadata notes with fields for name and JSON content
+- **JSON Validation Interface**: Real-time or on-submit validation for the JSON content field in metadata note creation, with clear error messages for invalid JSON format
+- **Metadata Note Linking Interface**: Interface for linking metadata notes to multiple session notes within the same campaign using session note names, available only from the metadata note creation or editing interface. The interface should instruct users to "Enter Session Note names separated by commas" and ensure all related UI text and placeholders reflect that note names (not IDs) are used for linking metadata to session notes.
+- **Note Creation Form**: Form accessible only to session owners within the session detail view for creating new notes with fields for name, player content, GM content, optional in-game datetime, and tags. Both content fields should support long text input and be clearly labeled. The form should be hidden or disabled for users who are not the session owner. The form should include user feedback indicating that note names must be unique within the campaign and are used for linking.
+- **Note Editing Form**: Form accessible to note owners and users with Write access within the note detail view for editing existing notes with fields for name, player content, GM content, optional in-game datetime, and tags. Both content fields should support long text input and be clearly labeled. The form should be hidden or disabled for users without Write access. The form should include user feedback indicating that note names must be unique within the campaign and are used for linking. The editing interface shows the raw content with placeholders, while the display view shows the substituted content. When editing a note, the uniqueness check for the note name allows the current note's name if it is unchanged, but prevents duplication with other notes in the same campaign.
+- **Note Access Management Interface**: Dedicated interface accessible to note owners for managing access levels of campaign participants (excluding the note owner) for their notes, allowing assignment and modification of Player Read, Game Master Read, Write, and Execute permissions using bitflag controls. The note owner is automatically excluded from the participant list and always has full permissions by default.
+- **Session Creation Form**: Form accessible only to users with GM role within the campaign detail view for creating new sessions with fields for name, description, and real-world date. The form should be hidden or disabled for users without GM role, regardless of campaign ownership.
+- **Session Editing Interface**: Edit form for sessions that is only accessible to the session owner from the Session Details page, allowing modification of session name, description, and real-world date
+- **Session Deletion Interface**: Delete button for sessions that is only accessible to the session owner from the Session Details page
+- **Session Deletion Confirmation**: Confirmation modal that appears when a session owner attempts to delete a session from the Session Details page, requiring explicit confirmation before the deletion is executed
+- **Automatic Session List Update**: After successful session deletion, the session list automatically updates to reflect the removal without requiring a page reload or manual refresh
+- **Note Deletion Interface**: Delete button for notes that is accessible to the note owner and users with Write access from the Note Details page
+- **Note Deletion Confirmation**: Confirmation modal that appears when a note owner or user with Write access attempts to delete a note from the Note Details page, requiring explicit confirmation before the deletion is executed
+- **Automatic Notes List Update**: After successful note deletion, the notes list automatically updates to reflect the removal without requiring a page reload or manual refresh
+- **SessionPlayer Management Interface**: Interface accessible only to session owners for managing SessionPlayers within their sessions, showing current SessionPlayers and allowing addition/removal of eligible campaign participants
+- **SessionPlayer Addition**: Form or interface for session owners to add eligible campaign participants (those with Player role or both Player and GM roles) as SessionPlayers to their sessions
+- **SessionPlayer Removal Confirmation**: Confirmation modal that appears when a session owner attempts to remove a SessionPlayer from a session, requiring explicit confirmation before the removal is executed
+- **SessionPlayer Display**: View showing the list of SessionPlayers for each session, visible to all campaign participants
+- Campaign creation form with text field input for in-game date and time entry
+- Campaign editing interface with text field input for modifying in-game date and time (accessible only from Campaign Details page)
+- Campaign deletion interface (accessible only from Campaign Details page)
+- Campaign participant management interface showing all participants including the currently logged-in user and their roles
+- **Participant Role Editing Interface**: Interactive controls within the participant management interface that allow campaign owners to directly edit and change participant roles between GM, player, or both, with immediate visual feedback. This includes the ability for campaign owners to modify their own roles within their campaigns.
+- Participant invitation form for sending invitations by username with role selection
+- Username validation feedback when sending invitations
+- Invitations inbox showing received invitations with accept/reject options
+- Sent invitations view showing invitation status for campaign owners
+- Comprehensive client-side validation with user-friendly error messages for date input
+- Campaign deletion confirmation (from Campaign Details page)
+- **Mandatory Participant Removal Confirmation Modal**: A prominent confirmation modal dialog that appears when a campaign owner attempts to remove a participant. The modal must clearly display the participant's name being removed, include explanatory text about the action, and provide distinct "Confirm Removal" and "Cancel" buttons. The modal must be visually prominent and require explicit user interaction to proceed with the removal.
+- **Leave Campaign Option**: A "Leave Campaign" button or option that is accessible from the same menu where "View Participants" is located. This option is visible only to campaign participants who are not the campaign owner and allows participants to leave the campaign without owner intervention.
+- Authentication flow integration
+- All content displayed in English
+- **Linked Metadata Notes Display**: Within the Note Detail View, display a list of all metadata notes linked to the current session note, showing each metadata note's name and relevant summary information with navigation capabilities to view the metadata note's details page. The display is styled and organized similarly to the existing linked notes area for consistency.
+- **Metadata Note View Button**: Button for each linked metadata note that allows users to navigate to the metadata note's details page only if they are the metadata note owner or have write access to at least one of its linked session notes. The button is hidden or disabled for users who do not meet these access requirements.
+- **Metadata Note Unlink Button**: Button for each linked metadata note that allows users with appropriate permissions to unlink the metadata note from the session note
+- **Metadata Note Unlinking Confirmation**: Confirmation dialog that appears when a user attempts to unlink a metadata note from a session note, requiring explicit confirmation before the unlinking is executed
+- **Automatic Metadata Link List Update**: After successful metadata note unlinking, the linked metadata notes list automatically updates to remove the unlinked metadata note from the UI without requiring a page reload
+- **Metadata Note Details View**: Dedicated page that displays detailed information about a metadata note including its name, JSON content (formatted for readability), owner information, and a list of all session notes linked to the metadata note. This page is only accessible to the metadata note owner or users who have write access to at least one of its linked session notes.
+- **Linked Session Note Navigation**: Within the Metadata Note Details View, each linked session note name is displayed as a clickable link if the user is either the note owner or has at least one type of read permission (Player Read or GM Read) for that session note. When clicked, users navigate directly to that session note's details page.
+
+### UI Requirements
+- **Username Setup UI**: Clear, user-friendly interface for username registration with validation feedback that only occurs when the "Create Profile" button is clicked
+- **Username Error Display**: Clear error messages when duplicate usernames are attempted after form submission, with specific guidance on choosing alternative usernames
+- **Tag Navigation UI**: Prominent navigation menu section displaying all unique note tags from the user's campaigns as clickable navigation items. Tags should be visually distinct and clearly indicate their function as category filters. The tag navigation should be easily accessible from the main navigation and provide clear visual feedback when tags are selected.
+- **Tag-Based Filtering UI**: Clear interface for viewing notes filtered by selected tags, with visual indicators showing which tag filter is currently active. The filtered view should clearly display notes from multiple campaigns with proper campaign identification and maintain consistent styling with other note lists.
+- **Tag Navigation Updates**: The tag navigation menu must automatically update when tags are added or removed from notes in any of the user's campaigns, ensuring the navigation always reflects the current available tags without requiring page reloads.
+- **Metadata Notes UI**: Clear visual distinction between session notes and metadata notes in the session notes dashboard, with appropriate styling and labeling to differentiate the two types of notes. Metadata notes are only displayed to users who are participants in the campaign where the metadata note is linked, or to the metadata note's owner.
+- **Immediate Metadata Notes Loading UI**: The session notes dashboard must automatically load and display metadata notes immediately upon access for authorized users, with the metadata notes query triggered on dashboard load to ensure metadata notes are always visible from the initial dashboard visit for users with proper access permissions
+- **Dashboard Metadata Query UI**: The dashboard interface must trigger the metadata notes query automatically on load for authorized users, ensuring metadata notes are fetched and displayed immediately when the dashboard is accessed by users with proper access permissions
+- **Reliable Metadata Notes UI**: The dashboard interface must implement robust loading logic that consistently identifies and displays all metadata notes associated with the current campaign, ensuring no metadata notes are missed due to timing, creation conditions, or data inconsistencies
+- **Metadata Note Name Field UI**: The metadata note creation form must clearly display the "name" field with appropriate labeling and validation feedback for name uniqueness within the campaign
+- **JSON Validation UI**: Clear, user-friendly interface for JSON content input with real-time or on-submit validation feedback, displaying specific error messages for invalid JSON format
+- **Content Substitution UI**: Clear presentation of note content with dynamic content substitution applied, showing the rendered result where placeholders are replaced with metadata values. The interface should present this as a normal feature without special highlighting or explanatory banners.
+- **Placeholder Editing UI**: In note editing forms, display the raw content with placeholders visible, while in note display views, show the substituted content with metadata values resolved. Provide clear visual distinction between editing and display modes without emphasizing the substitution feature.
+- **Native HTML Content Display**: Safe rendering of HTML tags in both player and GM content fields of session notes using native browser styling, unaffected by the application's global or custom CSS. Native HTML elements (like h1, li, ul, etc.) use browser default styles without additional application styles or Tailwind classes applied, allowing for natural spacing, font sizes, and formatting as defined by the browser.
+- **HTML Container Isolation**: Wrappers or containers around rendered note content are designed to avoid overriding native HTML styles, preserving the browser's default rendering of HTML elements and preventing custom CSS from affecting native HTML formatting.
+- **Custom Heading and List Spacing CSS**: The `.native-html-content` class includes specific CSS rules that target h2, h3, h4, h5, and h6 heading tags to apply reduced margin-top and margin-bottom values compared to browser defaults, and also includes CSS rules that target list items (li) to create tighter, more compact spacing between list items while maintaining readability and native HTML appearance.
+- **Session Owner Metadata Note Creation UI**: The metadata note creation interface must be visible to session owners regardless of their note permissions, while still requiring write access for other users. This ensures session owners can always create metadata notes for their sessions even if they don't have write access to any notes in the session. The creation button is only available in the main dashboard area, not within the metadata notes tab.
+- **Note Name Uniqueness Feedback**: Clear user feedback in note creation and editing forms indicating that note names must be unique within the campaign and are used for linking. This feedback should be prominently displayed and help users understand the importance of unique naming.
+- **Note Name Uniqueness During Editing UI**: The note editing form must provide clear feedback that when editing a note, the uniqueness check allows the current note's name if it is unchanged, but prevents duplication with other notes in the same campaign. This enables users to edit a note without changing its name while still enforcing campaign-scoped uniqueness constraints.
+- **Note Linking UI Feedback**: Clear indication in the note linking interface that note names are used for linking, with user-friendly guidance on how to specify target notes by name. The interface should provide clear feedback for successful link creation and removal operations, with prominent indication that note names are used for linking. The interface must prevent self-linking and display appropriate error messages when users attempt to link a note to itself. The interface must also prevent duplicate linking and display appropriate error messages when users attempt to create duplicate links.
+- **Self-Linking Prevention UI**: The note linking interface must prevent users from linking a note to itself and display clear error messages when self-linking is attempted, with user-friendly guidance explaining that notes cannot be linked to themselves.
+- **Duplicate Link Prevention UI**: The note linking interface must prevent users from creating duplicate links between two notes and display clear error messages when duplicate linking is attempted, with user-friendly guidance explaining that a link already exists between the two notes.
+- **Metadata Note Linking UI Text**: The metadata note linking interface must clearly instruct users to "Enter Session Note names separated by commas" and ensure all related UI text, placeholders, and labels reflect that note names (not IDs) are used for linking metadata to session notes.
+- **Manage Note Links Dialog UI**: The "Manage Note Links" dialog must be visually prominent with proper modal styling, clear organization focused on session note links only, and consistent interface elements. The dialog should be appropriately sized for session note link management functionality and be easily accessible from the Note Detail View, providing clear visual feedback for all link management operations including validation for existing links and prevention of duplicate link creation.
+- **Session Note Link Management UI in Dialog**: The session note links section within the dialog must display all currently linked session notes with their names, session information, and tags. Provide functionality to add new session note links by entering exact note names and remove existing session note links with confirmation. The interface should be clear and user-friendly for session note link management and must validate for existing links and prevent duplicate link creation with clear error messaging.
+- Consistent styling across all components with proper spacing and alignment
+- Clear and intuitive navigation between different sections including separate sections for owned campaigns and participated campaigns
+- Navigation from campaign lists to detailed campaign views
+- **Clear Session Navigation**: Clear and user-friendly navigation from session lists to session detail views when sessions are clicked
+- **Clear Note Navigation**: Clear and user-friendly navigation from notes lists to note detail views when notes are clicked
+- **Clear Linked Note Navigation**: Clear and user-friendly navigation from linked notes lists to linked note detail views when linked notes are clicked, but only for linked notes where the user is either the note owner or has read permissions. Each linked note entry displays the actual note name, session name, and tags with conditional clickable functionality based on user ownership or permissions. Clicking on accessible linked notes navigates smoothly to that note's details page, while inaccessible linked notes are displayed as non-clickable text with a "No read access" message. This navigation works regardless of which session the linked note belongs to within the same campaign.
+- **Clear Linked Session Note Navigation**: Clear and user-friendly navigation from the metadata note details view to linked session note detail views when linked session note names are clicked, but only for session notes where the user is either the note owner or has at least one type of read permission (Player Read or GM Read). Each linked session note name is displayed as a clickable link with proper visual feedback when the user has access, using the same navigation logic and template as the session note-to-session note link navigation. This navigation works seamlessly and is consistent with the permissions logic used elsewhere in the app.
+- **Clear Linked Metadata Note Navigation**: Clear and user-friendly navigation from the session note details view to linked metadata note detail views when linked metadata notes are clicked, but only for metadata notes where the user is the metadata note owner or has write access to at least one of its linked session notes. Each linked metadata note entry displays the metadata note's name and relevant summary information with conditional clickable functionality based on user access permissions. Clicking on accessible linked metadata notes navigates smoothly to that metadata note's details page, enabling seamless navigation between session notes and their linked metadata notes. The navigation button is hidden or disabled for users who do not meet the access requirements.
+- Accessible controls with proper labels and visual feedback
+- Responsive layout that maintains usability across different screen sizes
+- Proper visual hierarchy with clear headings and organized content sections
+- User-friendly forms with appropriate input validation and error messaging
+- Consistent button styling and interactive element behavior
+- Clean and organized layout that preserves the functionality of participant role editing and invitation system features
+- Clear distinction between campaigns the user owns and campaigns the user participates in
+- Participant lists that clearly show all participants including the currently logged-in user
+- **Role Editing Controls**: Intuitive interface elements (such as dropdown menus or toggle buttons) that allow campaign owners to easily change participant roles with clear visual indicators of current and available roles. Campaign owners can use these same controls to modify their own roles within their campaigns.
+- **Role Editing Dialog Positioning and Sizing**: The participant role changing dialog window must be positioned further to the left and made wider to ensure that when both "GM" and "Player" roles are selected, all text fits comfortably without being cut off. The dialog should have sufficient width to display all role combinations clearly and be positioned to avoid overlapping with other interface elements.
+- **Prominent confirmation modal styling**: The participant removal confirmation modal must be visually distinct with proper overlay, clear typography, and contrasting button colors to distinguish between confirm and cancel actions. The modal should be centered and clearly visible above other content.
+- **Leave Campaign UI**: The "Leave Campaign" option should be clearly accessible from the same menu where "View Participants" is located, ensuring participants can easily find and use this functionality. The option should be styled consistently with other menu items but clearly indicate its purpose and only be visible to eligible participants (non-owners).
+- **Session Creation UI**: Session creation form should be easily accessible only to users with GM role within the campaign detail view with clear visual indication of GM-only access. The interface should dynamically show or hide session creation capabilities based on the user's current role in the campaign.
+- **Real-time Session Creation UI Updates**: The "Create Session" button or the "Only GMs can create sessions" message must automatically refresh and reflect the user's current GM/Player role immediately after their role is changed, without requiring a page reload. The session creation interface must update to show or hide session creation capabilities based on the user's updated role status.
+- **Campaign Management UI**: Campaign edit and delete options should only be visible and accessible from the Campaign Details page, with clear visual indicators. Edit and delete buttons should be styled consistently with other interface elements.
+- **Session Management UI**: Session edit and delete options should only be visible and accessible from the Session Details page to the session owner, with clear visual indicators of ownership. Edit and delete buttons should be styled consistently with other interface elements.
+- **Session Deletion Confirmation Modal**: The session deletion confirmation modal must be visually distinct with proper overlay, clear typography, and contrasting button colors to distinguish between confirm and cancel actions. The modal should clearly display the session name being deleted and require explicit confirmation.
+- **Note Management UI**: Note edit and delete options should be visible and accessible from the Note Details page to the note owner and users with Write access, with clear visual indicators of permissions. Edit and delete buttons should be styled consistently with other interface elements.
+- **Note Deletion Confirmation Modal**: The note deletion confirmation modal must be visually distinct with proper overlay, clear typography, and contrasting button colors to distinguish between confirm and cancel actions. The modal should clearly display the note name being deleted and require explicit confirmation.
+- **Note Linking UI**: Note linking interface should be clearly accessible to note owners and users with Write access within the Note Detail View with intuitive controls for adding and removing note links using note names. The interface should provide clear feedback for successful link creation and removal operations, with prominent indication that note names are used for linking. The interface must prevent self-linking and display appropriate error messages when users attempt to link a note to itself. The interface must also prevent duplicate linking and display appropriate error messages when users attempt to create duplicate links.
+- **Note Tag Management UI**: Note tag management interface should be clearly accessible to note owners and users with Write access within the Note Detail View with intuitive controls for adding and removing tags. The interface should allow addition of single-word string tags with immediate visual feedback and easy removal of existing tags.
+- **Tag Display Styling**: Tags should be displayed with consistent, visually appealing styling both in the Note Details page and in the session notes list. Tags should be clearly distinguishable from other content and provide visual categorization of notes.
+- **Linked Notes Display Styling**: Linked notes should be displayed in a clear, organized list format with consistent styling. Each linked note entry shows the actual note name, the session name it belongs to, and the tags associated with the linked note. For linked notes where the user is either the note owner or has read permissions, the entry should be clearly clickable with proper visual feedback on hover or interaction and allow navigation to the linked note details, regardless of which session the linked note belongs to within the same campaign. For linked notes where the user is neither the note owner nor has read permissions, the entry should be displayed as non-clickable text with a "No read access" message instead of the navigation icon, providing clear visual distinction between accessible and inaccessible linked notes.
+- **Linked Session Notes Display Styling**: Linked session notes in the metadata note details view should be displayed in a clear, organized list format with consistent styling. Each linked session note name should be clearly clickable with proper visual feedback on hover or interaction when the user has access permissions, allowing navigation to the session note details page using the same navigation logic and template as the session note-to-session note link navigation. For session notes where the user lacks read permissions and is not the note owner, the name should be displayed as plain text, providing clear visual distinction between accessible and inaccessible session notes.
+- **Linked Metadata Notes Display Styling**: Linked metadata notes should be displayed in a clear, organized list format with consistent styling that matches the existing linked notes area for consistency. Each linked metadata note entry shows the metadata note's name and relevant summary information. For linked metadata notes where the user is the metadata note owner or has write access to at least one of its linked session notes, the entry should be clearly clickable with proper visual feedback on hover or interaction and allow navigation to the metadata note details page. For users who do not meet the access requirements, the navigation button should be hidden or disabled. The styling should make it easy to distinguish and navigate between linked notes and linked metadata while maintaining visual consistency with the existing linking interface.
+- **Session List Styling**: Sessions should be displayed in a list format similar to campaigns with consistent styling and clear presentation of session information (without management action menus)
+- **Campaign List Styling**: Campaigns should be displayed in a list format with consistent styling and clear presentation of campaign information (without management action menus)
+- **Session Detail View Styling**: Session detail view should maintain consistent styling with campaign detail views and clearly display all session information including the notes list, with session management actions (Edit and Delete) prominently displayed for session owners
+- **Campaign Detail View Styling**: Campaign detail view should clearly display all campaign information with campaign management actions (Edit and Delete) prominently displayed for campaign owners
+- **Session Notes List Styling**: Notes should be displayed in a list format similar to how sessions are listed for campaigns with consistent styling and clear presentation. Empty notes lists should display appropriately with user-friendly messaging. Notes are filtered and displayed based on user access permissions, showing note names and tags (without note content).
+- **Note Detail View Styling**: Note detail view should maintain consistent styling with campaign and session detail views and clearly display note content (both player and GM content) according to the user's access permissions, along with the note's tags, with dynamic content substitution applied. The view should clearly distinguish between player content and GM content sections when both are visible, and show the rendered result with metadata values substituted for placeholders. Note management actions (Edit and Delete) should be prominently displayed for note owners and users with Write access.
+- **Note Creation UI**: Note creation form should be easily accessible only to session owners within the session detail view with clear visual indication of session owner-only access. The interface should dynamically show or hide note creation capabilities based on whether the user is the session owner.
+- **Note Creation Form Styling**: Note creation form should maintain consistent styling with other forms in the application, including proper field labels, validation feedback, and submit button styling. The player content and GM content fields should be clearly labeled, support long text input, and be visually distinct from each other. The optional in-game datetime field should use the same input format and validation as campaign creation. The tags field should allow easy addition of single-word string tags. The form should include prominent user feedback indicating that note names must be unique within the campaign and are used for linking.
+- **Note Editing Form Styling**: Note editing form should maintain consistent styling with the note creation form and other forms in the application, including proper field labels, validation feedback, and submit button styling. The player content and GM content fields should be clearly labeled, support long text input, and be visually distinct from each other. The optional in-game datetime field should use the same input format and validation as campaign creation. The tags field should allow easy modification of existing tags and addition of new ones. The form should include prominent user feedback indicating that note names must be unique within the campaign and are used for linking. The editing interface shows the raw content with placeholders, while the display view shows the substituted content. When editing a note, the uniqueness check for the note name allows the current note's name if it is unchanged, but prevents duplication with other notes in the same campaign.
+- **Automatic Note Detail Content Refresh**: After a note is successfully edited, the Note Details page must automatically refresh to display the latest content including updated tags and dynamic content substitution without requiring a manual reload. The page should smoothly update to show the edited note information with proper visual feedback to indicate the successful update.
+- **Note Access Management UI**: Note access management interface should be clearly accessible only to note owners with intuitive controls for setting access levels for campaign participants (excluding the note owner). The interface should use clear bitflag controls (checkboxes or toggles) for Player Read, Game Master Read, Write, and Execute permissions with immediate visual feedback. The note owner should be automatically excluded from the participant list and not appear in the access management interface.
+- **Note Access Management Styling**: Note access management interface should maintain consistent styling with other management interfaces, clearly displaying participant names (excluding the note owner) and their current access levels with easy-to-use permission controls. The permission boxes must be enlarged to ensure all text (such as "Can view") is fully visible and not cut off, providing a clear and readable layout for all permission options.
+- **Seamless Session List Updates**: The session list interface should provide smooth visual feedback when sessions are deleted, ensuring the list updates immediately without jarring transitions or requiring user action
+- **Seamless Notes List Updates**: The notes list interface should provide smooth visual feedback when notes are deleted, ensuring the list updates immediately without jarring transitions or requiring user action
+- **SessionPlayer Management UI**: SessionPlayer management interface should be clearly accessible only to session owners with intuitive controls for adding and removing SessionPlayers. The interface should clearly show current SessionPlayers and available eligible participants.
+- **SessionPlayer Removal Confirmation Modal**: The SessionPlayer removal confirmation modal must be visually distinct with proper overlay, clear typography, and contrasting button colors to distinguish between confirm and cancel actions. The modal should clearly display the SessionPlayer's name being removed and require explicit confirmation.
+- **SessionPlayer Display Styling**: SessionPlayer lists should be displayed with consistent styling and clear presentation of participant information, visible to all campaign participants within session views.
+- **Metadata Note Action Buttons Styling**: The "View Details" button for each linked metadata note should be styled consistently with other interface buttons and only be visible to users who are the metadata note owner or have write access to at least one of its linked session notes. The "Unlink" button should provide proper visual feedback on hover and interaction.
+- **Metadata Note Unlinking Confirmation Modal**: The metadata note unlinking confirmation modal must be visually distinct with proper overlay, clear typography, and contrasting button colors to distinguish between confirm and cancel actions. The modal should clearly display the metadata note name being unlinked and require explicit confirmation.
+- **Automatic Metadata Link List Updates**: The linked metadata notes list interface should provide smooth visual feedback when metadata notes are unlinked, ensuring the list updates immediately without jarring transitions or requiring user action.
+- **Metadata Note Details View Styling**: The metadata note details page should maintain consistent styling with other detail views in the application, clearly displaying the metadata note's name, formatted JSON content, owner information, and linked session notes list with proper visual hierarchy and organization. This page is only accessible to the metadata note owner or users who have write access to at least one of its linked session notes.
+
+## Technical Requirements
+- Backend canister must be properly configured for successful deployment and installation
+- Ensure compatibility with Internet Computer deployment infrastructure
+- Implement proper error handling for canister lifecycle events
+- Maintain data integrity during canister upgrades and reinstallations
+- Implement efficient bitflag system for note access control with proper validation and storage optimization
+- Implement efficient bidirectional note linking system using note names as identifiers with proper validation and data integrity constraints
+- **Enforce campaign-scoped note name uniqueness**: Implement robust validation system to ensure note names are unique within each campaign, preventing creation of notes with duplicate names in the same campaign
+- **Enforce campaign-scoped metadata note name uniqueness**: Implement robust validation system to ensure metadata note names are unique within each campaign, preventing creation of metadata notes with duplicate names in the same campaign
+- **Name-based note linking validation**: Implement validation system for note linking using note names as identifiers, ensuring target notes exist within the same campaign before creating links
+- **Self-linking prevention validation**: Implement backend validation to prevent users from linking a session note to itself, with proper error handling and user feedback when self-linking is attempted
+- **Duplicate link prevention validation**: Implement backend validation to prevent users from creating duplicate links between two session notes, with proper error handling and user feedback when duplicate linking is attempted
+- Handle cascading deletion of note links when notes are removed to maintain referential integrity
+- Implement efficient tag storage and retrieval system for notes with proper validation of single-word string format
+- Ensure tag data persistence and proper handling during note updates and deletions
+- Implement efficient linked note access permission and ownership checking to determine if users are either note owners or have read permissions for proper display control in the Note Details page
+- **Consistent note owner permission enforcement**: Ensure that note owners automatically have full permissions (Player Read, Game Master Read, Write, and Execute) throughout all access control logic in both backend and frontend, with this being consistently applied across all note-related operations and UI components
+- **Username uniqueness validation system**: Implement efficient username uniqueness checking with proper indexing and validation to prevent duplicate usernames across all users
+- **Efficient tag aggregation system**: Implement optimized backend operations for collecting and aggregating unique tags across all campaigns where a user participates, with proper caching and performance optimization
+- **Cross-campaign tag filtering**: Implement efficient filtering and retrieval of notes by tag across multiple campaigns with proper access control validation and performance optimization
+- **Tag navigation updates**: Ensure the tag navigation system automatically reflects changes when tags are added or removed from notes, with efficient update mechanisms that don't require full page reloads
+- **Linked note tag retrieval**: Implement efficient retrieval of tags for linked notes to display alongside note names and session names in the linked notes section of the Note Details page
+- **JSON validation system**: Implement robust JSON format validation for metadata note content with proper error handling and user feedback
+- **Metadata note storage system**: Implement efficient storage and retrieval system for metadata notes with proper indexing and direct campaign association, using "name" field instead of "title"
+- **Metadata note linking system**: Implement system for linking metadata notes to multiple session notes within campaigns using session note names with proper validation and data integrity, restricted to metadata note creation or editing interface only
+- **Native HTML content rendering**: Implement safe HTML rendering for session note content fields using native browser styling, unaffected by the application's global or custom CSS. Ensure native HTML elements (like h1, li, ul, etc.) use browser default styles without additional application styles or Tailwind classes applied.
+- **HTML container isolation**: Design wrappers or containers around rendered note content to avoid overriding native HTML styles, preserving the browser's default rendering of HTML elements and preventing custom CSS from affecting native HTML formatting.
+- **Custom Heading and List Spacing Implementation**: Implement CSS styles for the `.native-html-content` class that specifically target h2, h3, h4, h5, and h6 heading tags to apply reduced margin-top and margin-bottom values compared to browser defaults, and also target list items (li) to create tighter, more compact spacing between list items while maintaining readability and native HTML appearance.
+- **Dynamic Content Substitution Engine**: Implement robust dynamic content substitution system that processes session note content to identify and replace placeholders in the format `<---field--->` with corresponding values from linked metadata notes. Support nested field access using dot notation (e.g., `<---character.name--->`) and array access using bracket notation (e.g., `<---items[0].name--->`). Apply substitution to both player and GM content fields based on user access permissions.
+- **Metadata JSON Parsing**: Implement efficient JSON parsing system for metadata note content that supports complex data structures including nested objects and arrays, with proper error handling for malformed JSON
+- **Placeholder Resolution System**: Implement sophisticated placeholder resolution that matches field names in metadata note JSON content, handles complex data structures, provides appropriate fallback values when fields are not found, and maintains performance with large datasets
+- **Real-time Content Processing**: Ensure dynamic content substitution is processed in real-time when notes are displayed, with efficient caching mechanisms to optimize performance for frequently accessed notes
+- **Session owner metadata note creation**: Implement backend validation that allows session owners to create metadata notes for their sessions regardless of their note permissions, while maintaining the existing Write permission requirement for other users
+- **Metadata Note Unlinking System**: Implement efficient system for unlinking metadata notes from session notes with proper authorization validation, data integrity maintenance, and cascading updates to ensure consistency across all related data structures
+- **Metadata Note Details Retrieval with Access Control**: Implement optimized system for retrieving comprehensive metadata note details including all linked session notes, with proper access control validation to ensure users can only view metadata note details if they are the metadata note owner or have write access to at least one of its linked session notes
+- **Linked Metadata Notes Display System with Access Control**: Implement efficient retrieval system for displaying all metadata notes linked to a specific session note, with proper access control filtering to ensure only authorized users can see the metadata notes
+- **Enhanced Linked Session Note Access Control System**: Implement efficient system for checking user access permissions and ownership for each session note linked to a metadata note, enabling proper display control in the metadata note details view with clickable navigation for accessible notes (either owned by the user or with read permissions) using the same navigation logic and template as the session note-to-session note link navigation
+- **Immediate Metadata Notes Loading System with Access Control**: Implement frontend system that automatically triggers metadata notes queries on dashboard load for authorized users only, ensuring metadata notes are fetched and displayed immediately when the dashboard is accessed by users with proper access permissions
+- **Dashboard Metadata Query Trigger with Access Control**: Implement automatic metadata notes query triggering on dashboard initialization for authorized users, ensuring metadata notes are always loaded and available from the initial dashboard visit for users who are participants in the campaign where the metadata note is linked, or for the metadata note's owner
+- **Metadata Note Access Control System**: Implement comprehensive access control system that restricts metadata note visibility to users who are participants in the campaign where the metadata note is linked, or to the metadata note's owner, with proper filtering at both backend query and frontend display levels
+- **Metadata Note Details Access Validation**: Implement robust access validation system that restricts access to metadata note details pages to only the metadata note owner or users who have write access to at least one of its linked session notes, with proper authorization checks and error handling for unauthorized access attempts
+- **Session Note Link Management System**: Implement backend support for the "Manage Note Links" dialog functionality focused on session note links only, including efficient retrieval of session note links, validation for new link creation, and proper handling of link removal operations with appropriate authorization checks
+- **Metadata Note Linking Restriction System**: Implement backend validation and enforcement that restricts metadata note linking to session notes to only be available from the metadata note creation or editing interface, preventing such linking from the session note side
+- **Dialog Link Management Data Integrity**: Ensure all session note link management operations performed through the dialog maintain proper data integrity, including bidirectional link updates, cascading relationship management, and consistent state across all related data structures
+- **Campaign-Based Metadata Note Storage and Retrieval**: Implement robust backend storage system that directly associates metadata notes with campaigns rather than relying on indirect session-based relationships, ensuring reliable identification and retrieval of all metadata notes belonging to a campaign
+- **Comprehensive Metadata Note Query System**: Implement backend query operations that consistently find and return all metadata notes associated with a campaign, regardless of creation timing, conditions, or data state, by using direct campaign association and comprehensive search logic
+- **Metadata Note Campaign Association Validation and Maintenance**: Implement validation and maintenance systems that ensure proper campaign association for all metadata notes, with data integrity checks and repair mechanisms to maintain reliable identification and retrieval across all UI contexts and linking operations
+- **Robust Metadata Note Detection Logic**: Implement comprehensive detection and retrieval logic that accounts for all possible metadata note states, creation conditions, and data relationships to ensure no metadata notes are missed in any UI context or linking operation
+- **Enhanced Duplicate Link Prevention System**: Implement comprehensive backend validation that checks for existing links between two session notes before creating new links, with proper error handling and user feedback when duplicate links are attempted. This includes validation in both the note linking interface and the "Manage Note Links" dialog.
+- **Frontend Duplicate Link Validation**: Implement frontend validation that prevents users from creating duplicate links between two session notes, with clear error messaging and user feedback when duplicate linking is attempted. This validation should work in both the note linking interface and the "Manage Note Links" dialog.
+- **Note Name Uniqueness Validation During Editing System**: Implement backend validation system that allows the current note's name during editing operations if it is unchanged, but prevents duplication with other notes in the same campaign. This enables users to edit a note without changing its name while still enforcing campaign-scoped uniqueness constraints with proper error handling and user feedback.

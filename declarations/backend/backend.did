@@ -1,0 +1,173 @@
+type UserRole = 
+ variant {
+   admin;
+   guest;
+   user;
+ };
+type UserProfile = record {name: text;};
+type Time = int;
+type SessionPlayer = 
+ record {
+   participant: principal;
+   sessionId: text;
+ };
+type Session = 
+ record {
+   campaignId: text;
+   creator: principal;
+   date: text;
+   description: text;
+   id: text;
+   name: text;
+ };
+type Role = 
+ variant {
+   both;
+   gm;
+   player;
+ };
+type RSVP = 
+ record {
+   attending: bool;
+   inviteCode: text;
+   name: text;
+   timestamp: Time;
+ };
+type Participant = 
+ record {
+   "principal": principal;
+   role: Role;
+ };
+type NoteAccess = 
+ record {
+   noteId: text;
+   participant: principal;
+   permissions: nat8;
+ };
+type Note = 
+ record {
+   creator: principal;
+   gmContent: text;
+   id: text;
+   inGameDateTime: opt text;
+   name: text;
+   playerContent: text;
+   sessionId: text;
+   tags: vec text;
+ };
+type MetadataNote = 
+ record {
+   campaignId: text;
+   content: text;
+   id: text;
+   linkedSessionNotes: vec text;
+   name: text;
+   owner: principal;
+ };
+type LinkedNoteDetails = 
+ record {
+   hasReadAccess: bool;
+   isOwner: bool;
+   linkedNoteId: text;
+   noteId: text;
+   noteName: text;
+   sessionName: text;
+   tags: vec text;
+ };
+type InviteCode = 
+ record {
+   code: text;
+   created: Time;
+   used: bool;
+ };
+type InvitationStatus = 
+ variant {
+   accepted;
+   pending;
+   rejected;
+ };
+type Invitation = 
+ record {
+   campaignId: text;
+   id: text;
+   recipient: principal;
+   role: Role;
+   sender: principal;
+   status: InvitationStatus;
+   timestamp: Time;
+ };
+type Campaign = 
+ record {
+   description: text;
+   id: text;
+   inGameDateTime: text;
+   name: text;
+   owner: principal;
+ };
+service : {
+  acceptInvitation: (id: text) -> ();
+  addParticipant: (campaignId: text, participant: principal, role: Role) ->
+   ();
+  addSessionPlayer: (sessionId: text, participant: principal) -> ();
+  addTag: (noteId: text, tag: text) -> ();
+  assignCallerUserRole: (user: principal, role: UserRole) -> ();
+  createCampaign: (id: text, name: text, description: text, inGameDateTime:
+   text) -> ();
+  createMetadataNote: (id: text, name: text, content: text,
+   linkedSessionNotes: vec text, campaignId: text) -> ();
+  createNote: (id: text, sessionId: text, name: text, playerContent: 
+   text, gmContent: text, inGameDateTime: opt text, tags: vec text) -> ();
+  createSession: (id: text, campaignId: text, name: text, description: 
+   text, date: text) -> ();
+  deleteCampaign: (id: text) -> ();
+  deleteNote: (id: text) -> ();
+  deleteSession: (id: text) -> ();
+  generateInviteCode: () -> (text);
+  getAllRSVPs: () -> (vec RSVP) query;
+  getCallerUserProfile: () -> (opt UserProfile) query;
+  getCallerUserRole: () -> (UserRole) query;
+  getCampaignDetails: (campaignId: text) -> (opt Campaign) query;
+  getInviteCodes: () -> (vec InviteCode) query;
+  getLinkedMetadataNotes: (sessionNoteId: text) -> (vec MetadataNote) query;
+  getLinkedNotes: (noteId: text) -> (vec LinkedNoteDetails) query;
+  getMetadataNoteDetails: (metadataNoteId: text) -> (opt MetadataNote) query;
+  getMetadataNotes: () -> (vec MetadataNote) query;
+  getNoteAccess: (noteId: text) -> (vec NoteAccess) query;
+  getNotes: (sessionId: text) -> (vec Note) query;
+  getNotesByTag: (tag: text) -> (vec Note) query;
+  getOwnedCampaigns: () -> (vec Campaign) query;
+  getParticipants: (campaignId: text) -> (vec Participant) query;
+  getParticipatedCampaigns: () -> (vec Campaign) query;
+  getReceivedInvitations: () -> (vec Invitation) query;
+  getSentInvitations: () -> (vec Invitation) query;
+  getSessionPlayers: (sessionId: text) -> (vec SessionPlayer) query;
+  getSessions: (campaignId: text) -> (vec Session) query;
+  getUserCampaignTags: () -> (vec text) query;
+  getUserProfile: (user: principal) -> (opt UserProfile) query;
+  initializeAccessControl: () -> ();
+  isCallerAdmin: () -> (bool) query;
+  isUsernameAvailable: (username: text) -> (bool) query;
+  leaveCampaign: (campaignId: text) -> ();
+  linkMetadataNoteByName: (sessionNoteId: text, metadataNoteName: text,
+   campaignId: text) -> ();
+  linkNotes: (noteId: text, targetNoteName: text) -> ();
+  manageNoteAccess: (noteId: text, participant: principal, permissions:
+   nat8) -> ();
+  rejectInvitation: (id: text) -> ();
+  removeNoteLink: (noteId: text, linkedNoteId: text) -> ();
+  removeParticipant: (campaignId: text, participant: principal) -> ();
+  removeSessionPlayer: (sessionId: text, participant: principal) -> ();
+  removeTag: (noteId: text, tag: text) -> ();
+  saveCallerUserProfile: (profile: UserProfile) -> ();
+  sendInvitation: (id: text, campaignId: text, recipientUsername: text, role:
+   Role) -> ();
+  submitRSVP: (name: text, attending: bool, inviteCode: text) -> ();
+  unlinkMetadataNote: (metadataNoteId: text, sessionNoteId: text) -> ();
+  updateCampaign: (id: text, name: text, description: text, inGameDateTime:
+   text) -> ();
+  updateNote: (id: text, name: text, playerContent: text, gmContent: 
+   text, inGameDateTime: opt text, tags: vec text) -> ();
+  updateParticipantRole: (campaignId: text, participant: principal, newRole:
+   Role) -> ();
+  updateSession: (id: text, name: text, description: text, date: text) -> ();
+}

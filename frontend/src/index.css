@@ -1,0 +1,260 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --radius: 0.625rem;
+        --background: 0.145 0 0;
+        --foreground: 0.985 0 0;
+        --card: 0.205 0 0;
+        --card-foreground: 0.985 0 0;
+        --popover: 0.269 0 0;
+        --popover-foreground: 0.985 0 0;
+        --primary: 0.646 0.222 264.376;
+        --primary-foreground: 0.985 0 0;
+        --secondary: 0.269 0 0;
+        --secondary-foreground: 0.985 0 0;
+        --muted: 0.269 0 0;
+        --muted-foreground: 0.708 0 0;
+        --accent: 0.371 0 0;
+        --accent-foreground: 0.985 0 0;
+        --destructive: 0.704 0.191 22.216;
+        --destructive-foreground: 0.985 0 0;
+        --border: 1 0 0 / 10%;
+        --input: 1 0 0 / 15%;
+        --ring: 0.646 0.222 264.376;
+        --chart-1: 0.646 0.222 41.116;
+        --chart-2: 0.6 0.118 184.704;
+        --chart-3: 0.398 0.07 227.392;
+        --chart-4: 0.828 0.189 84.429;
+        --chart-5: 0.769 0.188 70.08;
+        --sidebar: 0.205 0 0;
+        --sidebar-foreground: 0.985 0 0;
+        --sidebar-primary: 0.646 0.222 264.376;
+        --sidebar-primary-foreground: 0.985 0 0;
+        --sidebar-accent: 0.269 0 0;
+        --sidebar-accent-foreground: 0.985 0 0;
+        --sidebar-border: 1 0 0 / 10%;
+        --sidebar-ring: 0.646 0.222 264.376;
+    }
+
+    .dark {
+        --background: 0.145 0 0;
+        --foreground: 0.985 0 0;
+        --card: 0.205 0 0;
+        --card-foreground: 0.985 0 0;
+        --popover: 0.269 0 0;
+        --popover-foreground: 0.985 0 0;
+        --primary: 0.646 0.222 264.376;
+        --primary-foreground: 0.985 0 0;
+        --secondary: 0.269 0 0;
+        --secondary-foreground: 0.985 0 0;
+        --muted: 0.269 0 0;
+        --muted-foreground: 0.708 0 0;
+        --accent: 0.371 0 0;
+        --accent-foreground: 0.985 0 0;
+        --destructive: 0.704 0.191 22.216;
+        --destructive-foreground: 0.985 0 0;
+        --border: 1 0 0 / 10%;
+        --input: 1 0 0 / 15%;
+        --ring: 0.646 0.222 264.376;
+        --chart-1: 0.488 0.243 264.376;
+        --chart-2: 0.696 0.17 162.48;
+        --chart-3: 0.769 0.188 70.08;
+        --chart-4: 0.627 0.265 303.9;
+        --chart-5: 0.645 0.246 16.439;
+        --sidebar: 0.205 0 0;
+        --sidebar-foreground: 0.985 0 0;
+        --sidebar-primary: 0.646 0.222 264.376;
+        --sidebar-primary-foreground: 0.985 0 0;
+        --sidebar-accent: 0.269 0 0;
+        --sidebar-accent-foreground: 0.985 0 0;
+        --sidebar-border: 1 0 0 / 10%;
+        --sidebar-ring: 0.646 0.222 264.376;
+    }
+
+    * {
+        @apply border-border;
+    }
+    body {
+        @apply bg-background text-foreground;
+    }
+}
+
+/* Custom utilities for RPG theme */
+@layer utilities {
+    .line-clamp-3 {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    
+    .gradient-text {
+        @apply bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent;
+    }
+    
+    .glass-card {
+        @apply bg-white/10 backdrop-blur-sm border border-white/20;
+    }
+    
+    .rpg-button {
+        @apply bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white border-0 transition-all duration-200;
+    }
+}
+
+/* Native HTML styling for session note content */
+@layer components {
+    .native-html-content {
+        /* Reset to browser defaults and restore natural HTML styling */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: bold;
+            margin-top: 0.83em;
+            margin-bottom: 0.83em;
+            line-height: 1.2;
+        }
+        
+        /* Custom reduced spacing for h2-h6 headings */
+        h2, h3, h4, h5, h6 {
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
+        }
+        
+        h1 { font-size: 2em; }
+        h2 { font-size: 1.5em; }
+        h3 { font-size: 1.17em; }
+        h4 { font-size: 1em; }
+        h5 { font-size: 0.83em; }
+        h6 { font-size: 0.67em; }
+        
+        p {
+            margin-top: 1em;
+            margin-bottom: 1em;
+        }
+        
+        ul, ol {
+            margin-top: 0.75em;
+            margin-bottom: 0.75em;
+            padding-left: 2.5em;
+        }
+        
+        ul {
+            list-style-type: disc;
+        }
+        
+        ol {
+            list-style-type: decimal;
+        }
+        
+        li {
+            display: list-item;
+            margin-bottom: 0.25em;
+            line-height: 1.4;
+        }
+        
+        /* Remove margin from the last list item for tighter spacing */
+        li:last-child {
+            margin-bottom: 0;
+        }
+        
+        ul ul, ol ul {
+            list-style-type: circle;
+            margin-top: 0.25em;
+            margin-bottom: 0;
+        }
+        
+        ul ul ul, ol ul ul, ul ol ul, ol ol ul {
+            list-style-type: square;
+        }
+        
+        /* Tighter spacing for nested lists */
+        ul ul li, ol ul li, ul ol li, ol ol li {
+            margin-bottom: 0.15em;
+        }
+        
+        blockquote {
+            margin-top: 1em;
+            margin-bottom: 1em;
+            margin-left: 2.5em;
+            margin-right: 2.5em;
+            padding-left: 1em;
+            border-left: 4px solid currentColor;
+            opacity: 0.8;
+        }
+        
+        strong, b {
+            font-weight: bold;
+        }
+        
+        em, i {
+            font-style: italic;
+        }
+        
+        code {
+            font-family: monospace;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 0.2em 0.4em;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            font-family: monospace;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 1em;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin-top: 1em;
+            margin-bottom: 1em;
+        }
+        
+        pre code {
+            background-color: transparent;
+            padding: 0;
+        }
+        
+        a {
+            color: #60a5fa;
+            text-decoration: underline;
+        }
+        
+        a:hover {
+            color: #93c5fd;
+        }
+        
+        hr {
+            border: none;
+            border-top: 1px solid currentColor;
+            margin: 1.5em 0;
+            opacity: 0.3;
+        }
+        
+        table {
+            border-collapse: collapse;
+            margin-top: 1em;
+            margin-bottom: 1em;
+            width: 100%;
+        }
+        
+        th, td {
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.5em;
+            text-align: left;
+        }
+        
+        th {
+            font-weight: bold;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Ensure first and last elements don't have excessive margins */
+        > *:first-child {
+            margin-top: 0;
+        }
+        
+        > *:last-child {
+            margin-bottom: 0;
+        }
+    }
+}
